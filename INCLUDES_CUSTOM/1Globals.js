@@ -1,11 +1,11 @@
-var ENVIRON = "DEV";
-var EMAILREPLIES = "noreply@dca.ca.gov";
+var ENVIRON = "SUPP";
+var EMAILREPLIES = "noreply@accela.com";
 var SENDEMAILS = true;
-var ACAURL = "https://aca.supp.accela.com/BCC";
+var ACAURL = "https://aca.supp.accela.com/MPWMD";
 
 
 //set Debug
-var vDebugUsers = ['EWYLAM','ADMIN','JSCHILLO','EVONTRAPP'];
+var vDebugUsers = ['EWYLAM','ADMIN','JSCHILLO','EVONTRAPP','LCHARRON'];
 if (exists(currentUserID,vDebugUsers)) {
 	showDebug = 3;
 	showMessage = true;
