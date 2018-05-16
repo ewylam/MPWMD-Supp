@@ -42,10 +42,10 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		editAppSpecific("Credits Used", vWaterAllocationAmountCredits, vParentCapId);
 
 		// Copy Fixture ASIT from Water Permit. Update Existing Count with values from Post Count
-		var vFixtureTablName = "RESIDENTIAL FIXTURES";
+		var vFixtureTableName = "RESIDENTIAL  FIXTURES";
 		var vFixtureASIT;
 		var vFixture;
-		var vFixtureASIT = loadASITable(vFixtureTablName, capId);
+		var vFixtureASIT = loadASITable(vFixtureTableName, capId);
 		if (typeof(vFixtureASIT) == "object") {
 			x = 0;
 			for (x in vFixtureASIT) {
