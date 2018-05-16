@@ -44,7 +44,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		}		
 		vNewCreditsRecieved = vCreditsRecieved + vCreditAmountGranted;
 		if (parseFloat(vNewCreditsRecieved) != "NaN") {
-			editAppSpecific("Credits Received", vNewCreditsRecieved, vParentCapId);
+			editAppSpecific("Credits Received", toFixed(vNewCreditsRecieved,4), vParentCapId);
 		}
 		
 		// Update Credits Remaining (Base Premise ASI) with Credits Received minus Credits Used (Base Premise ASI)
