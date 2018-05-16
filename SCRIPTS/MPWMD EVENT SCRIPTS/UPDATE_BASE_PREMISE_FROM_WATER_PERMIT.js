@@ -51,9 +51,9 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			for (x in vFixtureASIT) {
 				vFixture = vFixtureASIT[x];
 				// Replace Existing Count with Post Count
-				vFixture["Existing Count"] = new asiTableValObj("Existing Count", parseFloat(vFixture["Post Count"].fieldValue), "N");
+				vFixture["Existing Count"] = new asiTableValObj("Existing Count", vFixture["Post Count"].fieldValue, "N");
 				// Replace Existing Fixture with Post Fixture
-				vFixture["Existing Fixture"] = new asiTableValObj("Existing Fixture", parseFloat(vFixture["Post Fixture"].fieldValue), "N");
+				vFixture["Existing Fixture"] = new asiTableValObj("Existing Fixture", vFixture["Post Fixture"].fieldValue, "N");
 			}
 			// Copy updated fixture table to Base Premise
 			removeASITable(vFixtureTableName, vParentCapId);
