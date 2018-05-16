@@ -7,7 +7,9 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 	for (x in RESIDENTIALFIXTURES) {
 		vFixture = RESIDENTIALFIXTURES[x];
 		vFixturePostValue = parseFloat(vFixture["Post Fixture"]);
-		vTotalFixtureCount += vFixturePostValue;
+		if (vFixturePostValue != "NaN") {
+			vTotalFixtureCount += vFixturePostValue;
+		}
 	}
 }
 editAppSpecific("Post Fixture Unit Count", vTotalFixtureCount);
