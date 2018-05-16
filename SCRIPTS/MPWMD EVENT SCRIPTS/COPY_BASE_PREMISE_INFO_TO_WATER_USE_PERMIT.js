@@ -3,7 +3,7 @@ if (parentCapId == "undefined" || parentCapId == null) {
 	parentCapId = aa.env.getValue("ParentCapID");
 }
 
-if (parentCapId != null && vGoodToRenew) {	
+if (parentCapId != null) {	
 	//Copy Parcels from license to renewal
 	copyParcels(parentCapId,capId);
 	
