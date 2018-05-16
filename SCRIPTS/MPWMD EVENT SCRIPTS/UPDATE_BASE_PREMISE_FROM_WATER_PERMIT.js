@@ -14,7 +14,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		var vAllocationAmount;
 		var vJAEArray = ["Allotment", "Paralta", "Pre-Paralta", "Public"];
 		var vEntitlementArray = ["Entitlement"];
-		var vCreditArray = ["Credit"];
+		var vCreditArray = ["Water Use Credits"];
 		var vWaterAllocationAmountJAE = 0;
 		var vWaterAllocationAmountEntitlements = 0;
 		var vWaterAllocationAmountCredits = 0;
