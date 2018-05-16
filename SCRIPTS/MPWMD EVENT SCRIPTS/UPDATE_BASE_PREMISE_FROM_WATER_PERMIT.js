@@ -56,8 +56,8 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 				vFixture["Existing Fixture"] = new asiTableValObj("Existing Fixture", parseFloat(vFixture["Post Fixture"].fieldValue), "N");
 			}
 			// Copy updated fixture table to Base Premise
-			removeASITable(vFixtureTablName, vParentCapId);
-			addASITable(vFixtureTablName, vFixtureASIT, vParentCapId);
+			removeASITable(vFixtureTableName, vParentCapId);
+			addASITable(vFixtureTableName, vFixtureASIT, vParentCapId);
 		}
 
 	}
