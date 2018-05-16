@@ -76,9 +76,11 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		} else {
 			vPurchasedWaterUsed = 0;
 		}
+		logDebug("vPurchasedWater: " + vPurchasedWater);
+		logDebug("vPurchasedWaterUsed: " + vPurchasedWaterUsed);
 		vPurchasedWaterRemaining = vPurchasedWater - vPurchasedWaterUsed;
 		if (parseFloat(vPurchasedWaterRemaining) != "NaN") {
-			editAppSpecific("Purchased Water Remaining", vPurchasedWaterRemaining);
+			editAppSpecific("Purchased Water Remaining", vPurchasedWaterRemaining, vParentCapId);
 		}
 	}
 }
