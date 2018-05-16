@@ -45,7 +45,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		var vFixtureTablName = "RESIDENTIAL FIXTURES";
 		var vFixtureASIT;
 		var vFixture;
-		var vFixtureASIT = loadASITable(, capId);
+		var vFixtureASIT = loadASITable(vFixtureTablName, capId);
 		if (typeof(vFixtureASIT) == "object") {
 			x = 0;
 			for (x in vFixtureASIT) {
