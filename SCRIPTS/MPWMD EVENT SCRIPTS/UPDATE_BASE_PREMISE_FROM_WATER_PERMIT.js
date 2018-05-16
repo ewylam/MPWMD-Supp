@@ -76,12 +76,32 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		} else {
 			vPurchasedWaterUsed = 0;
 		}
-		logDebug("vPurchasedWater: " + vPurchasedWater);
-		logDebug("vPurchasedWaterUsed: " + vPurchasedWaterUsed);
 		vPurchasedWaterRemaining = vPurchasedWater - vPurchasedWaterUsed;
 		if (parseFloat(vPurchasedWaterRemaining) != "NaN") {
 			editAppSpecific("Purchased Water Remaining", toFixed(vPurchasedWaterRemaining, 4), vParentCapId);
 		}
+
+		// Update Credits Remaining (Base Premise ASI) with Credits Received minus Credits Used (Base Premise ASI)
+		var vCreditsRecieved;
+		var vCreditsUsed;
+		var vCreditsRemaining;
+		vCreditsRecieved = getAppSpecific("Credits Received", vParentCapId);
+		vCreditsUsed = getAppSpecific("Credits Used", vParentCapId);
+		if (vCreditsRecieved != null && vCreditsRecieved != "") {
+			vCreditsRecieved = parseFloat(vCreditsRecieved);
+		} else {
+			vCreditsRecieved = 0;
+		}
+		if (vCreditsUsed != null && vCreditsUsed != "") {
+			vCreditsUsed = parseFloat(vCreditsUsed);
+		} else {
+			vCreditsUsed = 0;
+		}
+		vCreditsRemaining = vCreditsRecieved - vCreditsUsed;
+		if (parseFloat(vCreditsRemaining) != "NaN") {
+			editAppSpecific("Credits Remaining", toFixed(vCreditsRemaining, 4), vParentCapId);
+		}		
+		
 	}
 }
 // End script to update the parent Base Premise record with info from Water Permit
