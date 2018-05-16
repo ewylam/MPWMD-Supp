@@ -21,7 +21,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		if (typeof(PERMITWATERALLOCATION) == "object") {
 			for (x in PERMITWATERALLOCATION) {
 				vAllocation = PERMITWATERALLOCATION[x];
-				vAllocationType = vAllocation["Source Type"] = "";
+				vAllocationType = vAllocation["Source Type"] + "";
 				vAllocationAmount = parseFloat(vAllocation["Amount"]);
 				// Update Additional JAE Amount Granted (Base Premise ASI) from Permit Water Allocation (Water Permit ASIT) Allotment, Paralta, Preparalta, Public amounts
 				if (exists(vAllocationType, vJAEArray)) {
