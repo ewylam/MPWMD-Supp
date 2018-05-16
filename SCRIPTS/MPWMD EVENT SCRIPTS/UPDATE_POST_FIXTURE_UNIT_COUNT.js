@@ -11,7 +11,7 @@ logDebug("vFixturePostValue: " + vFixturePostValue);
 		if (vFixturePostValue != "NaN") {
 logDebug("Updating vTotalFixtureCount");
 			vTotalFixtureCount += vFixturePostValue;
-logDebug(vTotalFixtureCount);			
+logDebug("vTotalFixtureCount: " + vTotalFixtureCount);			
 		}
 	}
 }
