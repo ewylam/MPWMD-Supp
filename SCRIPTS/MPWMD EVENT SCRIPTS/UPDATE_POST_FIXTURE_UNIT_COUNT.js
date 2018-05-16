@@ -7,13 +7,10 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 	for (x in RESIDENTIALFIXTURES) {
 		vFixture = RESIDENTIALFIXTURES[x];
 		vFixturePostValue = parseFloat(vFixture["Post Fixture"]);
-logDebug("vFixturePostValue: " + vFixturePostValue);
 		if (vFixturePostValue != "NaN") {
-logDebug("Updating vTotalFixtureCount");
-			vTotalFixtureCount += vFixturePostValue;
-logDebug("vTotalFixtureCount: " + vTotalFixtureCount);			
+			vTotalFixtureCount += vFixturePostValue;		
 		}
 	}
 }
-editAppSpecific("Post Fixture Unit Count", vTotalFixtureCount);
+editAppSpecific("Post Fixture Unit Count", toFixed(vTotalFixtureCount,2));
 // Begin script to update the Post Fixture County (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
