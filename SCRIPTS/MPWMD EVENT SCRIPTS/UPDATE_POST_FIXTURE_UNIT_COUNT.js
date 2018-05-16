@@ -9,7 +9,9 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 		vFixturePostValue = parseFloat(vFixture["Post Fixture"]);
 logDebug("vFixturePostValue: " + vFixturePostValue);
 		if (vFixturePostValue != "NaN") {
+logDebug("Updating vTotalFixtureCount");
 			vTotalFixtureCount += vFixturePostValue;
+logDebug(vTotalFixtureCount);			
 		}
 	}
 }
