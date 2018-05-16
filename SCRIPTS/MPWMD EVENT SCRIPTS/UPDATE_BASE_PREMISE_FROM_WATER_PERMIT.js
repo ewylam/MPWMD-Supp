@@ -60,6 +60,26 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			addASITable(vFixtureTableName, vFixtureASIT, vParentCapId);
 		}
 
+		// Update Purchased Water Remaining (Base Premise ASI) with Purchased Water minus Purchased Water Used (Base Premise ASI)
+		var vPurchasedWater;
+		var vPurchasedWaterUsed;
+		var vPurchasedWaterRemaining;
+		vPurchasedWater = getAppSpecific("Purchased Water", vParentCapId);
+		vPurchasedWaterUsed = getAppSpecific("Purchased Water Used", vParentCapId);
+		if (vPurchasedWater != null && vPurchasedWater != "") {
+			vPurchasedWater = parseFloat(vPurchasedWater);
+		} else {
+			vPurchasedWater = 0;
+		}
+		if (vPurchasedWaterUsed != null && vPurchasedWaterUsed != "") {
+			vPurchasedWaterUsed = parseFloat(vPurchasedWaterUsed);
+		} else {
+			vPurchasedWaterUsed = 0;
+		}
+		vPurchasedWaterRemaining = vPurchasedWater - vPurchasedWaterUsed;
+		if (parseFloat(vPurchasedWaterRemaining) != "NaN") {
+			editAppSpecific("Purchased Water Remaining", vPurchasedWaterRemaining);
+		}
 	}
 }
 // End script to update the parent Base Premise record with info from Water Permit
