@@ -14,7 +14,7 @@ if (vCurrentFixtureUnitCount != null && vCurrentFixtureUnitCount != "") {
 } else {
 	vCurrentFixtureUnitCount = 0;
 }
-vProposedWaterUsage = vPostFixtureUnitCount - vCurrentFixtureUnitCount;
+vProposedWaterUsage = (vPostFixtureUnitCount - vCurrentFixtureUnitCount) * .01; // Convert to AF
 if (parseFloat(vProposedWaterUsage) != "NaN") {
 	editAppSpecific("Proposed Water Usage", vProposedWaterUsage);
 }
