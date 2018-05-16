@@ -8,6 +8,7 @@ function handleError(err,context) {
     logDebug("Stack: " + err.stack);
 	
 	// Log to Slack Channel in ETechConsultingLLC.slack.com BCC_EMSE_Debug
+	/*
 	
 	var headers=aa.util.newHashMap();
 
@@ -36,4 +37,5 @@ function handleError(err,context) {
 		aa.print("Slack Results: " + result.getOutput());
         }
   	}
+	*/
 	
