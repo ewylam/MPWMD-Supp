@@ -1,6 +1,7 @@
-var myCapId = "SDOT-CLZ-00-00226";
+var myCapId = "";
 var myUserId = "ADMIN";
 eventName = "";
+
 /* ASA  */  //var eventName = "ApplicationSubmitAfter";
 /* WTUA */  //var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Issuance";	  wfStatus = "Paid";  wfDateMMDDYYYY = "01/27/2015";
 /* WTUB */  //var eventName = "WorkflowTaskUpdateBefore";  wfProcess = "PRMT_AMEND"; wfTask = "Wrap Up";	  wfStatus = "Completed";  wfDateMMDDYYYY = "01/27/2015";
@@ -99,15 +100,7 @@ aa.print(z);
 
 try {
 
-servProvCode = 'SEATTLE';
-vState = 'WA';
-vLicNum = 'C74155F';
-licType = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/License";
 
-	OkRecordStatuses = ["Issued", "Issued - Waiting for Payment"];
-	OkPermitStatuses = ["Issued"];
-
-aa.print(isVehicleUnique_SDOT(vState, vLicNum, licType, OkPermitStatuses, OkRecordStatuses));	
 
 }
 catch (err) {
