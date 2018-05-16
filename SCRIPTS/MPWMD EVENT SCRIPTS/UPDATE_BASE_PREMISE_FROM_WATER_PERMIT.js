@@ -80,7 +80,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		logDebug("vPurchasedWaterUsed: " + vPurchasedWaterUsed);
 		vPurchasedWaterRemaining = vPurchasedWater - vPurchasedWaterUsed;
 		if (parseFloat(vPurchasedWaterRemaining) != "NaN") {
-			editAppSpecific("Purchased Water Remaining", vPurchasedWaterRemaining, vParentCapId);
+			editAppSpecific("Purchased Water Remaining", toFixed(vPurchasedWaterRemaining, 4), vParentCapId);
 		}
 	}
 }
