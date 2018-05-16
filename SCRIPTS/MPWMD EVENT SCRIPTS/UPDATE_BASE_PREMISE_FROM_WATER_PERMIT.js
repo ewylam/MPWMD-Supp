@@ -42,9 +42,10 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		editAppSpecific("Credits Used", vWaterAllocationAmountCredits, vParentCapId);
 
 		// Copy Fixture ASIT from Water Permit. Update Existing Count with values from Post Count
+		var vFixtureTablName = "RESIDENTIAL FIXTURES";
 		var vFixtureASIT;
 		var vFixture;
-		var vFixtureASIT = loadASITable("Residential Fixtures", capId);
+		var vFixtureASIT = loadASITable(, capId);
 		if (typeof(vFixtureASIT) == "object") {
 			x = 0;
 			for (x in vFixtureASIT) {
@@ -55,8 +56,8 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 				vFixture["Existing Fixture"] = new asiTableValObj("Existing Fixture", parseFloat(vFixture["Post Fixture"].fieldValue), "N");
 			}
 			// Copy updated fixture table to Base Premise
-			removeASITable("Residential Fixtures", vParentCapId);
-			addASITable("Residential Fixtures", vFixtureASIT, vParentCapId);
+			removeASITable(vFixtureTablName, vParentCapId);
+			addASITable(vFixtureTablName, vFixtureASIT, vParentCapId);
 		}
 
 	}
