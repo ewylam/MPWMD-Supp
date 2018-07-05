@@ -111,7 +111,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		var vProposedWaterUsage = getAppSpecific("Proposed Water Usage");
 		var vYear = new Date();
 		if (vPermitType == "New Construction") {
-			editAppSpecific("Year Built", vYear.getYear(), vParentCapId);
+			editAppSpecific("Year Built", vYear.getFullYear(), vParentCapId);
 			editAppSpecific("Baseline", vProposedWaterUsage, vParentCapId);	
 		}
 		
