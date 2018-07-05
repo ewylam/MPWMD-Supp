@@ -18,13 +18,16 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		var vWaterAllocationAmountJAE = 0;
 		var vWaterAllocationAmountEntitlements = 0;
 		var vWaterAllocationAmountCredits = 0;
+		var vPermitType;
 		if (typeof(PERMITWATERALLOCATION) == "object") {
 			for (x in PERMITWATERALLOCATION) {
 				vAllocation = PERMITWATERALLOCATION[x];
 				vAllocationType = vAllocation["Source Type"] + "";
 				vAllocationAmount = parseFloat(vAllocation["Amount"]);
 				// Update Additional JAE Amount Granted (Base Premise ASI) from Permit Water Allocation (Water Permit ASIT) Allotment, Paralta, Preparalta, Public amounts
-				if (exists(vAllocationType, vJAEArray)) {
+				vPermitType = getAppSpecific("Permit Type");
+				// Only update JAE Amount Granted only if permit type is NOT 'New Construction'
+				if (exists(vAllocationType, vJAEArray) && vPermitType != "New Construction") {
 					vWaterAllocationAmountJAE += vAllocationAmount;
 				}
 				// Update Purchased Water Used (Base Premise ASI) from Permit Water Allocation (Water Permit ASIT) Entitlement amounts
@@ -37,7 +40,10 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 				}
 			}
 		}
-		editAppSpecific("Additional JAE Amount Granted", vWaterAllocationAmountJAE, vParentCapId);
+		// Only update JAE Amount Granted only if permit type is NOT 'New Construction'
+		if (vPermitType != "New Construction") {
+			editAppSpecific("Additional JAE Amount Granted", vWaterAllocationAmountJAE, vParentCapId);
+		}
 		editAppSpecific("Purchased Water Used", vWaterAllocationAmountEntitlements, vParentCapId);
 		editAppSpecific("Credits Used", vWaterAllocationAmountCredits, vParentCapId);
 
@@ -107,7 +113,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		editAppSpecific("Total Square Footage", vProposed, vParentCapId);
 		
 		// Check Permit Type and update Year Built, Baseline
-		var vPermitType = getAppSpecific("Permit Type");
+		vPermitType = getAppSpecific("Permit Type");
 		var vProposedWaterUsage = getAppSpecific("Proposed Water Usage");
 		var vYear = new Date();
 		if (vPermitType == "New Construction") {
