@@ -102,6 +102,19 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			editAppSpecific("Credits Remaining", toFixed(vCreditsRemaining, 4), vParentCapId);
 		}		
 		
+		// Copy Proposed (ASI) 
+		var vProposed = getAppSpecific("Proposed");
+		editAppSpecific("Total Square Footage", vProposed, vParentCapId);
+		
+		// Check Permit Type and update Year Built, Baseline
+		var vPermitType = getAppSpecific("Permit Type");
+		var vProposedWaterUsage = getAppSpecific("Proposed Water Usage");
+		var vYear = new Date();
+		if (vPermitType == "New Construction") {
+			editAppSpecific("Year Built", vYear.getYear(), vParentCapId);
+			editAppSpecific("Baseline", vProposedWaterUsage, vParentCapId);	
+		}
+		
 	}
 }
 // End script to update the parent Base Premise record with info from Water Permit
