@@ -16,6 +16,6 @@ if (vCurrentFixtureUnitCount != null && vCurrentFixtureUnitCount != "") {
 }
 vProposedWaterUsage = (vPostFixtureUnitCount - vCurrentFixtureUnitCount) * .01; // Convert to AF
 if (parseFloat(vProposedWaterUsage) != "NaN") {
-	editAppSpecific("Proposed Water Usage", vProposedWaterUsage);
-}
+	editAppSpecific("Proposed Water Usage",toFixed(vProposedWaterUsage,2));
+	}
 // End script to update the Proposed Water Usage (ASI) with the result of the Post Fixture Unit Count (ASI) minus Current Fixture Unit Count (ASI)
