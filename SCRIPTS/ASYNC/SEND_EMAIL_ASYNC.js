@@ -26,10 +26,6 @@ try {
 	var vDocumentNumber;
 	var vACAUrl;
 	var vDocumentACAUrl;
-	var vAdHocProcess = "ADHOC_WORKFLOW";
-	var vAdHocTask = "Manual Notification";
-	var vAdHocNote;
-	var vAdHocAssignDept;
 	var vEParamsToSend;
 	var vModule;
 	var vEmailResult;
@@ -68,7 +64,7 @@ try {
 	}
 	/* End Code needed to call master script functions -----------------------------------------------------*/
 
-	logDebug("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
+	logDebug("1) Here in SEND_EMAIL_ASYNC: " + aa.env.getValue("eventType"));
 	logDebug("2) sendToEmailAddresses: " + sendToEmailAddresses);
 	logDebug("3) emailTemplate: " + emailTemplate);
 	logDebug("4) reportTemplate: " + reportTemplate);
