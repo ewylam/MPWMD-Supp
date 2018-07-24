@@ -1,21 +1,42 @@
-//Get environmental variables pass into the script
-var sendEmailToAddresses = aa.env.getValue("sendEmailToAddresses");
-var emailTemplate = aa.env.getValue("emailTemplate");
-var vEParams = aa.env.getValue("vEParams");
-var reportTemplate = aa.env.getValue("reportTemplate");
-var vRParams = aa.env.getValue("vRParams");
-var vChangeReportName = aa.env.getValue("vChangeReportName");
-var capId = aa.env.getValue("CapId");
-var adHocTaskContactsList = aa.env.getValue("adHocTaskContactsList");
-
-//Constant variables used in the script
-var CONST_ADHOC_PROCESS = "ADHOC_WORKFLOW";
-var CONST_ADHOC_TASK = "Manual Notification";
-
 try {
+	//Get environmental variables passed into the script
+	var sendToEmailAddresses = aa.env.getValue("sendEmailToContactTypes");
+	var emailTemplate = aa.env.getValue("emailTemplate");
+	var vEParams = aa.env.getValue("vEParams");
+	var reportTemplate = aa.env.getValue("reportTemplate");
+	var vRParams = aa.env.getValue("vRParams");
+	var vChangeReportName = aa.env.getValue("vChangeReportName");
+	var capId = aa.env.getValue("CapId");
+
+	//Set variables used in the script
+	var tmpl;
+	var emailArray = sendToEmailAddresses.split(",");
+	var v = 0;
+	var w = 0;
+	var x = 0;
+	var y = 0;
+	var z = 0;
+	var conEmail;
+	var mailFrom;
+	var capId4Email;
+	var vReportName;
+	var vDocumentList;
+	var vDocumentModel;
+	var vDocumentName;
+	var vDocumentNumber;
+	var vACAUrl;
+	var vDocumentACAUrl;
+	var vAdHocProcess = "ADHOC_WORKFLOW";
+	var vAdHocTask = "Manual Notification";
+	var vAdHocNote;
+	var vAdHocAssignDept;
+	var vEParamsToSend;
+	var vModule;
+	var vEmailResult;
+
 	//Start modification to support batch script, if not batch then grab globals, if batch do not.
 	if (aa.env.getValue("eventType") != "Batch Process") {
-		// Begin Code needed to call master script functions ---------------------------------------------------
+		/* Begin Code needed to call master script functions ---------------------------------------------------*/
 		function getScriptText(vScriptName, servProvCode, useProductScripts) {
 			if (!servProvCode)
 				servProvCode = aa.getServiceProviderCode();
@@ -37,83 +58,90 @@ try {
 		eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", null, true));
 		eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, true));
 		eval(getScriptText("INCLUDES_CUSTOM", null, true));
+	} else {
+		var balanceDue;
+		var capDetailObjResult = aa.cap.getCapDetail(capId);
+		if (capDetailObjResult.getSuccess()) {
+			capDetail = capDetailObjResult.getOutput();
+			balanceDue = capDetail.getBalance();
+		}
 	}
-	//End Code needed to call master script functions -----------------------------------------------------
+	/* End Code needed to call master script functions -----------------------------------------------------*/
 
-	logDebug("1) Here in SEND_EMAIL_ASYNC. Event Type: " + aa.env.getValue("eventType"));
-	logDebug("2) sendEmailToAddresses: " + sendEmailToAddresses);
+	logDebug("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
+	logDebug("2) sendToEmailAddresses: " + sendToEmailAddresses);
 	logDebug("3) emailTemplate: " + emailTemplate);
 	logDebug("4) reportTemplate: " + reportTemplate);
-	logDebug("5) adHocTaskContactsList: " + adHocTaskContactsList);
+	logDebug("5) balanceDue: " + balanceDue);
+	
+	//Add standard email variables from record information
+	vEParams = addStdVarsToEmail(vEParams, capId);
 
-	//1. Handle report, if needed
-	if (reportTemplate != null && reportTemplate != '') {
-		//Generate report and get report name
-		if (vRParams == null) {
-			vRParams = aa.util.newHashtable();
-		}
-		var vReportName = generateReportForEmail_BCC(capId, reportTemplate, aa.getServiceProviderCode(), vRParams);
-		//logDebug("Generated report " + vReportName);
-		if (vReportName != null && vReportName != false) {
-			//Update the report name if one was provided.
-			if (vChangeReportName != null && vChangeReportName != "") {
-				logDebug("Renaming generated report document name from " + vReportName + " to " + vChangeReportName);
-				if (editDocumentName(vReportName, vChangeReportName) == true) {
-					vReportName = vChangeReportName;
-				}
-			}
-			//Get document deep link URL, add to email params
-			var vACAUrl = lookup("ACA_CONFIGS", "ACA_SITE");
-			vACAUrl = vACAUrl.substr(0, vACAUrl.toUpperCase().indexOf("/ADMIN"));
-			var vDocumentList = aa.document.getDocumentListByEntity(capId, "CAP").getOutput();
-			if (vDocumentList != null) {
-				for (y = 0; y < vDocumentList.size(); y++) {
-					var vDocumentModel = vDocumentList.get(y);
-					if (vDocumentModel.getFileName() == vReportName) {
-						//Add the document url to the email paramaters using the name: $$acaDocDownloadUrl$$
-						getACADocDownloadParam4Notification(vEParams, vACAUrl, vDocumentModel);
-						//logDebug("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
-						break;
-					}
-				}
+	//get From email from template configuration
+	if (emailTemplate && emailTemplate != '') {
+		tmpl = aa.communication.getNotificationTemplate(emailTemplate).getOutput();
+		mailFrom = tmpl.getEmailTemplateModel().getFrom();
+	}
+
+	//Get the capId type needed for the email function
+	capId4Email = null;
+	capId4Email = aa.cap.createCapIDScriptModel(capId.getID1(), capId.getID2(), capId.getID3());
+
+	//Get ACA Url
+	vACAUrl = lookup("ACA_CONFIGS", "ACA_SITE");
+	vACAUrl = vACAUrl.substr(0, vACAUrl.toUpperCase().indexOf("/ADMIN"));
+
+	//Generate report and get report name
+	vReportName = false;
+	if (reportTemplate != '' && reportTemplate != null) {
+		//generate and get report file
+		vReportName = generateReportForASyncEmail(capId, reportTemplate, aa.getServiceProviderCode(), vRParams);
+
+		//update the report name if one was provided. this will be used to update the saved report's name
+		if (vReportName != false && vChangeReportName != null && vChangeReportName != "") {
+			logDebug("Renaming generated report document name from " + vReportName + " to " + vChangeReportName);
+			if (editDocumentName(vReportName, vChangeReportName) == true) {
+				vReportName = vChangeReportName;
 			}
 		}
 	}
 
-	//2. Send Email, if needed
-	if (sendEmailToAddresses && sendEmailToAddresses != '') {
-		//Get From email from template configuration
-		var mailFrom;
-		if (emailTemplate && emailTemplate != '') {
-			var tmpl = aa.communication.getNotificationTemplate(emailTemplate).getOutput();
-			mailFrom = tmpl.getEmailTemplateModel().getFrom();
+	//Get document deep link URL
+	if (vReportName != null && vReportName != false) {
+		vDocumentList = aa.document.getDocumentListByEntity(capId, "CAP");
+		if (vDocumentList != null) {
+			vDocumentList = vDocumentList.getOutput();
 		}
-		logDebug("mailFrom = " + mailFrom);
+	}
 
-		//Add standard email variables from record information
-		vEParams = addStdVarsToEmail(vEParams, capId);
-
-		logDebug("added standard vars to email");
-
-		//Get the capId type needed for the email function
-		var capId4Email = aa.cap.createCapIDScriptModel(capId.getID1(), capId.getID2(), capId.getID3());
-
-		//Loop through the email addresses and send to each
-		var arEmails = sendEmailToAddresses.split(',');
-		logDebug("arEmails.length = " + arEmails.length);
-		var sentTo = []; //Prevent duplicates
-		for (var i = 0; i < arEmails.length; i++) {
-			var thisEmail = arEmails[i];
-			if (!exists(thisEmail.toUpperCase(), sentTo)) {
-				logDebug("SEND_EMAIL_ASYNC: " + capId.getCustomID() + ": Sending " + emailTemplate + " from " + mailFrom + " to " + thisEmail);
-				//**Note we won't have contact specific email parameters like contact name, since we have no contact object, just email address
-				//vEParamsToSend = vConObj.getEmailTemplateParams(vEParams);
-				logDebug("Email Sent: " + aa.document.sendEmailAndSaveAsDocument(mailFrom, thisEmail, "", emailTemplate, vEParams, capId4Email, null).getSuccess());
-				sentTo.push(thisEmail.toUpperCase());
+	if (vDocumentList != null) {
+		for (y = 0; y < vDocumentList.size(); y++) {
+			vDocumentModel = vDocumentList.get(y);
+			vDocumentName = vDocumentModel.getFileName();
+			if (vDocumentName == vReportName) {
+				//Add the document url to the email parameters using the name: $$acaDocDownloadUrl$$
+				getACADocDownloadParam4Notification(vEParams, vACAUrl, vDocumentModel);
+				logDebug("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
+				//aa.print("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
+				break;
 			}
 		}
 	}
 
+	//Loop through the contact objects with email and send to each
+	for (w in emailArray) {
+		conEmail = emailArray[w];
+		//get clean email parameters
+		vEParamsToSend = vEParams;
+		//Send email
+		vEmailResult = aa.document.sendEmailAndSaveAsDocument(mailFrom, conEmail, "", emailTemplate, vEParamsToSend, capId4Email, null);
+		if (vEmailResult.getSuccess()) { 
+			logDebug("SEND_EMAIL_ASYNC: " + capId.getCustomID() + ": Sending " + emailTemplate + " from " + mailFrom + " to " + conEmail);
+		} else {
+			logDebug("Failed to send email " + emailTemplate + " to " + conEmail + " from " + mailFrom);
+			logDebug("Error Message: " + vEmailResult.getErrorMessage());
+		}
+	}
 } catch (err) {
-	aa.sendMail("noreply@accela.com", "john@grayquarter.com", "", "Script Error from CLEaR: " + err.message, err.lineNumber + " : " + err.stack + "\r\n" + debug);
+	logDebug("Error in SEND_EMAIL_TO_CONTACTS_ASYNC : " + err.message);
 }
