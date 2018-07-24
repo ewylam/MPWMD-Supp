@@ -1,4 +1,4 @@
-function addAdHocTaskAssignDept_BCC(adHocProcess, adHocTask, adHocNote, vAsgnDept) {
+function addAdHocTaskAssignDept(adHocProcess, adHocTask, adHocNote, vAsgnDept) {
 //adHocProcess must be same as one defined in R1SERVER_CONSTANT
 //adHocTask must be same as Task Name defined in AdHoc Process
 //adHocNote can be variable
@@ -17,7 +17,7 @@ function addAdHocTaskAssignDept_BCC(adHocProcess, adHocTask, adHocNote, vAsgnDep
 
 	var departSplits = vAsgnDept.split("/");
 	var assignedUser = aa.person.getUser(null,null,null,null,departSplits[0],departSplits[1],departSplits[2],departSplits[3],departSplits[4],departSplits[5]).getOutput();
-	assignedUser.setDeptOfUser("BCC/" + vAsgnDept);
+	assignedUser.setDeptOfUser(aa.getServiceProviderCode() + "/" + vAsgnDept);
 	
 	var taskObj = aa.workflow.getTasks(thisCap).getOutput()[0].getTaskItem()
 	taskObj.setProcessCode(adHocProcess);

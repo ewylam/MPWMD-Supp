@@ -1,4 +1,4 @@
-function getContactName_BCC(vConObj) {
+function getContactName(vConObj) {
 	if (vConObj.people.getContactTypeFlag() == "organization") {
 		if (vConObj.people.getBusinessName() != null && vConObj.people.getBusinessName() != "")
 			return vConObj.people.getBusinessName();

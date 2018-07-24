@@ -1,4 +1,4 @@
-function generateReportForEmail_BCC(itemCap, reportName, module, parameters) {
+function generateReportForASyncEmail(itemCap, reportName, module, parameters) {
     //returns the report file which can be attached to an email.
     var vAltId;
 	var user = currentUserID;   // Setting the User Name

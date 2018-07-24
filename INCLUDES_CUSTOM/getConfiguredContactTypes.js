@@ -1,4 +1,4 @@
-function getContactTypes_BCC() {
+function getConfiguredContactTypes() {
 	var bizDomScriptResult = aa.bizDomain.getBizDomain('CONTACT TYPE');
 	var vContactTypeArray = [];
 	var i;

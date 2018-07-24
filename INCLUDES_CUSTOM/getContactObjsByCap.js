@@ -1,4 +1,4 @@
-function getContactObjsByCap_BCC(itemCap) {
+function getContactObjsByCap(itemCap) {
     // optional typeToLoad
     var typesToLoad = false;
     if (arguments.length == 2) {
