@@ -1,5 +1,5 @@
 try {
-	aa.print("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
+	//aa.print("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
 
 	//Get environmental variables pass into the script
 	var sendEmailToContactTypes = aa.env.getValue("sendEmailToContactTypes");
@@ -11,9 +11,9 @@ try {
 	var capId = aa.env.getValue("CapId");
 	var vAddAdHocTask = aa.env.getValue("vAddAdHocTask");
 
-	aa.print("2) sendEmailToContactTypes: " + sendEmailToContactTypes);
-	aa.print("3) emailTemplate: " + emailTemplate);
-	aa.print("4) reportTemplate: " + reportTemplate);
+	//aa.print("2) sendEmailToContactTypes: " + sendEmailToContactTypes);
+	//aa.print("3) emailTemplate: " + emailTemplate);
+	//aa.print("4) reportTemplate: " + reportTemplate);
 
 	//Set variables used in the script
 	var tmpl;
@@ -157,10 +157,10 @@ try {
 				}
 			}
 
-			logDebug("vAddAdHocTask: " + (vAddAdHocTask ? "YES" : "NO"));
-			logDebug("conEmail == null || conEmail == '': " + ((conEmail == null || conEmail == "") ? "YES" : "NO"));
-			logDebug("conType != Primary: " + ((conType != "Primary") ? "YES" : "NO"));
-			logDebug("!exists(vConRefSeqNbr, conObjNonEmailCompareArray): " + ((!exists(vConRefSeqNbr, conObjNonEmailCompareArray)) ? "YES" : "NO"));
+			//logDebug("vAddAdHocTask: " + (vAddAdHocTask ? "YES" : "NO"));
+			//logDebug("conEmail == null || conEmail == '': " + ((conEmail == null || conEmail == "") ? "YES" : "NO"));
+			//logDebug("conType != Primary: " + ((conType != "Primary") ? "YES" : "NO"));
+			//logDebug("!exists(vConRefSeqNbr, conObjNonEmailCompareArray): " + ((!exists(vConRefSeqNbr, conObjNonEmailCompareArray)) ? "YES" : "NO"));
 
 			//Save contact email to array (primary)
 			if (conEmail && conEmail != "" && conType == "Primary" && vConObj.capContact.getPrimaryFlag() == 'Y' && !exists(conEmail, conObjEmailCompareArray)) {
@@ -228,7 +228,7 @@ try {
 				//Add the document url to the email parameters using the name: $$acaDocDownloadUrl$$
 				getACADocDownloadParam4Notification(vEParams, vACAUrl, vDocumentModel);
 				logDebug("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
-				aa.print("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
+				//aa.print("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
 				break;
 			}
 		}
