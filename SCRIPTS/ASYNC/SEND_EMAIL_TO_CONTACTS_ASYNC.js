@@ -38,7 +38,7 @@ try {
 	var vDocumentNumber;
 	var vACAUrl;
 	var vDocumentACAUrl;
-	var vAdHocProcess = "ADHOC WORKFLOW";
+	var vAdHocProcess = "ADHOC_WORKFLOW";
 	var vAdHocTask = "Manual Notification";
 	var vAdHocNote;
 	var vAdHocAssignDept;
