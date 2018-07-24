@@ -1,111 +1,110 @@
 try {
-aa.print("1) Here in sendEmailToContactsASync: " + aa.env.getValue("eventType"));
+	aa.print("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
 
-//Get environmental variables pass into the script
-var sendEmailToContactTypes = aa.env.getValue("sendEmailToContactTypes");
-var emailTemplate = aa.env.getValue("emailTemplate");
-var vEParams = aa.env.getValue("vEParams");
-var reportTemplate = aa.env.getValue("reportTemplate");
-var vRParams = aa.env.getValue("vRParams");
-var vChangeReportName = aa.env.getValue("vChangeReportName");
-var capId = aa.env.getValue("CapId");
-var vAddAdHocTask = aa.env.getValue("vAddAdHocTask");
+	//Get environmental variables pass into the script
+	var sendEmailToContactTypes = aa.env.getValue("sendEmailToContactTypes");
+	var emailTemplate = aa.env.getValue("emailTemplate");
+	var vEParams = aa.env.getValue("vEParams");
+	var reportTemplate = aa.env.getValue("reportTemplate");
+	var vRParams = aa.env.getValue("vRParams");
+	var vChangeReportName = aa.env.getValue("vChangeReportName");
+	var capId = aa.env.getValue("CapId");
+	var vAddAdHocTask = aa.env.getValue("vAddAdHocTask");
 
-aa.print("2) sendEmailToContactTypes: " + sendEmailToContactTypes);
-aa.print("3) emailTemplate: " + emailTemplate);
-aa.print("4) reportTemplate: " + reportTemplate);
+	aa.print("2) sendEmailToContactTypes: " + sendEmailToContactTypes);
+	aa.print("3) emailTemplate: " + emailTemplate);
+	aa.print("4) reportTemplate: " + reportTemplate);
 
-//Set variables used in the script
-var tmpl;
-var conTypeArray = [];
-var conType;
-var validConTypes;
-var conObjEmailArray = [];
-var conObjNonEmailArray = [];
-var conObjEmailCompareArray = [];
-var conObjNonEmailCompareArray = [];
-var v = 0;
-var w = 0;
-var x = 0;
-var y = 0;
-var z = 0;
-var conEmail;
-var peopTemp;
-var vConObjArry;
-var vConObj;
-var vConRefSeqNbr;
-var vPrimaryContactOnly = false;
-var mailFrom;
-var capId4Email;
-var vReportName;
-var vDocumentList;
-var vDocumentModel;
-var vDocumentName;
-var vDocumentNumber;
-var vACAUrl;
-var vDocumentACAUrl;
-var vAdHocProcess = "ADHOC_WORKFLOW";
-var vAdHocTask = "Manual Notification";
-var vAdHocNote;
-var vAdHocAssignDept;
-var vEParamsToSend;
+	//Set variables used in the script
+	var tmpl;
+	var conTypeArray = [];
+	var conType;
+	var validConTypes;
+	var conObjEmailArray = [];
+	var conObjNonEmailArray = [];
+	var conObjEmailCompareArray = [];
+	var conObjNonEmailCompareArray = [];
+	var v = 0;
+	var w = 0;
+	var x = 0;
+	var y = 0;
+	var z = 0;
+	var conEmail;
+	var peopTemp;
+	var vConObjArry;
+	var vConObj;
+	var vConRefSeqNbr;
+	var vPrimaryContactOnly = false;
+	var mailFrom;
+	var capId4Email;
+	var vReportName;
+	var vDocumentList;
+	var vDocumentModel;
+	var vDocumentName;
+	var vDocumentNumber;
+	var vACAUrl;
+	var vDocumentACAUrl;
+	var vAdHocProcess = "ADHOC_WORKFLOW";
+	var vAdHocTask = "Manual Notification";
+	var vAdHocNote;
+	var vAdHocAssignDept;
+	var vEParamsToSend;
+	var vModule;
 
-//Start modification to support batch script, if not batch then grab globals, if batch do not.
-if (aa.env.getValue("eventType") != "Batch Process") {
-	/* Begin Code needed to call master script functions ---------------------------------------------------*/
-	function getScriptText(vScriptName, servProvCode, useProductScripts) {
-		if (!servProvCode)
-			servProvCode = aa.getServiceProviderCode();
-		vScriptName = vScriptName.toUpperCase();
-		var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();
-		try {
-			if (useProductScripts) {
-				var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(), vScriptName);
-			} else {
-				var emseScript = emseBiz.getScriptByPK(aa.getServiceProviderCode(), vScriptName, "ADMIN");
+	//Start modification to support batch script, if not batch then grab globals, if batch do not.
+	if (aa.env.getValue("eventType") != "Batch Process") {
+		/* Begin Code needed to call master script functions ---------------------------------------------------*/
+		function getScriptText(vScriptName, servProvCode, useProductScripts) {
+			if (!servProvCode)
+				servProvCode = aa.getServiceProviderCode();
+			vScriptName = vScriptName.toUpperCase();
+			var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();
+			try {
+				if (useProductScripts) {
+					var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(), vScriptName);
+				} else {
+					var emseScript = emseBiz.getScriptByPK(aa.getServiceProviderCode(), vScriptName, "ADMIN");
+				}
+				return emseScript.getScriptText() + "";
+			} catch (err) {
+				return "";
 			}
-			return emseScript.getScriptText() + "";
-		} catch (err) {
-			return "";
+		}
+		var SCRIPT_VERSION = 3.0;
+		aa.env.setValue("CurrentUserID", "ADMIN");
+		eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", null, true));
+		eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, true));
+		eval(getScriptText("INCLUDES_CUSTOM", null, true));
+	} else {
+		var balanceDue;
+		var capDetailObjResult = aa.cap.getCapDetail(capId);
+		if (capDetailObjResult.getSuccess()) {
+			capDetail = capDetailObjResult.getOutput();
+			balanceDue = capDetail.getBalance();
 		}
 	}
-	var SCRIPT_VERSION = 3.0;
-	aa.env.setValue("CurrentUserID", "ADMIN");
-	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", null, true));
-	eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, true));
-	eval(getScriptText("INCLUDES_CUSTOM", null, true));
-} else {
-	var balanceDue;
-	var capDetailObjResult = aa.cap.getCapDetail(capId);
-	if (capDetailObjResult.getSuccess()) {
-		capDetail = capDetailObjResult.getOutput();
-		balanceDue = capDetail.getBalance();
-	}
-}
-/* End Code needed to call master script functions -----------------------------------------------------*/
+	/* End Code needed to call master script functions -----------------------------------------------------*/
 
-logDebug("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
-logDebug("2) sendEmailToContactTypes: " + sendEmailToContactTypes);
-logDebug("3) emailTemplate: " + emailTemplate);
-logDebug("4) reportTemplate: " + reportTemplate);
-
-/* Begin SDOT work-around to prevent payment notices on auto-approved (paid) ACA submissions */
-
-if (reportTemplate == "Payment Reminder" && balanceDue == '0') {
-	logDebug("Cancelling sendEmailToContactsASync. Report is a Payment Reminder and balanceDue is 0.")
-} else {
+	logDebug("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
+	logDebug("2) sendEmailToContactTypes: " + sendEmailToContactTypes);
+	logDebug("3) emailTemplate: " + emailTemplate);
+	logDebug("4) reportTemplate: " + reportTemplate);
 	logDebug("5) balanceDue: " + balanceDue);
 	logDebug("6) vAddAdHocTask: " + vAddAdHocTask);
-	/* End SDOT work-around to prevent payment notices on auto-approved (paid) ACA submissions */
+	
 	//Get valid array of contact types
-	validConTypes = getContactTypes_BCC();
+	validConTypes = getConfiguredContactTypes();
 
 	//Add standard email variables from record information
 	vEParams = addStdVarsToEmail(vEParams, capId);
 
 	//Set Ad-Hoc Task Information
 	if (vAddAdHocTask) {
-		vAdHocAssignDept = "LICENSE/LICENSE/PROCESS/NA/NA/NA";
+		// Get department to assign to by module
+		vModule = getRecordsModule(capId);
+		if (vModule != null && vModule != "") {
+			vAdHocAssignDept = lookup("Manual_Notification_Assign_Dept", vModule);
+		}
 	}
 
 	//Check to see if provided contact type(s) is/are valid
@@ -138,11 +137,11 @@ if (reportTemplate == "Payment Reminder" && balanceDue == '0') {
 		conType = conTypeArray[z];
 		conEmail = null;
 		peopTemp = null;
-		logDebug("          Searching for " + conTypeArray[z]);
+		logDebug("Searching for " + conTypeArray[z]);
 		if (conType == "Primary") {
-			vConObjArry = getContactObjsByCap_BCC(capId);
+			vConObjArry = getContactObjsByCap(capId);
 		} else {
-			vConObjArry = getContactObjsByCap_BCC(capId, conTypeArray[z]);
+			vConObjArry = getContactObjsByCap(capId, conTypeArray[z]);
 		}
 		for (x in vConObjArry) {
 			vConObj = vConObjArry[x];
@@ -201,7 +200,7 @@ if (reportTemplate == "Payment Reminder" && balanceDue == '0') {
 	vReportName = false;
 	if (reportTemplate != '' && reportTemplate != null) {
 		//generate and get report file
-		vReportName = generateReportForEmail_BCC(capId, reportTemplate, aa.getServiceProviderCode(), vRParams);
+		vReportName = generateReportForASyncEmail(capId, reportTemplate, aa.getServiceProviderCode(), vRParams);
 
 		//update the report name if one was provided. this will be used to update the saved report's name
 		if (vReportName != false && vChangeReportName != null && vChangeReportName != "") {
@@ -225,7 +224,7 @@ if (reportTemplate == "Payment Reminder" && balanceDue == '0') {
 			vDocumentModel = vDocumentList.get(y);
 			vDocumentName = vDocumentModel.getFileName();
 			if (vDocumentName == vReportName) {
-				//Add the document url to the email paramaters using the name: $$acaDocDownloadUrl$$
+				//Add the document url to the email parameters using the name: $$acaDocDownloadUrl$$
 				getACADocDownloadParam4Notification(vEParams, vACAUrl, vDocumentModel);
 				logDebug("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
 				aa.print("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
@@ -241,12 +240,12 @@ if (reportTemplate == "Payment Reminder" && balanceDue == '0') {
 		if (vConObj) {
 			conEmail = vConObj.people.getEmail();
 		}
-		//get clean email paramaters
+		//get clean email parameters
 		vEParamsToSend = vEParams;
-		//Set contact specific email paramaters
+		//Set contact specific email parameters
 		vEParamsToSend = vConObj.getEmailTemplateParams(vEParams);
-		//Set contact Name paramaters
-		addParameter(vEParamsToSend, "$$FullNameBusName$$", getContactName_BCC(vConObj));
+		//Set contact Name parameters
+		addParameter(vEParamsToSend, "$$FullNameBusName$$", getContactName(vConObj));
 		//Add Contact Trade Name
 		if (vConObj.people.getTradeName() != null) {
 			addParameter(vEParamsToSend, "$$TradeName$$", vConObj.people.getTradeName())
@@ -260,9 +259,9 @@ if (reportTemplate == "Payment Reminder" && balanceDue == '0') {
 	for (v in conObjNonEmailArray) {
 		vConObj = conObjNonEmailArray[v];
 		if (v == 0) {
-			vAdHocNote = vConObj.type + " - " + getContactName_BCC(vConObj);
+			vAdHocNote = vConObj.type + " - " + getContactName(vConObj);
 		} else {
-			vAdHocNote = vAdHocNote + ", " + vConObj.type + " - " + getContactName_BCC(vConObj);
+			vAdHocNote = vAdHocNote + ", " + vConObj.type + " - " + getContactName(vConObj);
 		}
 	}
 	//Add Email Template to Note
@@ -273,9 +272,8 @@ if (reportTemplate == "Payment Reminder" && balanceDue == '0') {
 	//Add Ad-Hoc if needed
 	if (vAddAdHocTask && conObjNonEmailArray.length > 0) {
 		logDebug("Adding adHoc Task for " + vAdHocNote);
-		addAdHocTaskAssignDept_BCC(vAdHocProcess, vAdHocTask, vAdHocNote, vAdHocAssignDept);
+		addAdHocTaskAssignDept(vAdHocProcess, vAdHocTask, vAdHocNote, vAdHocAssignDept);
 	}
-	/* Begin SDOT work-around to prevent payment notices on auto-approved (paid) ACA submissions */
+} catch (err) {
+	logDebug("Error in SEND_EMAIL_TO_CONTACTS_ASYNC : " + err.message);
 }
-/* End SDOT work-around to prevent payment notices on auto-approved (paid) ACA submissions */
-} catch (err) { logDebug("Error in SEND_EMAIL_TO_CONTACTS_ASYNC : " + err.message); }
