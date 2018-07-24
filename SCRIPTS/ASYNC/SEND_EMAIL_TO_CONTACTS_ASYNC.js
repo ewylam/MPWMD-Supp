@@ -50,6 +50,7 @@ try {
 	var vAdHocAssignDept;
 	var vEParamsToSend;
 	var vModule;
+	var vEmailResult;
 
 	//Start modification to support batch script, if not batch then grab globals, if batch do not.
 	if (aa.env.getValue("eventType") != "Batch Process") {
@@ -251,8 +252,13 @@ try {
 			addParameter(vEParamsToSend, "$$TradeName$$", vConObj.people.getTradeName())
 		}
 		//Send email
-		logDebug("Email Sent: " + aa.document.sendEmailAndSaveAsDocument(mailFrom, conEmail, "", emailTemplate, vEParamsToSend, capId4Email, null).getSuccess());
-		logDebug("SEND_EMAIL_TO_CONTACTS_ASYNC: " + capId.getCustomID() + ": Sending " + emailTemplate + " from " + mailFrom + " to " + conEmail);
+		vEmailResult = aa.document.sendEmailAndSaveAsDocument(mailFrom, conEmail, "", emailTemplate, vEParamsToSend, capId4Email, null);
+		if (vEmailResult.getSuccess()) { 
+			logDebug("SEND_EMAIL_TO_CONTACTS_ASYNC: " + capId.getCustomID() + ": Sending " + emailTemplate + " from " + mailFrom + " to " + conEmail);
+		} else {
+			logDebug("Failed to send email " + emailTemplate + " to " + conEmail + " from " + mailFrom);
+			logDebug("Error Message: " + vEmailResult.getErrorMessage());
+		}
 	}
 
 	//Loop through the contact objects without email and update the Ad-Hoc Note
