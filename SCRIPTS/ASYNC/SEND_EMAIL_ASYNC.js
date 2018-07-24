@@ -1,6 +1,6 @@
 try {
 	//Get environmental variables passed into the script
-	var sendToEmailAddresses = aa.env.getValue("sendEmailToContactTypes");
+	var sendToEmailAddresses = aa.env.getValue("sendToEmailAddresses");
 	var emailTemplate = aa.env.getValue("emailTemplate");
 	var vEParams = aa.env.getValue("vEParams");
 	var reportTemplate = aa.env.getValue("reportTemplate");
