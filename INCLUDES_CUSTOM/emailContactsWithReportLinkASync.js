@@ -1,9 +1,9 @@
 /*
 emailContactsWithReportLinkASync
 Required Params:
-	sendEmailToContactTypes = comma-separated list of contact types to send to, no spaces. "All" will send to all contacts
-	emailTemplate = notification template name
-Optional Params: (use blank string, not null, if missing!)
+	pSendEmailToContactTypes = comma-separated list of contact types to send to, no spaces. "All" will send to all contacts. "Primary" will send to the contact with the primary flag enabled.
+	pEmailTemplate = notification template name
+Optional Params:
 	vEParams = parameters to be filled in notification template
 	reportTemplate = if provided, will run report and attach (per report manager settings) and include a link to it in the email
 	vRParams  = report parameters
@@ -13,36 +13,57 @@ Optional Params: (use blank string, not null, if missing!)
 Sample: 
 	emailContactsWithReportLinkASync('OWNER APPLICANT', 'DPD_WAITING_FOR_PAYMENT'); //minimal
 	emailContactsWithReportLinkASync('OWNER APPLICANT,BUSINESS OWNER', 'DPD_PERMIT_ISSUED', eParamHashtable, 'Construction Permit', rParamHashtable, 'Y', 'New Report Name'); //full
- */
-function emailContactsWithReportLinkASync(sendEmailToContactTypes, emailTemplate, vEParams, reportTemplate, vRParams) {
-	var vChangeReportName = "";
+*/
+function emailContactsWithReportLinkASync(pSendEmailToContactTypes, pEmailTemplate, pEParams, pReportTemplate, pRParams, pAddAdHocTask, pChangeReportName) {
 	var conTypeArray = [];
 	var validConTypes = getConfiguredContactTypes();
 	var x = 0;
 	var vConType;
 	var vAsyncScript = "SEND_EMAIL_TO_CONTACTS_ASYNC";
 	var envParameters = aa.util.newHashMap();
+		
+	//Initialize optional parameters	
+	var vEParams = aa.util.newHashtable();
+	var vReportTemplate = null;
+	var vRParams = aa.util.newHashtable();
 	var vAddAdHocTask = true;
+	var vChangeReportName = "";	
 
-	//Ad-hoc Task Requested
-	if (arguments.length > 5) {
-		vAddAdHocTask = arguments[5]; // use provided preference for adding an ad-hoc task for manual notification
-		if (vAddAdHocTask == "N") {
-			logDebug("No adhoc task");
+	if (pEParams != undefined) {
+		logDebug("pEParams is defined");
+		vEParams = pEParams;
+	}
+	
+	if (pReportTemplate != undefined) {
+		logDebug("pReportTemplate is defined");
+		vReportTemplate = pReportTemplate;
+	}
+
+	if (pRParams != undefined) {
+		logDebug("pRParams is defined");
+		vRParams = pRParams;
+	}
+	
+	if (pAddAdHocTask != undefined) {
+		logDebug("pAddAdHocTask is defined");
+		if (pAddAdHocTask == "N") {
+			vAddAdHocTask = false;
+		} else if (pAddAdHocTask == false) {
 			vAddAdHocTask = false;
 		}
 	}
-
-	//Change Report Name Requested
-	if (arguments.length > 6) {
-		vChangeReportName = arguments[6]; // use provided report name
+	
+	if (pChangeReportName != undefined) {
+		logDebug("pChangeReportName is defined");
+		vChangeReportName = pChangeReportName;
 	}
-
-	logDebug("Provided contact types to send to: " + sendEmailToContactTypes);
+	
+	
+	logDebug("Provided contact types to send to: " + pSendEmailToContactTypes);
 
 	//Check to see if provided contact type(s) is/are valid
-	if (sendEmailToContactTypes != "All" && sendEmailToContactTypes != null && sendEmailToContactTypes != '') {
-		conTypeArray = sendEmailToContactTypes.split(",");
+	if (pSendEmailToContactTypes != "All" && pSendEmailToContactTypes != null && pSendEmailToContactTypes != '') {
+		conTypeArray = pSendEmailToContactTypes.split(",");
 	}
 	for (x in conTypeArray) {
 		//check all that are not "Primary"
@@ -53,20 +74,20 @@ function emailContactsWithReportLinkASync(sendEmailToContactTypes, emailTemplate
 		}
 	}
 	//Check if any types remain. If not, don't continue processing
-	if ((sendEmailToContactTypes != "All" && sendEmailToContactTypes != null && sendEmailToContactTypes != '') && conTypeArray.length <= 0) {
+	if ((pSendEmailToContactTypes != "All" && pSendEmailToContactTypes != null && pSendEmailToContactTypes != '') && conTypeArray.length <= 0) {
 		logDebug(vConType + " is not a valid contact type. No actions will be taken for this type.");
 		return false;
-	} else if ((sendEmailToContactTypes != "All" && sendEmailToContactTypes != null && sendEmailToContactTypes != '') && conTypeArray.length > 0) {
-		sendEmailToContactTypes = conTypeArray.toString();
+	} else if ((pSendEmailToContactTypes != "All" && pSendEmailToContactTypes != null && pSendEmailToContactTypes != '') && conTypeArray.length > 0) {
+		pSendEmailToContactTypes = conTypeArray.toString();
 	}
 
-	logDebug("Validated contact types to send to: " + sendEmailToContactTypes);
+	logDebug("Validated contact types to send to: " + pSendEmailToContactTypes);
 	
 	//Save variables to the hash table and call sendEmailASync script. This allows for the email to contain an ACA deep link for the document
-	envParameters.put("sendEmailToContactTypes", sendEmailToContactTypes);
-	envParameters.put("emailTemplate", emailTemplate);
+	envParameters.put("sendEmailToContactTypes", pSendEmailToContactTypes);
+	envParameters.put("emailTemplate", pEmailTemplate);
 	envParameters.put("vEParams", vEParams);
-	envParameters.put("reportTemplate", reportTemplate);
+	envParameters.put("reportTemplate", vReportTemplate);
 	envParameters.put("vRParams", vRParams);
 	envParameters.put("vChangeReportName", vChangeReportName);
 	envParameters.put("CapId", capId);
@@ -75,10 +96,10 @@ function emailContactsWithReportLinkASync(sendEmailToContactTypes, emailTemplate
 	//Start modification to support batch script
 	var vEvntTyp = aa.env.getValue("eventType");
 	if (vEvntTyp == "Batch Process") {
-		aa.env.setValue("sendEmailToContactTypes", sendEmailToContactTypes);
-		aa.env.setValue("emailTemplate", emailTemplate);
+		aa.env.setValue("sendEmailToContactTypes", pSendEmailToContactTypes);
+		aa.env.setValue("emailTemplate", pEmailTemplate);
 		aa.env.setValue("vEParams", vEParams);
-		aa.env.setValue("reportTemplate", reportTemplate);
+		aa.env.setValue("reportTemplate", vReportTemplate);
 		aa.env.setValue("vRParams", vRParams);
 		aa.env.setValue("vChangeReportName", vChangeReportName);
 		aa.env.setValue("CapId", capId);
