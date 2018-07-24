@@ -1,7 +1,5 @@
 try {
-	//aa.print("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
-
-	//Get environmental variables pass into the script
+	//Get environmental variables passed into the script
 	var sendEmailToContactTypes = aa.env.getValue("sendEmailToContactTypes");
 	var emailTemplate = aa.env.getValue("emailTemplate");
 	var vEParams = aa.env.getValue("vEParams");
@@ -10,10 +8,6 @@ try {
 	var vChangeReportName = aa.env.getValue("vChangeReportName");
 	var capId = aa.env.getValue("CapId");
 	var vAddAdHocTask = aa.env.getValue("vAddAdHocTask");
-
-	//aa.print("2) sendEmailToContactTypes: " + sendEmailToContactTypes);
-	//aa.print("3) emailTemplate: " + emailTemplate);
-	//aa.print("4) reportTemplate: " + reportTemplate);
 
 	//Set variables used in the script
 	var tmpl;
@@ -272,8 +266,6 @@ try {
 	}
 	//Add Email Template to Note
 	vAdHocNote = emailTemplate + ", " + vAdHocNote;
-
-	logDebug("Create AddHocTask: " + vAddAdHocTask);
 
 	//Add Ad-Hoc if needed
 	if (vAddAdHocTask && conObjNonEmailArray.length > 0) {

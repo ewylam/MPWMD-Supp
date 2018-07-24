@@ -66,7 +66,6 @@
 */
 
 function contactObj(ccsm)  {
-logDebug("ETW: new 9.0 contactObj function.");
     this.people = null;         // for access to the underlying data
     this.capContact = null;     // for access to the underlying data
     this.capContactScript = null;   // for access to the underlying data
