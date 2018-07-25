@@ -34,7 +34,7 @@ try {
 	var vReportName;
 	var vReportNameString;
 	var vExtStart;
-	var vFileExtension = "";	
+	var vFileExtension = "";
 	var vDocumentList;
 	var vDocumentModel;
 	var vDocumentName;
@@ -198,14 +198,11 @@ try {
 		if (vReportName != false && vChangeReportName != null && vChangeReportName != "") {
 			vReportNameString = vReportName + "";
 			vExtStart = vReportNameString.indexOf(".");
-				logDebug("vExtStart: " + vExtStart);
-				logDebug("vReportNameString.length: " + vReportNameString.length);
-				if (vExtStart != -1) {
-					vFileExtension = vReportNameString.substr(vExtStart,vReportNameString.length);
-					vChangeReportName = vChangeReportName + vFileExtension;
-					logDebug("vChangeReportName: " + vFileExtension);
-				}			
-			
+			if (vExtStart != -1) {
+				vFileExtension = vReportNameString.substr(vExtStart, vReportNameString.length);
+				vChangeReportName = vChangeReportName + vFileExtension;
+			}
+
 			if (editDocumentName(vReportName, vChangeReportName) == true) {
 				vReportName = vChangeReportName;
 			}
