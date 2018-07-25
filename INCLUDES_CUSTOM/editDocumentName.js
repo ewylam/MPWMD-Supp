@@ -4,6 +4,8 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 	var y;
 	var vDocumentModel;
 	var vDocumentName;
+	var vExtStart;
+	var vFileExtension = "";
 	var vSaveResult;
 	
 	vDocumentList = aa.document.getDocumentListByEntity(capId, "CAP");
@@ -19,6 +21,11 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 			vDocumentModel = vDocumentList.get(y);
 			vDocumentName = vDocumentModel.getFileName();
 			if (vDocumentName == vOrgDocumentName) {
+				vExtStart = vDocumentName.indexOf(".");
+				if (vExtStart != -1) {
+					vFileExtension = vDocumentName.substr(vExtStart,vOrgName.length);
+					vNewDocumentName = vNewDocumentName + vFileExtension;
+				}
 				//edit document name in accela
 				vDocumentModel.setFileName(vNewDocumentName);
 				vSaveResult = aa.document.updateDocument(vDocumentModel);
