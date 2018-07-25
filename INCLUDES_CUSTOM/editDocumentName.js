@@ -23,7 +23,7 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 			if (vDocumentName == vOrgDocumentName) {
 				vExtStart = vDocumentName.indexOf(".");
 				if (vExtStart != -1) {
-					vFileExtension = vDocumentName.substr(vExtStart,vOrgName.length);
+					vFileExtension = vDocumentName.substr(vExtStart,vDocumentName.length);
 					vNewDocumentName = vNewDocumentName + vFileExtension;
 				}
 				//edit document name in accela
