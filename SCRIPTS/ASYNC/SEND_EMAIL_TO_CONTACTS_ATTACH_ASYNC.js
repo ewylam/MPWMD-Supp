@@ -32,6 +32,9 @@ try {
 	var mailFrom;
 	var capId4Email;
 	var vReportName;
+	var vReportNameString;
+	var vExtStart;
+	var vFileExtension = "";	
 	var vDocumentList;
 	var vDocumentModel;
 	var vDocumentName;
@@ -193,6 +196,16 @@ try {
 
 		//update the report name if one was provided. this will be used to update the saved report's name
 		if (vReportName != false && vChangeReportName != null && vChangeReportName != "") {
+			vReportNameString = vReportName + "";
+			vExtStart = vReportNameString.indexOf(".");
+				logDebug("vExtStart: " + vExtStart);
+				logDebug("vReportNameString.length: " + vReportNameString.length);
+				if (vExtStart != -1) {
+					vFileExtension = vReportNameString.substr(vExtStart,vReportNameString.length);
+					vChangeReportName = vChangeReportName + vFileExtension;
+					logDebug("vChangeReportName: " + vFileExtension);
+				}			
+			
 			if (editDocumentName(vReportName, vChangeReportName) == true) {
 				vReportName = vChangeReportName;
 			}
