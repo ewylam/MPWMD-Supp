@@ -223,13 +223,10 @@ try {
 			vDocumentModel = vDocumentList.get(y);
 			vDocumentName = vDocumentModel.getFileName();
 			if (vDocumentName == vReportName) {
-				logDebug("Attempting to include file");
 				vDownloadResult = aa.document.downloadFile2Disk(vDocumentModel, vDocumentModel.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
 				if (vDownloadResult.getSuccess()) {
 					vFile = vDownloadResult.getOutput();
-					logDebug("File: " + vFile);
 					if (vFile != null && vFile != false && vFile != "") {
-						logDebug("Including file: " + vFile);
 						vFileArray.push(vFile);
 					}
 				}
