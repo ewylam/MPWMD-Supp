@@ -25,6 +25,7 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 				if (vExtStart != -1) {
 					vFileExtension = vDocumentName.substr(vExtStart,vDocumentName.length);
 					vNewDocumentName = vNewDocumentName + vFileExtension;
+					logDebug("Changing File Name to : " + vNewDocumentName);
 				}
 				//edit document name in accela
 				vDocumentModel.setFileName(vNewDocumentName);
