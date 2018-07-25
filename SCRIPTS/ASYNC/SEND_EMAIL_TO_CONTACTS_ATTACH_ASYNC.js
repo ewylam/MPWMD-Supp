@@ -226,6 +226,7 @@ try {
 				vDocumentBusinessScript = aa.proxyInvoker.newInstance("com.accela.aa.ads.ads.DocumentBusiness").getOutput()
 				vFile = vDocumentBusinessScript.getDocumentContent(aa.getServiceProviderCode(), vDocumentNumber);
 				if (vFile != null && vFile != false && vFile != "") {
+					logDebug("Including file: " + vFile);
 					vFileArray.push(vFile);
 				}
 				break;
