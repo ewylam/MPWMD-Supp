@@ -4,6 +4,7 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 	var y;
 	var vDocumentModel;
 	var vDocumentName;
+	var vDocumentNameString = "";
 	var vExtStart;
 	var vFileExtension = "";
 	var vSaveResult;
@@ -20,13 +21,14 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 		for (y = 0; y < vDocumentList.size(); y++) {
 			vDocumentModel = vDocumentList.get(y);
 			vDocumentName = vDocumentModel.getFileName();
-			logDebug("vDocumentName: " + vDocumentName);
-			if (vDocumentName == vOrgDocumentName) {
-				vExtStart = vDocumentName.indexOf(".");
+			vDocumentNameString = vDocumentName + "";
+			logDebug("vDocumentNameString: " + vDocumentNameString);
+			if (vDocumentNameString == vOrgDocumentName) {
+				vExtStart = vDocumentNameString.indexOf(".");
 				logDebug("vExtStart: " + vExtStart);
-				logDebug("vDocumentName.length: " + vDocumentName.length);
+				logDebug("vDocumentNameString.length: " + vDocumentNameString.length);
 				if (vExtStart != -1) {
-					vFileExtension = vDocumentName.substr(vExtStart,vDocumentName.length);
+					vFileExtension = vDocumentNameString.substr(vExtStart,vDocumentNameString.length);
 					logDebug("vFileExtension: " + vFileExtension);
 				}
 				//edit document name in accela
