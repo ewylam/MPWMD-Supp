@@ -41,7 +41,6 @@ try {
 	var vDownloadResult;
 	var vFile;
 	var vFileArray = [];
-	var vACAUrl;
 	var vAdHocProcess = "ADHOC_WORKFLOW";
 	var vAdHocTask = "Manual Notification";
 	var vAdHocNote;
@@ -155,11 +154,6 @@ try {
 				}
 			}
 
-			//logDebug("vAddAdHocTask: " + (vAddAdHocTask ? "YES" : "NO"));
-			//logDebug("conEmail == null || conEmail == '': " + ((conEmail == null || conEmail == "") ? "YES" : "NO"));
-			//logDebug("conType != Primary: " + ((conType != "Primary") ? "YES" : "NO"));
-			//logDebug("!exists(vConRefSeqNbr, conObjNonEmailCompareArray): " + ((!exists(vConRefSeqNbr, conObjNonEmailCompareArray)) ? "YES" : "NO"));
-
 			//Save contact email to array (primary)
 			if (conEmail && conEmail != "" && conType == "Primary" && vConObj.capContact.getPrimaryFlag() == 'Y' && !exists(conEmail, conObjEmailCompareArray)) {
 				logDebug("          Adding (Primary) " + conEmail + " to email array");
@@ -190,10 +184,6 @@ try {
 	//Get the capId type needed for the email function
 	capId4Email = null;
 	capId4Email = aa.cap.createCapIDScriptModel(capId.getID1(), capId.getID2(), capId.getID3());
-
-	//Get ACA Url
-	vACAUrl = lookup("ACA_CONFIGS", "ACA_SITE");
-	vACAUrl = vACAUrl.substr(0, vACAUrl.toUpperCase().indexOf("/ADMIN"));
 
 	//Generate report and get report name
 	vReportName = false;

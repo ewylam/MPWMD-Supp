@@ -5,7 +5,7 @@ Required Params:
 	pEmailTemplate = notification template name
 Optional Params:
 	vEParams = parameters to be filled in notification template
-	reportTemplate = if provided, will run report and include as an attachment to the email. If configured to do so in report manager the report will save to EDMS
+	reportTemplate = if provided, will run report and attach (per report manager settings) and include as an attachment in the email
 	vRParams  = report parameters
 	vAddAdHocTask = Y/N for adding manual notification task when no email exists (Assigns the task to the department configured by module in the "Manual_Notification_Assign_Dept" standard choice)
 	changeReportName = if using reportTemplate, will change the title of the document produced by the report from its default
