@@ -20,8 +20,10 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 		for (y = 0; y < vDocumentList.size(); y++) {
 			vDocumentModel = vDocumentList.get(y);
 			vDocumentName = vDocumentModel.getFileName();
+			logDebug("vDocumentName: " + vDocumentName);
 			if (vDocumentName == vOrgDocumentName) {
 				vExtStart = vDocumentName.indexOf(".");
+				logDebug("vExtStart: " + vExtStart);
 				if (vExtStart != -1) {
 					vFileExtension = vDocumentName.substr(vExtStart,vDocumentName.length);
 					logDebug("vFileExtension: " + vFileExtension);
@@ -29,7 +31,8 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 				//edit document name in accela
 				vDocumentModel.setFileName(vNewDocumentName + vFileExtension);
 				vSaveResult = aa.document.updateDocument(vDocumentModel);
-				if (vSaveResult.getSuccess()) {			
+				if (vSaveResult.getSuccess()) {
+					logDebug("Renamed document " + vDocumentName + " to " + vNewDocumentName + vFileExtension);					
 					return true;
 				} else {
 					logDebug("Failed to update report name");

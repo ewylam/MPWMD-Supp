@@ -95,7 +95,6 @@ try {
 
 		//update the report name if one was provided. this will be used to update the saved report's name
 		if (vReportName != false && vChangeReportName != null && vChangeReportName != "") {
-			logDebug("Renaming generated report document name from " + vReportName + " to " + vChangeReportName);
 			if (editDocumentName(vReportName, vChangeReportName) == true) {
 				vReportName = vChangeReportName;
 			}
