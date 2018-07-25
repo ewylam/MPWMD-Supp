@@ -24,11 +24,10 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 				vExtStart = vDocumentName.indexOf(".");
 				if (vExtStart != -1) {
 					vFileExtension = vDocumentName.substr(vExtStart,vDocumentName.length);
-					vNewDocumentName = vNewDocumentName + vFileExtension;
-					logDebug("Changing File Name to : " + vNewDocumentName);
+					logDebug("vFileExtension: " + vFileExtension);
 				}
 				//edit document name in accela
-				vDocumentModel.setFileName(vNewDocumentName);
+				vDocumentModel.setFileName(vNewDocumentName + vFileExtension);
 				vSaveResult = aa.document.updateDocument(vDocumentModel);
 				if (vSaveResult.getSuccess()) {			
 					return true;
