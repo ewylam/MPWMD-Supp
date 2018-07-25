@@ -222,9 +222,11 @@ try {
 			vDocumentModel = vDocumentList.get(y);
 			vDocumentName = vDocumentModel.getFileName();
 			if (vDocumentName == vReportName) {
+				logDebug("Attempting to include file");
 				vDocumentNumber = vDocumentModel.getDocumentNo();
 				vDocumentBusinessScript = aa.proxyInvoker.newInstance("com.accela.aa.ads.ads.DocumentBusiness").getOutput()
 				vFile = vDocumentBusinessScript.getDocumentContent(aa.getServiceProviderCode(), vDocumentNumber);
+				logDebug("File: " + vFile);
 				if (vFile != null && vFile != false && vFile != "") {
 					logDebug("Including file: " + vFile);
 					vFileArray.push(vFile);
