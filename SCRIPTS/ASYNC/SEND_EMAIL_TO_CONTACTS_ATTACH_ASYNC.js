@@ -35,12 +35,13 @@ try {
 	var vDocumentList;
 	var vDocumentModel;
 	var vDocumentName;
-	var vDocumentNumber;
-	var vDocumentBusinessScript;
+	var useDefaultUserPassword = true; //If useDefaultUserPassword = true, there is no need to set user name & password, but if useDefaultUserPassword = false, we need define EDMS user name & password.
+	var EMDSUsername = null;
+	var EMDSPassword = null;
+	var vDownloadResult;
 	var vFile;
 	var vFileArray = [];
 	var vACAUrl;
-	var vDocumentACAUrl;
 	var vAdHocProcess = "ADHOC_WORKFLOW";
 	var vAdHocTask = "Manual Notification";
 	var vAdHocNote;
@@ -89,7 +90,7 @@ try {
 	logDebug("4) reportTemplate: " + reportTemplate);
 	logDebug("5) balanceDue: " + balanceDue);
 	logDebug("6) vAddAdHocTask: " + vAddAdHocTask);
-	
+
 	//Get valid array of contact types
 	validConTypes = getConfiguredContactTypes();
 
@@ -223,13 +224,14 @@ try {
 			vDocumentName = vDocumentModel.getFileName();
 			if (vDocumentName == vReportName) {
 				logDebug("Attempting to include file");
-				vDocumentNumber = vDocumentModel.getDocumentNo();
-				vDocumentBusinessScript = aa.proxyInvoker.newInstance("com.accela.aa.ads.ads.DocumentBusiness").getOutput()
-				vFile = vDocumentBusinessScript.getDocumentContent(aa.getServiceProviderCode(), vDocumentNumber);
-				logDebug("File: " + vFile);
-				if (vFile != null && vFile != false && vFile != "") {
-					logDebug("Including file: " + vFile);
-					vFileArray.push(vFile);
+				vDownloadResult = aa.document.downloadFile2Disk(vDocumentModel, vDocumentModel.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				if (vDownloadResult.getSuccess()) {
+					vFile = vDownloadResult.getOutput();
+					logDebug("File: " + vFile);
+					if (vFile != null && vFile != false && vFile != "") {
+						logDebug("Including file: " + vFile);
+						vFileArray.push(vFile);
+					}
 				}
 				break;
 			}
@@ -255,7 +257,7 @@ try {
 		}
 		//Send email
 		vEmailResult = aa.document.sendEmailAndSaveAsDocument(mailFrom, conEmail, "", emailTemplate, vEParamsToSend, capId4Email, vFileArray);
-		if (vEmailResult.getSuccess()) { 
+		if (vEmailResult.getSuccess()) {
 			logDebug("SEND_EMAIL_TO_CONTACTS_ATTACH_ASYNC: " + capId.getCustomID() + ": Sending " + emailTemplate + " from " + mailFrom + " to " + conEmail);
 		} else {
 			logDebug("Failed to send email " + emailTemplate + " to " + conEmail + " from " + mailFrom);
