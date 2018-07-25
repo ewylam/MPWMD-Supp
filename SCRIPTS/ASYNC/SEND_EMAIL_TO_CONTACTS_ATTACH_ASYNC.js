@@ -36,6 +36,9 @@ try {
 	var vDocumentModel;
 	var vDocumentName;
 	var vDocumentNumber;
+	var vDocumentBusinessScript;
+	var vFile;
+	var vFileArray = [];
 	var vACAUrl;
 	var vDocumentACAUrl;
 	var vAdHocProcess = "ADHOC_WORKFLOW";
@@ -80,7 +83,7 @@ try {
 	}
 	/* End Code needed to call master script functions -----------------------------------------------------*/
 
-	logDebug("1) Here in SEND_EMAIL_TO_CONTACTS_ASYNC: " + aa.env.getValue("eventType"));
+	logDebug("1) Here in SEND_EMAIL_TO_CONTACTS_ATTACH_ASYNC: " + aa.env.getValue("eventType"));
 	logDebug("2) sendEmailToContactTypes: " + sendEmailToContactTypes);
 	logDebug("3) emailTemplate: " + emailTemplate);
 	logDebug("4) reportTemplate: " + reportTemplate);
@@ -206,7 +209,7 @@ try {
 		}
 	}
 
-	//Get document deep link URL
+	//Get document file for email
 	if (vReportName != null && vReportName != false) {
 		vDocumentList = aa.document.getDocumentListByEntity(capId, "CAP");
 		if (vDocumentList != null) {
@@ -219,10 +222,12 @@ try {
 			vDocumentModel = vDocumentList.get(y);
 			vDocumentName = vDocumentModel.getFileName();
 			if (vDocumentName == vReportName) {
-				//Add the document url to the email parameters using the name: $$acaDocDownloadUrl$$
-				getACADocDownloadParam4Notification(vEParams, vACAUrl, vDocumentModel);
-				logDebug("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
-				//aa.print("including document url: " + vEParams.get('$$acaDocDownloadUrl$$'));
+				vDocumentNumber = vDocumentModel.getDocumentNo();
+				vDocumentBusinessScript = aa.proxyInvoker.newInstance("com.accela.aa.ads.ads.DocumentBusiness").getOutput()
+				vFile = vDocumentBusinessScript.getDocumentContent(aa.getServiceProviderCode(), vDocumentNumber);
+				if (vFile != null && vFile != false && vFile != "") {
+					vFileArray.push(vFile);
+				}
 				break;
 			}
 		}
@@ -246,9 +251,9 @@ try {
 			addParameter(vEParamsToSend, "$$TradeName$$", vConObj.people.getTradeName())
 		}
 		//Send email
-		vEmailResult = aa.document.sendEmailAndSaveAsDocument(mailFrom, conEmail, "", emailTemplate, vEParamsToSend, capId4Email, null);
+		vEmailResult = aa.document.sendEmailAndSaveAsDocument(mailFrom, conEmail, "", emailTemplate, vEParamsToSend, capId4Email, vFileArray);
 		if (vEmailResult.getSuccess()) { 
-			logDebug("SEND_EMAIL_TO_CONTACTS_ASYNC: " + capId.getCustomID() + ": Sending " + emailTemplate + " from " + mailFrom + " to " + conEmail);
+			logDebug("SEND_EMAIL_TO_CONTACTS_ATTACH_ASYNC: " + capId.getCustomID() + ": Sending " + emailTemplate + " from " + mailFrom + " to " + conEmail);
 		} else {
 			logDebug("Failed to send email " + emailTemplate + " to " + conEmail + " from " + mailFrom);
 			logDebug("Error Message: " + vEmailResult.getErrorMessage());
@@ -273,5 +278,5 @@ try {
 		addAdHocTaskAssignDept(vAdHocProcess, vAdHocTask, vAdHocNote, vAdHocAssignDept);
 	}
 } catch (err) {
-	logDebug("Error in SEND_EMAIL_TO_CONTACTS_ASYNC : " + err.message);
+	logDebug("Error in SEND_EMAIL_TO_CONTACTS_ATTACH_ASYNC : " + err.message);
 }

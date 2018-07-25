@@ -1,25 +1,25 @@
 /*
-emailContactsWithReportLinkASync
+emailContactsWithReportAttachASync
 Required Params:
 	pSendEmailToContactTypes = comma-separated list of contact types to send to, no spaces. "All" will send to all contacts. "Primary" will send to the contact with the primary flag enabled.
 	pEmailTemplate = notification template name
 Optional Params:
 	vEParams = parameters to be filled in notification template
-	reportTemplate = if provided, will run report and attach (per report manager settings) and include a link to it in the email
+	reportTemplate = if provided, will run report and include as an attachment to the email. If configured to do so in report manager the report will save to EDMS
 	vRParams  = report parameters
 	vAddAdHocTask = Y/N for adding manual notification task when no email exists (Assigns the task to the department configured by module in the "Manual_Notification_Assign_Dept" standard choice)
 	changeReportName = if using reportTemplate, will change the title of the document produced by the report from its default
 
 Sample: 
-	emailContactsWithReportLinkASync('OWNER APPLICANT', 'DPD_WAITING_FOR_PAYMENT'); //minimal
-	emailContactsWithReportLinkASync('OWNER APPLICANT,BUSINESS OWNER', 'DPD_PERMIT_ISSUED', eParamHashtable, 'Construction Permit', rParamHashtable, 'Y', 'New Report Name'); //full
+	emailContactsWithReportAttachASync('OWNER APPLICANT', 'DPD_WAITING_FOR_PAYMENT'); //minimal
+	emailContactsWithReportAttachASync('OWNER APPLICANT,BUSINESS OWNER', 'DPD_PERMIT_ISSUED', eParamHashtable, 'Construction Permit', rParamHashtable, 'Y', 'New Report Name'); //full
 */
-function emailContactsWithReportLinkASync(pSendEmailToContactTypes, pEmailTemplate, pEParams, pReportTemplate, pRParams, pAddAdHocTask, pChangeReportName) {
+function emailContactsWithReportAttachASync(pSendEmailToContactTypes, pEmailTemplate, pEParams, pReportTemplate, pRParams, pAddAdHocTask, pChangeReportName) {
 	var conTypeArray = [];
 	var validConTypes = getConfiguredContactTypes();
 	var x = 0;
 	var vConType;
-	var vAsyncScript = "SEND_EMAIL_TO_CONTACTS_ASYNC";
+	var vAsyncScript = "SEND_EMAIL_TO_CONTACTS_ATTACH_ASYNC";
 	var envParameters = aa.util.newHashMap();
 		
 	//Initialize optional parameters	
