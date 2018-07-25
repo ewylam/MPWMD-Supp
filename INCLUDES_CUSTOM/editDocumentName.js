@@ -24,6 +24,7 @@ function editDocumentName(vOrgDocumentName, vNewDocumentName) {
 			if (vDocumentName == vOrgDocumentName) {
 				vExtStart = vDocumentName.indexOf(".");
 				logDebug("vExtStart: " + vExtStart);
+				logDebug("vDocumentName.length: " + vDocumentName.length);
 				if (vExtStart != -1) {
 					vFileExtension = vDocumentName.substr(vExtStart,vDocumentName.length);
 					logDebug("vFileExtension: " + vFileExtension);
