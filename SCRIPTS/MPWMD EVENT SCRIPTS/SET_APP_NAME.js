@@ -1,5 +1,5 @@
 // Begin script to set the record name to the Address; Parcel
-var vAddress = getAddressInALine();
+var vAddress = getAddressInALine_MPWMD();
 var vParcel = getPrimaryParcel();
 var vRecName = "";
 if (vAddress != null && vAddress != false && vAddress != "") {
