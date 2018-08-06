@@ -1,11 +1,13 @@
 // Begin script that copies data from Base Premise record to Water Use Permit record.
 if (parentCapId == "undefined" || parentCapId == null) {
 	parentCapId = aa.env.getValue("ParentCapID");
+	logDebug("1)");
 }
 if (parentCapId == "undefined" || parentCapId == null) {
 	parentCapId = getParent();
+	logDebug("2)");
 }
-
+logDebug("ParentCapID: " + parentCapId);
 if (parentCapId != null) {
 	//Copy Parcels from license to renewal
 	copyParcels(parentCapId, capId);
