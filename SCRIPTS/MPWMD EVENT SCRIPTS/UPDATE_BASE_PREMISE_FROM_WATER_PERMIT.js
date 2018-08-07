@@ -62,6 +62,11 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			x = 0;
 			for (x in vFixtureASIT) {
 				vFixture = vFixtureASIT[x];
+				
+				for (aa in vFixture) {
+					logDebug(aa + " : " + vFixture[aa]);
+				}
+				
 				// Removed any 'Removed' table values
 				vFixtureStatus = vFixture["Status"].fieldValue + "";
 				if (vFixtureStatus == "Removed") {
