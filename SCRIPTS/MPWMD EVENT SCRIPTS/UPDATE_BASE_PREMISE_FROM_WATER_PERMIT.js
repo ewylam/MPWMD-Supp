@@ -58,22 +58,21 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		var vFixture;
 		var vFixtureStatus;
 		var vFixtureASIT = loadASITable(vFixtureTableName, capId);
+		var vUpdatedFixtureASIT = [];
 		if (typeof(vFixtureASIT) == "object") {
 			x = 0;
+			// Removed any 'Removed' table values
 			for (x in vFixtureASIT) {
-				vFixture = vFixtureASIT[x];
-				
-				for (aa in vFixture) {
-					logDebug(aa + " : " + vFixture[aa]);
-				}
-				
-				// Removed any 'Removed' table values
+				vFixture = vFixtureASIT[x];		
 				vFixtureStatus = vFixture["Status"].fieldValue + "";
-				if (vFixtureStatus == "Removed") {
+				if (vFixtureStatus != "Removed") {
 					//Remove ASIT row from table to be copied to Base Premise Records
-					vFixtureASIT = vFixtureASIT.splice(x, 1);
-					continue;
-				}				
+					vUpdatedFixtureASIT.push(vFixture);
+				}	
+			}
+			x = 0;
+			for (x in vUpdatedFixtureASIT) {	
+				vFixture = vUpdatedFixtureASIT[x];				
 				// Replace Existing Count with Post Count
 				vFixture["Existing Count"] = new asiTableValObj("Existing Count", vFixture["Post Count"].fieldValue, "N");
 				// Replace Existing Fixture with Post Fixture
@@ -81,7 +80,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			}
 			// Copy updated fixture table to Base Premise
 			removeASITable(vFixtureTableName, vParentCapId);
-			addASITable(vFixtureTableName, vFixtureASIT, vParentCapId);
+			addASITable(vFixtureTableName, vUpdatedFixtureASIT, vParentCapId);
 		}
 
 		// Update Purchased Water Remaining (Base Premise ASI) with Purchased Water minus Purchased Water Used (Base Premise ASI)
