@@ -2,11 +2,16 @@
 if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
 	var vPostFixtureUnitCount;
+	var v2ndBathFixtureCount;
 	if (vParentCapId != null && vParentCapId != "") {
 		// Update Current Fixture Unit Count (Base Premise ASI) from Post Fixture Unit Count (Water Permit ASI)
 		vPostFixtureUnitCount = getAppSpecific("Post Fixture Unit Count");
 		editAppSpecific("Current Fixture Unit Count", vPostFixtureUnitCount, vParentCapId);
 
+		// Update 2nd Bath (Base Premise ASI) from Post 2nd Bath Fixture (Water Permit ASI)
+		v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
+		editAppSpecific("2nd Bath", v2ndBathFixtureCount, vParentCapId);		
+		
 		// Process Permit Water Allocation ASIT and update Base Premise info
 		var x = 0;
 		var vAllocation;
@@ -51,11 +56,19 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		var vFixtureTableName = "RESIDENTIAL  FIXTURES";
 		var vFixtureASIT;
 		var vFixture;
+		var vFixtureStatus;
 		var vFixtureASIT = loadASITable(vFixtureTableName, capId);
 		if (typeof(vFixtureASIT) == "object") {
 			x = 0;
 			for (x in vFixtureASIT) {
 				vFixture = vFixtureASIT[x];
+				// Removed any 'Removed' table values
+				vFixtureStatus = vFixture["Status"] + "";
+				if (vFixtureStatus == "Removed") {
+					//Remove ASIT row from table to be copied to Base Premise Records
+					vFixtureASIT = vFixtureASIT.splice(x, 1);
+					continue;
+				}				
 				// Replace Existing Count with Post Count
 				vFixture["Existing Count"] = new asiTableValObj("Existing Count", vFixture["Post Count"].fieldValue, "N");
 				// Replace Existing Fixture with Post Fixture
