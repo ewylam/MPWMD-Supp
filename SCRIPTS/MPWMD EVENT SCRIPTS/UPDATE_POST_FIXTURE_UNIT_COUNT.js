@@ -1,4 +1,4 @@
-// Begin script to update the Post Fixture County (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
+// Begin script to update the Post Fixture County and Post 2nd Bath Fixture (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
 var x = 0;
 var vFixture;
 var vFixturePostValue;
@@ -21,4 +21,4 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 }
 editAppSpecific("Post Fixture Unit Count", toFixed(vTotalFixtureCount, 2));
 editAppSpecific("Post 2nd Bath Fixture", toFixed(vTotal2ndBathFixtureCount, 2));
-// Begin script to update the Post Fixture County (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
+// Begin script to update the Post Fixture County and Post 2nd Bath Fixture (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
