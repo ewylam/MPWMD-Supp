@@ -10,6 +10,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 
 		// Update 2nd Bath (Base Premise ASI) from Post 2nd Bath Fixture (Water Permit ASI)
 		v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
+logDebug("v2ndBathFixtureCount: " + v2ndBathFixtureCount);		
 		editAppSpecific("2nd Bath", v2ndBathFixtureCount, vParentCapId);		
 		
 		// Process Permit Water Allocation ASIT and update Base Premise info
