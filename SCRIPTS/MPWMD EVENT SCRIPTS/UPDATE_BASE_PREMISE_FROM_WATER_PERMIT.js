@@ -63,7 +63,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			for (x in vFixtureASIT) {
 				vFixture = vFixtureASIT[x];
 				// Removed any 'Removed' table values
-				vFixtureStatus = vFixture["Status"] + "";
+				vFixtureStatus = vFixture["Status"].fieldValue + "";
 				if (vFixtureStatus == "Removed") {
 					//Remove ASIT row from table to be copied to Base Premise Records
 					vFixtureASIT = vFixtureASIT.splice(x, 1);
