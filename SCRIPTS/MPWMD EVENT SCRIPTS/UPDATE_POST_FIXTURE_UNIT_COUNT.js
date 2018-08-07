@@ -19,6 +19,10 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 		}
 	}
 }
-editAppSpecific("Post Fixture Unit Count", toFixed(vTotalFixtureCount, 2));
-editAppSpecific("Post 2nd Bath Fixture", toFixed(vTotal2ndBathFixtureCount, 2));
+if (vTotalFixtureCount != "NaN") {
+	editAppSpecific("Post Fixture Unit Count", toFixed(vTotalFixtureCount, 2));
+}
+if (vTotal2ndBathFixtureCount != "NaN") {
+	editAppSpecific("Post 2nd Bath Fixture", toFixed(vTotal2ndBathFixtureCount, 2));
+}
 // Begin script to update the Post Fixture County and Post 2nd Bath Fixture (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
