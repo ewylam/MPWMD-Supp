@@ -10,11 +10,14 @@ if (vRelatedRecords != null) {
 	}
 	for (x in vRelatedRecords) {
 		vRelatedRecId = vRelatedRecords[x];
+		logDebug("RecId: " + vRelatedRecId);
+		/*
 		if (getRecordStatus(vRelatedRecId) == "Active") { 
 			// Relate Base Premise record
 			addParent(vRelatedRecId);
 			break;
 		}
+		*/
 	}
 }
 // End script to find Base Premise records by parcel
