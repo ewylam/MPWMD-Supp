@@ -9,7 +9,7 @@ if (vRelatedRecords != null) {
 		comment("More than one Base Premise record exists for the linked parcel(s)");
 	}
 	for (x in vRelatedRecords) {
-		vRelatedRecId = vRelatedRecords[x].getCapId();
+		vRelatedRecId = vRelatedRecords[x].getCapID();
 		logDebug("RecId: " + vRelatedRecId);
 		/*
 		if (getRecordStatus(vRelatedRecId) == "Active") { 
