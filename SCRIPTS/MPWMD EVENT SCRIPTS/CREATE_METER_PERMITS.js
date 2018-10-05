@@ -8,6 +8,7 @@ if (wfTask == "Review" && wfStatus == "Approved") {
 		var vStreetName;
 		var vSteetDir;
 		var vStreetType;
+		var vMeterNumber;
 		var x = 0;
 		var vChildID;
 		for (x in vMetersASIT) {
@@ -30,16 +31,19 @@ if (wfTask == "Review" && wfStatus == "Approved") {
 					aa.address.createAddressWithRefAddressModel(vChildID, addr);
 					// Add Parcel and Owners
 					addParcelAndOwnerFromRefAddress(addr, vChildID);
-					// Save current capId
-					var vTmpCapId = capId;
-					// Set capId to childId
-					capId = vChildID;
-					// Add GIS objects
-					copyParcelGisObjects();
-					// Update record name
-					include("SET_APP_NAME");
-					capId = vTmpCapId;
 				}
+				// Save current capId
+				var vTmpCapId = capId;
+				// Set capId to childId
+				capId = vChildID;
+				// Add GIS objects
+				copyParcelGisObjects();
+				// Update record name
+				include("SET_APP_NAME");
+				capId = vTmpCapId;
+				// Update Meter Number ASI
+				vMeterNumber = vMeterRow["Meter Number"].fieldValue;
+				editAppSpecific("Meter Number", vMeterNumber, vChildID);
 			}
 		}
 	}
