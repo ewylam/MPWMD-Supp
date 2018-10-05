@@ -1,5 +1,5 @@
 // Begin script to create child meter permits for each row in the meter table
-if (wfTask == "Plan Review" && wfStatus == "Approved") {
+if (wfTask == "Review" && wfStatus == "Approved") {
 	var vMeterPermitType = getAppSpecific("Meter Permit Type");
 	if (vMeterPermitType == "Meter Split (Individual Meter Use)") {
 		var vMetersASIT = loadASITable("METERS");
