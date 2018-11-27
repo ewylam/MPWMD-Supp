@@ -1,7 +1,6 @@
 // Begin script that copies data from Base Premise record to Water Use Permit record.
 var parentCapId = getParent();
-logDebug("ParentCapId: " + parentCapId);
-if (parentCapId != null) {
+if (parentCapId != null && parentCapId != false) {
 	//Copy Parcels from license to renewal
 	copyParcels(parentCapId, capId);
 
