@@ -11,6 +11,10 @@ if (wfTask == "Review" && wfStatus == "Approved") {
 		var vMeterNumber;
 		var x = 0;
 		var vChildID;
+		var vTmpCapId;
+		var addrObj;
+		var addrArr;
+		var addr;
 		for (x in vMetersASIT) {
 			vMeterRow = vMetersASIT[x];
 			// Create child Meter Permit record for each row in the table
@@ -22,29 +26,37 @@ if (wfTask == "Review" && wfStatus == "Approved") {
 			vStreetName = vMeterRow["Street Name"].fieldValue;
 			vSteetDir = vMeterRow["Dir"].fieldValue;
 			vStreetType = vMeterRow["Type"].fieldValue;
-			var addrObj = aa.address.getAddressListForAdmin(null, null, vStreetNum, null, vSteetDir, vStreetName, vStreetType, null, null, null, null, null, null, null, null, null, null, null, null);
+			addrObj = aa.address.getAddressListForAdmin(null, null, vStreetNum, null, vSteetDir, vStreetName, vStreetType, null, null, null, null, null, null, null, null, null, null, null, null);
 			if (addrObj.getSuccess()) {
-				var addrArr = addrObj.getOutput();
+				addrArr = addrObj.getOutput();
 				if (addrArr != null && addrArr.length > 0) {
-					var addr = addrArr[0].getRefAddressModel();
+					addr = addrArr[0].getRefAddressModel();
 					addr.setPrimaryFlag("Y");
 					aa.address.createAddressWithRefAddressModel(vChildID, addr);
 					// Add Parcel and Owners
 					addParcelAndOwnerFromRefAddress(addr, vChildID);
 				}
 				// Save current capId
-				var vTmpCapId = capId;
+				vTmpCapId = capId;
 				// Set capId to childId
 				capId = vChildID;
 				// Add GIS objects
 				copyParcelGisObjects();
-				// Update record name
-				include("SET_APP_NAME");
 				capId = vTmpCapId;
-				// Update Meter Number ASI
-				vMeterNumber = vMeterRow["Meter Number"].fieldValue;
-				editAppSpecific("Meter Number", vMeterNumber, vChildID);
+			} else {
+				logDebug("Failed to get an address based on " + vStreetNum + " " + vSteetDir + " " vStreetName + " " + vStreetType + ".");
+				logDebug(addrObj.getErrorMessage());
 			}
+			// Save current capId
+			var vTmpCapId = capId;
+			// Set capId to childId
+			capId = vChildID;
+			// Update record name
+			include("SET_APP_NAME");
+			capId = vTmpCapId;
+			// Update Meter Number ASI
+			vMeterNumber = vMeterRow["Meter Number"].fieldValue;
+			editAppSpecific("Meter Number", vMeterNumber, vChildID);
 		}
 	}
 }
