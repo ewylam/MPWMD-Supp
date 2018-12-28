@@ -1,68 +1,70 @@
 // Get Expression Objects
 var servProvCode=expression.getValue("$$servProvCode$$").value;
 var vCalcMethod = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Calculation Method");
+
 var vProposedWaterUsage = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Proposed Water Usage");
+
 var vPurchasedWaterRemaining = expression.getValue("ASI::BASE PREMISE::Purchased Water Remaining");
 var vWDSRemaining = expression.getValue("ASI::BASE PREMISE::WDS Remaining");
 var vWUCRemaining = expression.getValue("ASI::BASE PREMISE::Credits Remaining");
-var vEntitlements = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Entitlements");
-var vWDS = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::WDS");
-var vWUCUsing = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Water Use Credit Using");
-var vForm = expression.getValue("ASI::FORM");
-var vRemainingAmount = 0;
 
-// Get numberic values
+var vAuthEntitlements = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Entitlements");
+var vAuthWDS = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::WDS");
+var vAuthWUCUsing = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Water Use Credit Using");
+
+var vForm = expression.getValue("ASI::FORM");
+var vProposedAmountRemaining = 0;
+
+var decPlaces = 4;
+
+// Get numeric values
 var vProposedWaterUsageValue = Number(vProposedWaterUsage.value);
+
 var vPurchasedWaterRemainingValue = Number(vPurchasedWaterRemaining.value);
 var vWDSRemainingValue = Number(vWDSRemaining.value);
 var vWUCRemainingValue = Number(vWUCRemaining.value);
 
-if (vCalcMethod.value == "Best Practice Methodology" && vProposedWaterUsageValue != null && vProposedWaterUsageValue > 0) {
-	if (vPurchasedWaterRemainingValue != null) {
-		if (vPurchasedWaterRemainingValue < vProposedWaterUsageValue) {
-			vEntitlements.value = vPurchasedWaterRemainingValue;
-			expression.setReturn(vEntitlements);
-			vRemainingAmount = vProposedWaterUsageValue - vPurchasedWaterRemainingValue;
-		} 
-		else {
-			vEntitlements.value = vProposedWaterUsageValue;
-			expression.setReturn(vEntitlements);
-			vRemainingAmount = 0;		
-		}
+var vAuthEntitlementsValue = 0.0000;
+var vAuthWDSValue = 0.0000;
+var vAuthWUCUsingValue = 0.0000;
+
+// if there is a remaining proposed amount not covered, and we have credits available to cover part or all
+// if we don't have enough credits to cover the entire bill, just some; use all those credits, otherwise if we have enough credits to cover, use just enough to cover
+// the remaining proposed amount is 0 if our credits covered it all; otherwise, the proposed amount remaining is just less all the wuc credits used
+	
+if (vCalcMethod.value == "Best Practice Methodology" && vProposedWaterUsageValue != null) {
+	vProposedAmountRemaining = vProposedWaterUsageValue;
+	
+	if (Number(vProposedAmountRemaining.toFixed(decPlaces)) > 0 && vWUCRemainingValue != null && vWUCRemainingValue > 0) {
+		vAuthWUCUsingValue = (vProposedAmountRemaining > vWUCRemainingValue) ? vWUCRemainingValue : vProposedAmountRemaining;
+		
+		vProposedAmountRemaining -= vAuthWUCUsingValue;
 	}
-	if (vRemainingAmount > 0 && vWDSRemainingValue != null && vWDSRemainingValue > 0) {
-		if (vWDSRemainingValue < vRemainingAmount) {
-			vWDS.value = vWDSRemainingValue;
-			expression.setReturn(vWDS);
-			vRemainingAmount = vRemainingAmount - vWDSRemainingValue;
-		}
-		else {
-			vWDS.value = vRemainingAmount;
-			expression.setReturn(vWDS);
-			vRemainingAmount = 0;				
-		}
+	
+	if (Number(vProposedAmountRemaining.toFixed(decPlaces)) > 0 && vPurchasedWaterRemainingValue != null && vPurchasedWaterRemainingValue > 0) {
+		vAuthEntitlementsValue = (vProposedAmountRemaining > vPurchasedWaterRemainingValue) ? vPurchasedWaterRemainingValue : vProposedAmountRemaining;
+		
+		vProposedAmountRemaining -= vAuthEntitlementsValue;
 	}
-	if (vRemainingAmount > 0 && vWUCRemainingValue != null && vWUCRemainingValue > 0) {
-		if (vWUCRemainingValue < vRemainingAmount) {
-			vWUCUsing.value = vWUCRemainingValue;
-			expression.setReturn(vWUCUsing);
-			vRemainingAmount = vRemainingAmount - vWUCRemainingValue;			
-		}	
-		else {
-			vWUCUsing.value = vRemainingAmount;
-			expression.setReturn(vWUCUsing);
-			vRemainingAmount = 0;			
-		}
+	
+	if (Number(vProposedAmountRemaining.toFixed(decPlaces)) > 0 && vWDSRemainingValue != null && vWDSRemainingValue > 0) {
+		vAuthWDSValue = (vProposedAmountRemaining > vWDSRemainingValue) ? vWDSRemainingValue : vProposedAmountRemaining;
+		
+		vProposedAmountRemaining -= vAuthWDSValue;
 	}
-}
-if (vRemainingAmount > 0) {
-	vForm.message = "Please enter approprate jurisditction bucket for the remaining " + toPrecision(vRemainingAmount) + " amount";
-	expression.setReturn(vForm);
-	vProposedWaterUsage.message = "Please enter approprate jurisditction bucket for the remaining " + toPrecision(vRemainingAmount) + " amount";
-	expression.setReturn(vProposedWaterUsage);
+
+	vAuthWUCUsing.value = vAuthWUCUsingValue.toFixed(decPlaces);
+	vAuthEntitlements.value = vAuthEntitlementsValue.toFixed(decPlaces);
+	vAuthWDS.value = vAuthWDSValue.toFixed(decPlaces);
+
+	expression.setReturn(vAuthWUCUsing);	
+	expression.setReturn(vAuthEntitlements);
+	expression.setReturn(vAuthWDS);
 }
 
-function toPrecision(value) {
-  var multiplier=10000;
-  return Math.round(value*multiplier)/multiplier;
+if (vProposedAmountRemaining > 0) {
+	vForm.message = "Please enter appropriate jurisdiction bucket for the remaining " + vProposedAmountRemaining.toFixed(4) + " amount";
+	expression.setReturn(vForm);
+	vProposedWaterUsage.message = "Please enter appropriate jurisdiction bucket for the remaining " + vProposedAmountRemaining.toFixed(4) + " amount";
+	expression.setReturn(vProposedWaterUsage);
 }
