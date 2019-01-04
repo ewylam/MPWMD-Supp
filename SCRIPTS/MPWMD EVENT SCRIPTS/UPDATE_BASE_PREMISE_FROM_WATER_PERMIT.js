@@ -11,7 +11,8 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		// Update 2nd Bath (Base Premise ASI) from Post 2nd Bath Fixture (Water Permit ASI)
 		v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
 		editAppSpecific("2nd Bath Fixture Unit Count", v2ndBathFixtureCount, vParentCapId);		
-		
+
+/*		
 		// Process Permit Water Allocation ASIT and update Base Premise info
 		var x = 0;
 		var vAllocation;
@@ -51,7 +52,8 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		}
 		editAppSpecific("Purchased Water Used", vWaterAllocationAmountEntitlements, vParentCapId);
 		editAppSpecific("Credits Used", vWaterAllocationAmountCredits, vParentCapId);
-
+*/
+		
 		// Copy Fixture ASIT from Water Permit. Update Existing Count with values from Post Count
 		var vFixtureTableName = "RESIDENTIAL  FIXTURES";
 		var vFixtureASIT;
