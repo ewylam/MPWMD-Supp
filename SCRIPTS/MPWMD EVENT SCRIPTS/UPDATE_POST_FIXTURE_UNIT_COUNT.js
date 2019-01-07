@@ -9,13 +9,18 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 	for (x in RESIDENTIALFIXTURES) {
 		vFixture = RESIDENTIALFIXTURES[x];
 		vFixturePostValue = parseFloat(vFixture["Post Fixture"]);
+		vFUV = parseFloat(vFixture["FUV"]);
 		vFixtureStatus = vFixture["Status"] + "";
 		if (vFixturePostValue != "NaN" && vFixtureStatus == "Active") {
 			vTotalFixtureCount += vFixturePostValue;
-		} else if (vFixturePostValue != "NaN" && vFixtureStatus == "Removed") {
-			vTotalFixtureCount += vFixturePostValue; // Value should be negative already
+			logDebug("Value of Fixtures = Active:" + vTotalFixtureCount + "Value of the Post Count:" + vFixturePostValue);
 		} else if (vFixturePostValue != "NaN" && vFixtureStatus == "2nd Bath Protocol") {
-			vTotal2ndBathFixtureCount += vFixturePostValue;
+			vTotal2ndBathFixtureCount += vFUV;
+			logDebug("Value of 2ndBath Fixtures = Active:" + vTotal2ndBathFixtureCount +  "Value of the FUV:" + vFUV);
+			vAdjustedFixture = vFixturePostValue - vFUV;
+			logDebug("Adjusted Valued of Fixtures:" + vAdjustedFixture);
+			vTotalFixtureCount +=vAdjustedFixture;
+			logDebug("Value of Fixtures = 2ndBath Post:" + vTotalFixtureCount);
 		}
 	}
 }
