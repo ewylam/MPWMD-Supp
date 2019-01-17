@@ -166,9 +166,9 @@ try {
 
 	for (x in capList) {
 
-		//if (x > 300) {
-		//	break;
-		//}
+		if (x > 30) {
+			break;
+		}
 
 		if (x % 500 === 0) {
 			aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Progress Results : " + x, message);
@@ -381,12 +381,13 @@ try {
 			}
 
 			if (vIsNewer == true) {
-				wfTask = "Permit Issuance"
-					wfStatus = "Issued"
-					include("UPDATE_BASE_PREMISE_FROM_WATER_PERMIT");
+				wfTask = "Permit Issuance";
+				wfStatus = "Issued";
+				logMessage("Updating Base Premise Record: " + vBasePremiseRecId.getCustomID() + " from Water Permit: " + capId.getCustomID());
+				include("UPDATE_BASE_PREMISE_FROM_WATER_PERMIT");
 
 				// Update BP Use and Jurisdiction ASI Fields
-				editAppSpecific("Use", getAppSpecific("Permit Category", capId), vRelatedRecordId);
+				editAppSpecific("Use", getAppSpecific("Permit Category", capId), vBasePremiseRecId);
 
 				var vJurisdiction = "";
 				vJurisdiction = getAddressCity(capId);
@@ -556,7 +557,7 @@ try {
 						break;
 					}
 				}
-				editAppSpecific("Jurisdiction", vJurisdiction, vRelatedRecordId);
+				editAppSpecific("Jurisdiction", vJurisdiction, vBasePremiseRecId);
 			}
 		}
 	}
@@ -696,3 +697,45 @@ function getAddressCity(pCapId) {
 	}
 	return vCity;
 }
+
+function editAppSpecific_Local(itemName,itemValue)  // optional: itemCap
+{
+	var itemCap = capId;
+	var itemGroup = null;
+	if (arguments.length == 3) itemCap = arguments[2]; // use cap ID specified in args
+   	
+  	if (useAppSpecificGroupName)
+	{
+		if (itemName.indexOf(".") < 0)
+			{ logDebug("**WARNING: editAppSpecific requires group name prefix when useAppSpecificGroupName is true") ; return false }
+		
+		
+		itemGroup = itemName.substr(0,itemName.indexOf("."));
+		itemName = itemName.substr(itemName.indexOf(".")+1);
+	}
+   	// change 2/2/2018 - update using: aa.appSpecificInfo.editAppSpecInfoValue(asiField)
+	// to avoid issue when updating a blank custom form via script. It was wiping out the field alias 
+	// and replacing with the field name
+	
+	var asiFieldResult = aa.appSpecificInfo.getByList(itemCap, itemName);
+	if(asiFieldResult.getSuccess()){
+		var asiFieldArray = asiFieldResult.getOutput();
+		if(asiFieldArray.length > 0){
+			var asiField = asiFieldArray[0];
+			var origAsiValue = asiField.getChecklistComment();
+			asiField.setChecklistComment(itemValue);
+
+			var updateFieldResult = aa.appSpecificInfo.editAppSpecInfoValue(asiField);
+			if(updateFieldResult.getSuccess()){
+				logMessage("Successfully updated custom field: " + itemName + " with value: " + itemValue + " : " + itemCap.getCustomID());
+				if(arguments.length < 3) //If no capId passed update the ASI Array
+				AInfo[itemName] = itemValue; 
+			}
+			else
+			{ logDebug( "WARNING: " + itemName + " was not updated."); }
+		}
+	}
+	else {
+		logDebug("ERROR: " + asiFieldResult.getErrorMessage());
+	}
+} 
