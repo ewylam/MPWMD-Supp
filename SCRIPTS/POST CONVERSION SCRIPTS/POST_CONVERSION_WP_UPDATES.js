@@ -166,9 +166,9 @@ try {
 
 	for (x in capList) {
 
-		if (x > 30) {
-			break;
-		}
+		//if (x > 30) {
+		//	break;
+		//}
 
 		if (x % 500 === 0) {
 			aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Progress Results : " + x, message);
@@ -374,7 +374,6 @@ try {
 				vRelatedFileDateObj = vRelatedCap.getFileDate();
 				vRelatedFileDate = vRelatedFileDateObj.getMonth() + "/" + vRelatedFileDateObj.getDayOfMonth() + "/" + vRelatedFileDateObj.getYear();
 				vRelatedFileDateJS = new Date(vRelatedFileDate);
-
 				if (vCurrentRecordFileDateJS < vRelatedFileDateJS) {
 					vIsNewer = false;
 				}
@@ -390,7 +389,7 @@ try {
 				editAppSpecific("Use", getAppSpecific("Permit Category", capId), vBasePremiseRecId);
 
 				var vJurisdiction = "";
-				vJurisdiction = getAddressCity(capId);
+				vJurisdiction = getAddressCity(capId) + "";
 				if (vJurisdiction != "" && vJurisdiction != null & vJurisdiction != false) {
 					switch (vJurisdiction) {
 					case 'PG 74':
@@ -557,6 +556,7 @@ try {
 						break;
 					}
 				}
+				aa.print("Jurisdiction: " + vJurisdiction);
 				editAppSpecific("Jurisdiction", vJurisdiction, vBasePremiseRecId);
 			}
 		}
