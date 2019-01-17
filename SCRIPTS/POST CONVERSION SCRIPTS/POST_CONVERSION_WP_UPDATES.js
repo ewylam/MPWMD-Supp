@@ -1,10 +1,10 @@
 // POST_CONVERSION_WP_UPDATES.js
 // Calcualte missing fields
 // Check for parent Base Premise(parcel)
-	// If not exist create it as parent
-	// If it does exist check to see if current WP records open date is more recent then existing base premise WPs opend date
-		// if so, Update base premise by coping required fields and link as parent (see UPDATE_BASE_PREMISE_FROM_WATER_PERMIT)
-		// if not, do not update it and link as parent
+// If not exist create it as parent
+// If it does exist check to see if current WP records open date is more recent then existing base premise WPs opend date
+// if so, Update base premise by coping required fields and link as parent (see UPDATE_BASE_PREMISE_FROM_WATER_PERMIT)
+// if not, do not update it and link as parent
 
 
 /*------------------------------------------------------------------------------------------------------/
@@ -146,9 +146,12 @@ try {
 	com.accela.aa.util.WebThreadLocal.setServiceProviderCode("MPWMD");
 
 	logMessage("Start Time: " + elapsed() + " Seconds");
-	var capList = aa.cap.getByAppType("Demand", "Application", "Water Permit", "New").getOutput();
+	//var capList = aa.cap.getByAppType("Demand", "Application", "Water Permit", "New").getOutput();
+	var capList = getRecordsBySQL();
 	var cap;
 	var capId;
+	var vCapId;
+	var vCap;
 	var x = 0;
 	var vUpdated = 0;
 	var vNotUpdated = 0;
@@ -162,21 +165,37 @@ try {
 
 	for (x in capList) {
 
-		//if (x > 20) {
-		//	break;
-		//}
+		if (x > 20) {
+			break;
+		}
 
 		if (x % 500 === 0) {
 			aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Progress Results : " + x, message);
 		}
 
-		cap = capList[x];
-		capId = cap.getCapID();
-		cap = cap.getCapModel();
+		vCapId = capList[x];
+		vCap = aa.cap.getCap(vCapId).getOutput();
 
-		if (capId.getCustomID() != "WP-36930") {
+		if (vCapId != null && vCap != null) {
+			// Define global variables
+			capId = vCapId;
+			cap = vCap;
+			vCapModel = vCap.getCapModel();
+
+			// Do stuff here
+		} else {
 			continue;
 		}
+
+		logMessage(capId.getCustomID());
+
+		//cap = capList[x];
+		//capId = cap.getCapID();
+		//cap = cap.getCapModel();
+
+		//if (capId.getCustomID() != "WP-36930") {
+		//	continue;
+		//}
 
 		// For all converted WP and Conservation
 		// Check the Residential Fixtures table and update the following fields
@@ -187,9 +206,9 @@ try {
 		// If FUV == 0 and Post Count > 0 the set Status to "2nd Bath Protocol"
 
 		var vTableName = "RESIDENTIAL  FIXTURES";
-		
+
 		var vFixtureTable = loadASITable(vTableName);
-		
+
 		var vASITRow;
 		var y = 0;
 		var z = 0;
@@ -212,24 +231,24 @@ try {
 				vPostFixture = vASITRow["Post Fixture"];
 				vExistingFixture = vASITRow["Existing Fixture"];
 				vStatus = vASITRow["Status"];
-		/*
-				aa.print(vASITRow["Type of Fixture"].fieldValue);
-				aa.print("Post Count " + vPostCount.fieldValue);
-				aa.print("Existing Count " + vExistingCount.fieldValue);
-				aa.print("FUV " + vFUV.fieldValue);
-				aa.print("Post Fixture " + vPostFixture.fieldValue);
-				aa.print("Existing Fixture " + vExistingFixture.fieldValue);
-				aa.print("Status " + vStatus.fieldValue);
-		*/				
+				//
+				// aa.print(vASITRow["Type of Fixture"].fieldValue);
+				// aa.print("Post Count " + vPostCount.fieldValue);
+				// aa.print("Existing Count " + vExistingCount.fieldValue);
+				// aa.print("FUV " + vFUV.fieldValue);
+				// aa.print("Post Fixture " + vPostFixture.fieldValue);
+				// aa.print("Existing Fixture " + vExistingFixture.fieldValue);
+				// aa.print("Status " + vStatus.fieldValue);
+				//
 				//Set Post Fixture value
 				if (vPostFixture.fieldValue == null || vPostFixture.fieldValue == "") {
-					vPostFixture.fieldValue = toFixed((vPostCount.fieldValue * vFUV.fieldValue),3) + "";
+					vPostFixture.fieldValue = toFixed((vPostCount.fieldValue * vFUV.fieldValue), 3) + "";
 					vASITChanges = true;
-				}		
-				
+				}
+
 				//Set Existing Fixture value
 				if (vExistingFixture.fieldValue == null || vExistingFixture.fieldValue == "") {
-					vExistingFixture.fieldValue = toFixed((vExistingCount.fieldValue * vFUV.fieldValue),3) + "";
+					vExistingFixture.fieldValue = toFixed((vExistingCount.fieldValue * vFUV.fieldValue), 3) + "";
 					vASITChanges = true;
 				}
 
@@ -292,6 +311,251 @@ try {
 		} else {
 			vNotUpdated++;
 		}
+
+		// Begin script to link to/create Base Premise record.
+		var vRelatedBasePremises = getRelatedCapsByParcel("Demand/Master/Base Premise/NA");
+		var l = 0;
+		var vBasePremiseRecId;
+
+		// Base premise record exists.
+		if (vRelatedBasePremises != null) {
+			if (vRelatedBasePremises.length > 1) {
+				showMessage = true;
+				comment("More than one Base Premise record exists for the linked parcel(s)");
+			}
+			// Link to base premise
+			for (l in vRelatedBasePremises) {
+				vBasePremiseRecId = vRelatedBasePremises[l].getCapID();
+				if (getRecordStatus(vBasePremiseRecId) == "Active") {
+					// Relate Base Premise record
+					addParent(vBasePremiseRecId);
+					break;
+				}
+			}
+		} else {
+			// Create Base Premise
+			vBasePremiseRecId = createParent("Demand", "Master", "Base Premise", "NA", getAppName(capId));
+
+			//Copy Parcels
+			//copyParcels(capId, vBasePremiseRecId);
+
+			//Copy Addresses
+			//copyAddress(capId, vBasePremiseRecId);
+
+			//Copy Owners
+			//copyOwner(capId,vBasePremiseRecId);
+			copyOwnersByParcel(capId, vBasePremiseRecId) // Adds reference owners
+
+			//Copy application name from license to renewal
+			//editAppName(getAppName(capId), vBasePremiseRecId);
+		}
+
+		// Check to see if WP is the newest one linked to the Base Premise
+		var vIsNewer = true;
+		if (vBasePremiseRecId != null) {
+			var vRelatedRecords = getChildren("Demand/Application/Water Permit/New", vBasePremiseRecId);
+			var m = 0;
+			var vRelatedRecordId;
+			var vRelatedCap;
+			var vCurrentRecordFileDateObj = cap.getFileDate();
+			var vCurrentRecordFileDate = vCurrentRecordFileDateObj.getMonth() + "/" + vCurrentRecordFileDateObj.getDayOfMonth() + "/" + vCurrentRecordFileDateObj.getYear();
+			var vCurrentRecordFileDateJS = new Date(vCurrentRecordFileDate);
+			var vRelatedFileDateObj;
+			var vRelatedFileDate;
+			var vRelatedFileDateJS;
+
+			if (vRelatedRecords != null) {
+				vRelatedRecordId = vRelatedRecords[m];
+				vRelatedCap = aa.cap.getCap(vRelatedRecordId).getOutput();
+				vRelatedFileDateObj = vRelatedCap.getFileDate();
+				vRelatedFileDate = vRelatedFileDateObj.getMonth() + "/" + vRelatedFileDateObj.getDayOfMonth() + "/" + vRelatedFileDateObj.getYear();
+				vRelatedFileDateJS = new Date(vRelatedFileDate);
+
+				if (vCurrentRecordFileDateJS < vRelatedFileDateJS) {
+					vIsNewer = false;
+				}
+			}
+
+			if (vIsNewer == true) {
+				wfTask = "Permit Issuance"
+					wfStatus = "Issued"
+					include("UPDATE_BASE_PREMISE_FROM_WATER_PERMIT");
+
+				// Update BP Use and Jurisdiction ASI Fields
+				editAppSpecific("Use", getAppSpecific("Permit Category", capId), vRelatedRecordId);
+
+				var vJurisdiction = "";
+				vJurisdiction = getAddressCity(capId);
+				if (vJurisdiction != "" && vJurisdiction != null & vJurisdiction != false) {
+					switch (vJurisdiction) {
+					case 'PG 74':
+						vJurisdiction = 'Pacific Grove';
+						break;
+					case 'PG OTHER':
+						vJurisdiction = 'Pacific Grove';
+						break;
+					case 'CARME VALLEY':
+						vJurisdiction = 'Monterey County';
+						break;
+					case ' Carmel':
+						vJurisdiction = 'Carmel-by-the-Sea';
+						break;
+					case 'Salinas':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'CARMEL HIGHLANDS':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'PACFIC GROVE':
+						vJurisdiction = 'Pacific Grove';
+						break;
+					case 'PEBBLE BEAACH':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'SEASIDE':
+						vJurisdiction = 'Seaside';
+						break;
+					case 'PACIFIC GROVE':
+						vJurisdiction = 'Pacific Grove';
+						break;
+					case 'pa':
+						vJurisdiction = 'Pacific Grove';
+						break;
+					case 'MONTEREY 74':
+						vJurisdiction = 'Monterey';
+						break;
+					case 'QUAIL':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'MONTEREY PUBLIC':
+						vJurisdiction = 'Monterey';
+						break;
+					case 'MONTEREY OTHER':
+						vJurisdiction = 'Monterey';
+						break;
+					case 'COUNTY PUBLIC':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'DRO OTHER':
+						vJurisdiction = 'Del Rey Oaks';
+						break;
+					case 'MONTEREY':
+						vJurisdiction = 'Monterey';
+						break;
+					case 'Pebble':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'Carmel Meadows':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'ENTITLEMENT':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'CARMELVALLEY':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'CAMREL':
+						vJurisdiction = 'Carmel-by-the-Sea';
+						break;
+					case 'COUNTY 74':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'AIRPORT DIST':
+						vJurisdiction = 'Airport District';
+						break;
+					case 'Pebble Beach':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'MONTEREY COUNTY':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'SC PUBLIC':
+						vJurisdiction = 'Sand City';
+						break;
+					case 'PEBBLE BEACH CO':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'PACIFC GROVE':
+						vJurisdiction = 'Pacific Grove';
+						break;
+					case 'SAND CITY':
+						vJurisdiction = 'Sand City';
+						break;
+					case ' PEBBLE BEACH':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'mo':
+						vJurisdiction = 'Monterey';
+						break;
+					case 'MONTERY COUNTY':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'PEBBEL BEACH':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'PG PUBLIC':
+						vJurisdiction = 'Pacific Grove';
+						break;
+					case 'COUNTY':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'Pebble Bech':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'Big Sur':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'SEASIDE PUBLIC':
+						vJurisdiction = 'Seaside';
+						break;
+					case 'ca':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'DEL REY OAKS':
+						vJurisdiction = 'Del Rey Oaks';
+						break;
+					case 'MONTERY':
+						vJurisdiction = 'Monterey';
+						break;
+					case 'WATER WEST':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'Various Cities':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'COUNTY OTHER':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'GRIFFIN TRUST':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'Carmel Valley':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'Carmel':
+						vJurisdiction = 'Carmel-by-the-Sea';
+						break;
+					case 'MACOMBER':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'QUAIL MEADOWS':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'Pebble Beah':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'pe':
+						vJurisdiction = 'Monterey County';
+						break;
+					case 'CARNEL VALLEY':
+						vJurisdiction = 'Monterey County';
+						break;
+					}
+				}
+				editAppSpecific("Jurisdiction", vJurisdiction, vRelatedRecordId);
+			}
+		}
+
 	}
 
 	logMessage("Updated: " + vUpdated);
@@ -320,83 +584,109 @@ if (debug.indexOf("**ERROR") > 0) {
 /*------------------------------------------------------------------------------------------------------/
 | <===========Internal Functions and Classes (Used by this script)
 /------------------------------------------------------------------------------------------------------*/
-function generateReportForEmail(itemCap, reportName, module, parameters) {
-	//logMessage(" Report Time Check 1 : " + elapsed() + " Seconds");
-	//returns the report file which can be attached to an email.
-	var vAltId;
-	var user = currentUserID; // Setting the User Name
-	var report = aa.reportManager.getReportInfoModelByName(reportName);
-	//logMessage(" Report Time Check 2 : " + elapsed() + " Seconds");
-	var permit;
-	var reportResult;
-	var reportOutput;
-	var vReportName;
-	report = report.getOutput();
-	report.setModule(module);
-	report.setCapId(itemCap);
-	report.setReportParameters(parameters);
-
-	vAltId = itemCap.getCustomID();
-	report.getEDMSEntityIdModel().setAltId(vAltId);
-	//logMessage(" Report Time Check 3 : " + elapsed() + " Seconds");
-	permit = aa.reportManager.hasPermission(reportName, user);
-	//logMessage(" Report Time Check 4 : " + elapsed() + " Seconds");
-	if (permit.getOutput().booleanValue()) {
-		reportResult = aa.reportManager.getReportResult(report);
-		//logMessage(" Report Time Check 5 : " + elapsed() + " Seconds");
-		if (!reportResult.getSuccess()) {
-			logDebug("System failed get report: " + reportResult.getErrorType() + ":" + reportResult.getErrorMessage());
-			return false;
-		} else {
-			reportOutput = reportResult.getOutput();
-			vReportName = reportOutput.getName();
-			logMessage("Report " + vReportName + " generated for record " + itemCap.getCustomID() + ". " + parameters);
-			//logMessage(" Report Time Check 6 : " + elapsed() + " Seconds");
-			return vReportName;
-		}
-	} else {
-		logDebug("Permissions are not set for report " + reportName + ".");
-		return false;
-	}
-}
-
-function getContactObjs_Batch(itemCap) // optional typeToLoad, optional return only one instead of Array?
-{
-	var typesToLoad = false;
-	if (arguments.length == 2)
-		typesToLoad = arguments[1];
-	var capContactArray = new Array();
-	var cArray = new Array();
-	typesToLoad = typesToLoad.split(",");
-
-	//logDebug("1) " + typesToLoad);
-
-	var capContactResult = aa.people.getCapContactByCapID(itemCap);
-	//logDebug("2) " + capContactResult.getSuccess());
-	if (capContactResult.getSuccess()) {
-		var capContactArray = capContactResult.getOutput();
-	}
-
-	if (capContactArray) {
-		//logDebug("3) " + capContactArray.length);
-		for (var yy in capContactArray) {
-			//logDebug("4) " + capContactArray[yy].getPeople().contactType);
-			//logDebug("5) " + typesToLoad);
-			//logDebug("6) " + exists(capContactArray[yy].getPeople().contactType, typesToLoad));
-
-			if (!typesToLoad || exists(capContactArray[yy].getPeople().contactType, typesToLoad)) {
-				//logDebug("7)");
-				cArray.push(new contactObj(capContactArray[yy]));
-			}
-		}
-	}
-	//    logDebug("getContactObj returned " + cArray.length + " contactObj(s)");
-	return cArray;
-
-}
-
 function elapsed() {
 	var thisDate = new Date();
 	var thisTime = thisDate.getTime();
 	return ((thisTime - startTime) / 1000)
+}
+
+function getRecordsBySQL() {
+	// Setup variables
+	var initialContext;
+	var ds;
+	var conn;
+	var selectString;
+	var sStmt;
+	var rSet;
+	var retVal;
+	var retValArray;
+	var capIdArray;
+	var retArr;
+
+	// Setup SQL Query to return CapIds
+	initialContext = aa.proxyInvoker.newInstance("javax.naming.InitialContext", null).getOutput();
+	ds = initialContext.lookup("java:/AA");
+	conn = ds.getConnection();
+/*
+	// Get Records for Testing
+	selectString = "SELECT B.B1_PER_ID1 || '-' || B.B1_PER_ID2 || '-' || B.B1_PER_ID3 AS CapId \
+		FROM B1PERMIT B \
+		INNER JOIN B3PARCEL P ON 1=1 \
+		AND B.SERV_PROV_CODE = P.SERV_PROV_CODE \
+		AND B.B1_PER_ID1 = P.B1_PER_ID1 \
+		AND B.B1_PER_ID2 = P.B1_PER_ID2 \
+		AND B.B1_PER_ID3 = P.B1_PER_ID3 \
+		AND P.B1_PARCEL_NBR IN ('011241000000', \
+		'012341010000', \
+		'012282012000', \
+		'009293006000', \
+		'007041016000', \
+		'007031005000', \
+		'010053020000', \
+		'241201022000', \
+		'187631008000', \
+		'157041007000', \
+		'011022009000', \
+		'007482003000', \
+		'011526011000', \
+		'015271003000', \
+		'012601034000', \
+		'197011019000', \
+		'009441015000', \
+		'008441009000')	\
+		WHERE 1=1 \
+		AND B.SERV_PROV_CODE = 'MPWMD' \
+		AND B.B1_PER_GROUP = 'Demand' \
+		AND B.B1_PER_TYPE = 'Application' \
+		AND B.B1_PER_SUB_TYPE = 'Water Permit' \
+		AND B.B1_PER_CATEGORY = 'New' \
+		AND B.REC_STATUS = 'A' \
+		ORDER BY B.B1_FILE_DD ASC";
+*/
+	// Get Records
+	selectString = "SELECT B.B1_PER_ID1 || '-' || B.B1_PER_ID2 || '-' || B.B1_PER_ID3 AS CapId \
+	FROM B1PERMIT B \
+	WHERE 1=1 \
+	AND B.SERV_PROV_CODE = 'MPWMD' \
+	AND B.B1_PER_GROUP = 'Demand' \
+	AND B.B1_PER_TYPE = 'Application' \
+	AND B.B1_PER_SUB_TYPE = 'Water Permit' \
+	AND B.B1_PER_CATEGORY = 'New' \
+	AND B.REC_STATUS = 'A' \
+	ORDER BY B.B1_FILE_DD ASC";
+	//logDebug(selectString);
+	
+	 
+	// Execute the SQL query to return CapIds as a CapIdModel
+	sStmt = conn.prepareStatement(selectString);
+	rSet = sStmt.executeQuery();
+	retVal = "";
+	retValArray = [];
+	capIdArray = [];
+	while (rSet.next()) {
+		retVal = rSet.getString("CapId");
+		// Separate CapId into three parts, ID1, ID2, ID3
+		retValArray = retVal.split("-");
+		// Save actual CapId object to array for processing
+		capIdArray.push(aa.cap.getCapID(retValArray[0], retValArray[1], retValArray[2]).getOutput());
+	}
+	sStmt.close();
+	conn.close();
+
+	return capIdArray;
+}
+
+function getAddressCity(pCapId) {
+	var vAddressArray = aa.address.getAddressByCapId(pCapId);
+		if (!vAddressArray.getSuccess()) {
+			return false;
+		}
+		vAddressArray = vAddressArray.getOutput();
+	var vCity = "";
+	var k = 0;
+	for (k in vAddressArray) {
+		vCity = vAddressArray[k].getCity();
+		break; // assume only one for now
+	}
+	return vCity;
 }
