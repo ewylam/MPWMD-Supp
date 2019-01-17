@@ -14,7 +14,7 @@
 /------------------------------------------------------------------------------------------------------*/
 var showMessage = true; // Set to true to see results in popup window
 var disableTokens = false;
-var showDebug = true; // Set to true to see debug messages in email confirmation
+var showDebug = false; // Set to true to see debug messages in email confirmation
 var maxSeconds = 4 * 60; // number of seconds allowed for batch processing, usually < 5*60
 var autoInvoiceFees = "Y"; // whether or not to invoice the fees added
 var useAppSpecificGroupName = false; // Use Group name when populating App Specific Info Values
@@ -142,6 +142,8 @@ var batchJobName = "" + aa.env.getValue("batchJobName");
 // Your script goes here
 // Ex. var appGroup = getParam("Group");
 //
+	showDebug = false;
+	showMessage = true;
 try {
 	com.accela.aa.util.WebThreadLocal.setServiceProviderCode("MPWMD");
 
@@ -155,19 +157,18 @@ try {
 	var x = 0;
 	var vUpdated = 0;
 	var vNotUpdated = 0;
-	var VResFixtures
+	var vResFixtures;
+	var vBasePremiseCreated = 0;
+	var vBasePremiseLinked = 0;
 	//var vGoodStatuses = ["Active","About to Expire"];
-
-	//showDebug = true;
-	showMessage = true;
 
 	logMessage("Processing " + capList.length + " records.");
 
 	for (x in capList) {
 
-		if (x > 20) {
-			break;
-		}
+		//if (x > 300) {
+		//	break;
+		//}
 
 		if (x % 500 === 0) {
 			aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Progress Results : " + x, message);
@@ -187,7 +188,7 @@ try {
 			continue;
 		}
 
-		logMessage(capId.getCustomID());
+		//logMessage(capId.getCustomID());
 
 		//cap = capList[x];
 		//capId = cap.getCapID();
@@ -206,9 +207,7 @@ try {
 		// If FUV == 0 and Post Count > 0 the set Status to "2nd Bath Protocol"
 
 		var vTableName = "RESIDENTIAL  FIXTURES";
-
 		var vFixtureTable = loadASITable(vTableName);
-
 		var vASITRow;
 		var y = 0;
 		var z = 0;
@@ -269,12 +268,13 @@ try {
 				}
 			}
 		}
+
 		if (vASITChanges) {
 			removeASITable(vTableName, capId);
 			addASITable(vTableName, vFixtureTable, capId);
 			vChanges = true;
 		}
-
+		
 		// Begin script to update the Post Fixture County and Post 2nd Bath Fixture (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
 		var w = 0;
 		var vFixture;
@@ -296,6 +296,8 @@ try {
 				}
 			}
 		}
+		
+		
 		if (vTotalFixtureCount != "NaN") {
 			editAppSpecific("Post Fixture Unit Count", toFixed(vTotalFixtureCount, 2));
 			vChanges = true;
@@ -329,12 +331,14 @@ try {
 				if (getRecordStatus(vBasePremiseRecId) == "Active") {
 					// Relate Base Premise record
 					addParent(vBasePremiseRecId);
+					vBasePremiseLinked++;
 					break;
 				}
 			}
 		} else {
 			// Create Base Premise
 			vBasePremiseRecId = createParent("Demand", "Master", "Base Premise", "NA", getAppName(capId));
+			vBasePremiseCreated++;
 
 			//Copy Parcels
 			//copyParcels(capId, vBasePremiseRecId);
@@ -555,14 +559,16 @@ try {
 				editAppSpecific("Jurisdiction", vJurisdiction, vRelatedRecordId);
 			}
 		}
-
 	}
 
-	logMessage("Updated: " + vUpdated);
-	logMessage("Not Updated: " + vNotUpdated);
+	logMessage("Water Permits Updated: " + vUpdated);
+	logMessage("Water Permits Not Updated: " + vNotUpdated);
+	logMessage("Base Premise Records Created: " + vBasePremiseCreated);
+	logMessage("Base Premise Records Linked: " + vBasePremiseLinked);
 	logMessage("End Time: " + elapsed() + " Seconds");
 	aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Complete : " + x, message);
 } catch (e) {
+	showDebug = true;
 	logDebug("Error: " + e);
 }
 
