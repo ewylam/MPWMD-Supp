@@ -1,4 +1,3 @@
-WTUA: Demand / Application / Waiver / NA(Meter Permit)
 // Begin script to close workflow and related records workflow.
 if (matches(wfTask, "Permit Issuance") && matches(wfStatus, "Issued") {
 	closeTask("Close", "Closed-Completed", "Auto Close Workflow");
