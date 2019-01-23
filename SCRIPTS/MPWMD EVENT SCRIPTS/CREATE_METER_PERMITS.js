@@ -44,7 +44,7 @@ if (wfTask == "Review" && wfStatus == "Approved") {
 				copyParcelGisObjects();
 				capId = vTmpCapId;
 			} else {
-				logDebug("Failed to get an address based on " + vStreetNum + " " + vSteetDir + " " vStreetName + " " + vStreetType + ".");
+				logDebug("Failed to get an address based on " + vStreetNum + " " + vSteetDir + " " + vStreetName + " " + vStreetType + ".");
 				logDebug(addrObj.getErrorMessage());
 			}
 			// Save current capId
