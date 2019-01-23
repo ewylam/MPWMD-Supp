@@ -26,6 +26,10 @@ if (wfTask == "Review" && wfStatus == "Approved") {
 			vStreetName = vMeterRow["Street Name"].fieldValue;
 			vSteetDir = vMeterRow["Dir"].fieldValue;
 			vStreetType = vMeterRow["Type"].fieldValue;
+			if (vSteetDir == "") {
+				vSteetDir = null;
+			}
+			
 			addrObj = aa.address.getAddressListForAdmin(null, null, vStreetNum, null, vSteetDir, vStreetName, vStreetType, null, null, null, null, null, null, null, null, null, null, null, null);
 			if (addrObj.getSuccess()) {
 				addrArr = addrObj.getOutput();
