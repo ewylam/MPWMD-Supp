@@ -37,6 +37,9 @@ if (parentCapId != null && parentCapId != false) {
 			// Replace Post Fixture with Existing Fixture
 			vFixture["Post Fixture"] = new asiTableValObj("Post Fixture", vFixture["Existing Fixture"].fieldValue, "N");
 		}
+		if (appMatch("DEMAND/APPLICATION/WATER USE CREDIT/NA")) {
+			vFixtureTableName = "RESIDENTIAL FIXTURES";
+		}
 		// Copy updated fixture table to Base Premise
 		removeASITable(vFixtureTableName, capId);
 		addASITable(vFixtureTableName, vFixtureASIT, capId);
