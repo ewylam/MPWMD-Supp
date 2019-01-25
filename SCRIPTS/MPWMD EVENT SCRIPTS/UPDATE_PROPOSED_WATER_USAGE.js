@@ -27,7 +27,6 @@ if (parseFloat(vProposedWaterUsage) != "NaN") {
 //if less water demand (Proposed water usage <0)put the absolute value of the proposed water usage into the Current Permit Onsite Credit
 if (parseFloat(vProposedWaterUsage) < 0) {
 vCurrentPermitOnsiteCredit = Math.abs(toFixed(vCurrentPermitOnsiteCredit, 4));
-	logDebug(vCurrentPermitOnsiteCredit);
-                editAppSpecific("Current Permit Onsite Credit", toFixed(vCurrentPermitOnsiteCredit, 4));
+	         editAppSpecific("Current Permit Onsite Credit", toFixed(vCurrentPermitOnsiteCredit, 4));
 }
 // End script to update the Proposed Water Usage (ASI) with the result of the Post Fixture Unit Count and Post 2nd Bath Fixture (ASI) minus Current Fixture Unit Count (ASI)
