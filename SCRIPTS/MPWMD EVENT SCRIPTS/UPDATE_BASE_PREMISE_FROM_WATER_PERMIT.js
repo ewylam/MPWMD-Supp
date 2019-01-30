@@ -1,8 +1,23 @@
 // Begin script to update the parent Base Premise record with info from Water Permit
 if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
+	// Begin script to update the parent Base Premise record with info from Water Permit
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
 	var vPostFixtureUnitCount;
 	var v2ndBathFixtureCount;
+	var vUseJurisdiction = getAppSpecific("Use Jurisdiction");
+	var vUseWUC = getAppSpecific("Water Use Credits");
+	var vUseEntitlement = getAppSpecific("Use Entitlement");
+	var vUseWDS = getAppSpecific("Use WDS");
+	var vJurisdictionAmount;
+	var vParalta = getAppSpecific("Paralta");
+	var vPreParalta = getAppSpecific("Pre-Paralta");
+	var vPublic = getAppSpecific("Public");
+	var vOther = getAppSpecific("Other");
+	var vWUC = getAppSpecific("Water Use Credit Using");
+	var vEntitlement = getAppSpecific("Entitlements");
+	var vWDS = getAppSpecific("WDS");
+
+	// Process Permit Water Allocation and update Base Premise info
 	if (vParentCapId != null && vParentCapId != "") {
 		// Update Current Fixture Unit Count (Base Premise ASI) from Post Fixture Unit Count (Water Permit ASI)
 		vPostFixtureUnitCount = getAppSpecific("Post Fixture Unit Count");
@@ -10,50 +25,26 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 
 		// Update 2nd Bath (Base Premise ASI) from Post 2nd Bath Fixture (Water Permit ASI)
 		v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
-		editAppSpecific("2nd Bath Fixture Unit Count", v2ndBathFixtureCount, vParentCapId);		
+		editAppSpecific("2nd Bath Fixture Unit Count", v2ndBathFixtureCount, vParentCapId);
 
-/*		
-		// Process Permit Water Allocation ASIT and update Base Premise info
-		var x = 0;
-		var vAllocation;
-		var vAllocationType;
-		var vAllocationAmount;
-		var vJAEArray = ["Allotment", "Paralta", "Pre-Paralta", "Public"];
-		var vEntitlementArray = ["Entitlement"];
-		var vCreditArray = ["Water Use Credits"];
-		var vWaterAllocationAmountJAE = 0;
-		var vWaterAllocationAmountEntitlements = 0;
-		var vWaterAllocationAmountCredits = 0;
-		var vPermitType;
-		if (typeof(PERMITWATERALLOCATION) == "object") {
-			for (x in PERMITWATERALLOCATION) {
-				vAllocation = PERMITWATERALLOCATION[x];
-				vAllocationType = vAllocation["Source Type"] + "";
-				vAllocationAmount = parseFloat(vAllocation["Amount"]);
-				// Update Additional JAE Amount Granted (Base Premise ASI) from Permit Water Allocation (Water Permit ASIT) Allotment, Paralta, Preparalta, Public amounts
-				vPermitType = getAppSpecific("Permit Type");
-				// Only update JAE Amount Granted only if permit type is NOT 'New Construction'
-				if (exists(vAllocationType, vJAEArray) && vPermitType != "New Construction") {
-					vWaterAllocationAmountJAE += vAllocationAmount;
-				}
-				// Update Purchased Water Used (Base Premise ASI) from Permit Water Allocation (Water Permit ASIT) Entitlement amounts
-				if (exists(vAllocationType, vEntitlementArray)) {
-					vWaterAllocationAmountEntitlements += vAllocationAmount;
-				}
-				// Update Credits Used (Base Permit ASI) from Permit Water Allocation (Water Permit ASIT) Water Use Credits amounts
-				if (exists(vAllocationType, vEntitlementArray)) {
-					vWaterAllocationAmountCredits += vAllocationAmount;
-				}
-			}
+		//if (vPermitType != "New Construction") {
+		//editAppSpecific("Additional JAE Amount Granted", vWaterAllocationAmountJAE, vParentCapId);
+		if (vUseWUC == "CHECKED") {
+			editAppSpecific("Credits Used", vWUC, vParentCapId);
 		}
-		// Only update JAE Amount Granted only if permit type is NOT 'New Construction'
-		if (vPermitType != "New Construction") {
-			editAppSpecific("Additional JAE Amount Granted", vWaterAllocationAmountJAE, vParentCapId);
+		if (vUseEntitlement == "CHECKED") {
+			editAppSpecific("Purchased Water Used", vEntitlement, vParentCapId);
 		}
-		editAppSpecific("Purchased Water Used", vWaterAllocationAmountEntitlements, vParentCapId);
-		editAppSpecific("Credits Used", vWaterAllocationAmountCredits, vParentCapId);
-*/
-		
+		if (vUseWDS == "CHECKED") {
+			editAppSpecific("WDS Used", vWDS, vParentCapId);
+		}
+		if (vUseJurisdiction == "CHECKED") {
+			vJurisdictionAmount = parseFloat(vParalta) + parseFloat(vPreParalta) + parseFloat(vPublic) + parseFloat(vOther);
+			logDebug("Paralta =" + vParalta + " Pre-Paralta + " + vPreParalta + "  Jurisdiciton amount = " + vJurisdictionAmount);
+			//+ vPreParalta.value + vPublic.value + vOther.value;
+			editAppSpecific("Water Authorized by Jurisdiction", vJurisdictionAmount, vParentCapId);
+		}
+
 		// Copy Fixture ASIT from Water Permit. Update Existing Count with values from Post Count
 		var vFixtureTableName = "RESIDENTIAL  FIXTURES";
 		var vFixtureASIT;
@@ -65,16 +56,16 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			x = 0;
 			// Removed any 'Removed' table values
 			for (x in vFixtureASIT) {
-				vFixture = vFixtureASIT[x];		
+				vFixture = vFixtureASIT[x];
 				vFixtureStatus = vFixture["Status"].fieldValue + "";
 				if (vFixtureStatus != "Removed") {
 					//Remove ASIT row from table to be copied to Base Premise Records
 					vUpdatedFixtureASIT.push(vFixture);
-				}	
+				}
 			}
 			x = 0;
-			for (x in vUpdatedFixtureASIT) {	
-				vFixture = vUpdatedFixtureASIT[x];				
+			for (x in vUpdatedFixtureASIT) {
+				vFixture = vUpdatedFixtureASIT[x];
 				// Replace Existing Count with Post Count
 				vFixture["Existing Count"] = new asiTableValObj("Existing Count", vFixture["Post Count"].fieldValue, "N");
 				// Replace Existing Fixture with Post Fixture
@@ -125,21 +116,21 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		vCreditsRemaining = vCreditsRecieved - vCreditsUsed;
 		if (parseFloat(vCreditsRemaining) != "NaN") {
 			editAppSpecific("Credits Remaining", toFixed(vCreditsRemaining, 4), vParentCapId);
-		}		
-		
-		// Copy Proposed (ASI) 
+		}
+
+		// Copy Proposed (ASI)
 		var vProposed = getAppSpecific("Proposed");
 		editAppSpecific("Total Square Footage", vProposed, vParentCapId);
-		
+
 		// Check Permit Type and update Year Built, Baseline
 		vPermitType = getAppSpecific("Permit Type");
 		var vProposedWaterUsage = getAppSpecific("Proposed Water Usage");
 		var vYear = new Date();
 		if (vPermitType == "New Construction") {
 			editAppSpecific("Year Built", vYear.getFullYear(), vParentCapId);
-			editAppSpecific("Baseline", vProposedWaterUsage, vParentCapId);	
+			editAppSpecific("Baseline", vProposedWaterUsage, vParentCapId);
 		}
-		
 	}
+	// End script to update the parent Base Premise record with info from Water Permit
 }
 // End script to update the parent Base Premise record with info from Water Permit
