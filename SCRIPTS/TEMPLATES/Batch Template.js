@@ -24,7 +24,7 @@ var useTaskSpecificGroupName = true;	// Use Group name when populating Task Spec
 var currentUserID = "ADMIN";
 var publicUser = null;
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
-var GLOBAL_VERSION = 2.0
+var GLOBAL_VERSION = 3.0
 
 var cancel = false;
 
