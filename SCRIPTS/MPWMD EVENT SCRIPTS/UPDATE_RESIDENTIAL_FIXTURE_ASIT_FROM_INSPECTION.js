@@ -137,7 +137,7 @@ if (wfTask == "Conservation" && wfStatus == "Update from Checklist") {
 		// Save updated/new ASIT back to the record
 		if (vASITChanges) {
 			removeASITable(vTableName, capId);
-			addASITable_local(vTableName, vFixtureTable, capId);
+			addASITable(vTableName, vFixtureTable, capId);
 		}
 	} else {
 		logDebug("No fixture infomation on the last inspection.");
