@@ -5,8 +5,6 @@
 // If it does exist check to see if current WP records open date is more recent then existing base premise WPs opend date
 // if so, Update base premise by coping required fields and link as parent (see UPDATE_BASE_PREMISE_FROM_WATER_PERMIT)
 // if not, do not update it and link as parent
-
-
 /*------------------------------------------------------------------------------------------------------/
 |
 | START: USER CONFIGURABLE PARAMETERS
@@ -133,7 +131,7 @@ var batchJobName = "" + aa.env.getValue("batchJobName");
 /*----------------------------------------------------------------------------------------------------/
 |
 | End: BATCH PARAMETERS
-|-----------------------------------------------------------------------------------------------------+/
+|-----------------------------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------------------------------/
 | <===========Main=Loop================>
 |
@@ -166,7 +164,7 @@ try {
 
 	for (x in capList) {
 
-		//if (x > 30) {
+		//if (x > 20) {
 		//	break;
 		//}
 
@@ -357,7 +355,9 @@ try {
 		// Check to see if WP is the newest one linked to the Base Premise
 		var vIsNewer = true;
 		if (vBasePremiseRecId != null) {
-			var vRelatedRecords = getChildren("Demand/Application/Water Permit/New", vBasePremiseRecId);
+			var vRelatedWPRecords = getChildren("Demand/Application/Water Permit/New", vBasePremiseRecId);
+			var vRelatedConvRecords = getChildren("Demand/Application/Conservation/NA", vBasePremiseRecId);
+			var vRelatedRecords = vRelatedWPRecords.concat(vRelatedConvRecords);
 			var m = 0;
 			var vRelatedRecordId;
 			var vRelatedCap;
@@ -378,19 +378,22 @@ try {
 					vIsNewer = false;
 				}
 			}
-
 			if (vIsNewer == true) {
 				wfTask = "Permit Issuance";
 				wfStatus = "Issued";
 				logMessage("Updating Base Premise Record: " + vBasePremiseRecId.getCustomID() + " from Water Permit: " + capId.getCustomID());
 				include("UPDATE_BASE_PREMISE_FROM_WATER_PERMIT");
 
-				// Update BP Use and Jurisdiction ASI Fields
-				editAppSpecific("Use", getAppSpecific("Permit Category", capId), vBasePremiseRecId);
+				var vPermitCategory = getAppSpecific("Permit Category", capId);
+				if (vPermitCategory != 'undefined' && vPermitCategory != null) {
+					// Update BP Use and Jurisdiction ASI Fields
+					vPermitCategory = vPermitCategory + "";
+					editAppSpecific("Use", vPermitCategory, vBasePremiseRecId);
+				}
 
 				var vJurisdiction = "";
 				vJurisdiction = getAddressCity(capId) + "";
-				if (vJurisdiction != "" && vJurisdiction != null & vJurisdiction != false) {
+				//if (vJurisdiction != "" && vJurisdiction != null && vJurisdiction != false) {
 					switch (vJurisdiction) {
 					case 'PG 74':
 						vJurisdiction = 'Pacific Grove';
@@ -553,15 +556,13 @@ try {
 						break;
 					case 'CARNEL VALLEY':
 						vJurisdiction = 'Monterey County';
-						break;
+						break;				
 					}
-				}
-				aa.print("Jurisdiction: " + vJurisdiction);
-				editAppSpecific("Jurisdiction", vJurisdiction, vBasePremiseRecId);
-			}
+				//}				
+				editAppSpecific("Jurisdiction", vJurisdiction, vBasePremiseRecId);				
+			}			
 		}
 	}
-
 	logMessage("Water Permits Updated: " + vUpdated);
 	logMessage("Water Permits Not Updated: " + vNotUpdated);
 	logMessage("Base Premise Records Created: " + vBasePremiseCreated);
@@ -577,6 +578,7 @@ try {
 | <===========END=Main=Loop================>
 /-----------------------------------------------------------------------------------------------------*/
 showMessage = true;
+//showDebug = true;
 if (debug.indexOf("**ERROR") > 0) {
 	aa.env.setValue("ScriptReturnCode", "1");
 	aa.env.setValue("ScriptReturnMessage", debug);
@@ -623,47 +625,48 @@ function getRecordsBySQL() {
 		AND B.B1_PER_ID1 = P.B1_PER_ID1 \
 		AND B.B1_PER_ID2 = P.B1_PER_ID2 \
 		AND B.B1_PER_ID3 = P.B1_PER_ID3 \
-		AND P.B1_PARCEL_NBR IN ('011241000000', \
-		'012341010000', \
+		AND P.B1_PARCEL_NBR IN ( \
 		'012282012000', \
-		'009293006000', \
 		'007041016000', \
-		'007031005000', \
-		'010053020000', \
-		'241201022000', \
 		'187631008000', \
 		'157041007000', \
-		'011022009000', \
-		'007482003000', \
-		'011526011000', \
-		'015271003000', \
 		'012601034000', \
 		'197011019000', \
 		'009441015000', \
 		'008441009000')	\
 		WHERE 1=1 \
 		AND B.SERV_PROV_CODE = 'MPWMD' \
-		AND B.B1_PER_GROUP = 'Demand' \
-		AND B.B1_PER_TYPE = 'Application' \
-		AND B.B1_PER_SUB_TYPE = 'Water Permit' \
-		AND B.B1_PER_CATEGORY = 'New' \
+		AND ((B.B1_PER_GROUP = 'Demand' \
+			AND B.B1_PER_TYPE = 'Application' \
+			AND B.B1_PER_SUB_TYPE = 'Water Permit' \
+			AND B.B1_PER_CATEGORY = 'New') \
+			OR (B.B1_PER_GROUP = 'Demand' \
+				AND B.B1_PER_TYPE = 'Application' \
+				AND B.B1_PER_SUB_TYPE = 'Conservation' \
+				AND B.B1_PER_CATEGORY = 'NA'))\
 		AND B.REC_STATUS = 'A' \
 		ORDER BY B.B1_FILE_DD ASC";
 */
+
 	// Get Records
 	selectString = "SELECT B.B1_PER_ID1 || '-' || B.B1_PER_ID2 || '-' || B.B1_PER_ID3 AS CapId \
 	FROM B1PERMIT B \
 	WHERE 1=1 \
-	AND B.SERV_PROV_CODE = 'MPWMD' \
-	AND B.B1_PER_GROUP = 'Demand' \
-	AND B.B1_PER_TYPE = 'Application' \
-	AND B.B1_PER_SUB_TYPE = 'Water Permit' \
-	AND B.B1_PER_CATEGORY = 'New' \
-	AND B.REC_STATUS = 'A' \
-	ORDER BY B.B1_FILE_DD ASC";
+		AND B.SERV_PROV_CODE = 'MPWMD' \
+		AND ((B.B1_PER_GROUP = 'Demand' \
+			AND B.B1_PER_TYPE = 'Application' \
+			AND B.B1_PER_SUB_TYPE = 'Water Permit' \
+			AND B.B1_PER_CATEGORY = 'New') \
+			OR (B.B1_PER_GROUP = 'Demand' \
+				AND B.B1_PER_TYPE = 'Application' \
+				AND B.B1_PER_SUB_TYPE = 'Conservation' \
+				AND B.B1_PER_CATEGORY = 'NA'))\
+		AND B.REC_STATUS = 'A' \
+		ORDER BY B.B1_FILE_DD ASC";
+
+	 
 	//logDebug(selectString);
 	
-	 
 	// Execute the SQL query to return CapIds as a CapIdModel
 	sStmt = conn.prepareStatement(selectString);
 	rSet = sStmt.executeQuery();
