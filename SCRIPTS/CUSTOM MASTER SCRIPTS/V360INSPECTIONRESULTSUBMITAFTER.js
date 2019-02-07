@@ -1,9 +1,8 @@
 /*------------------------------------------------------------------------------------------------------/
-| SVN $Id: V360InspectionResultSubmitAfterV.js 1051 2007-12-18 17:58:36Z john.schomp $
-| Program : V360InspectionResultSubmitAfterV.js
+| Program : V360INSPECTIONRESULTSUBMITAFTER.js
 | Event   : V360InspectionResultSubmitAfter
 |
-| Usage   : Master Script by Accela.  See accompanying documentation and release notes.
+| Usage   : Custom Master Script by ETech Consulting, LLC.  Updated to provide global variables.
 |
 | Client  : N/A
 | Action# : N/A
