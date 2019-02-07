@@ -9,7 +9,7 @@ var vGuesthouse = getAppSpecific("Guest house");
 var vStudio = getAppSpecific("Studio");
 
 if (vApartment == 'CHECKED') {
-	addGuideSheet(capId,inspectionId,"Apartment");
+	addGuideSheet(capId,inspId,"Apartment");
 }	
 if (vADU == 'CHECKED') {
 	addGuideSheet(capId,inspId,"ADU");
