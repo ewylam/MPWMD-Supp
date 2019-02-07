@@ -17,10 +17,7 @@ if (typeof(RESIDENTIALREBATES) == "object") {
 }
 
 x = 0;
-logDebug("Here1: " + typeof(COMMERCIALREBATES));
-
 if (typeof(COMMERCIALREBATES) == "object") {
-logDebug("Here2");
 	for (x in COMMERCIALREBATES) {
 		vRebateFixture = COMMERCIALREBATES[x];
 		vRebateFixtureApprovedAmount = parseFloat(vRebateFixture["Approved Amount"]);
