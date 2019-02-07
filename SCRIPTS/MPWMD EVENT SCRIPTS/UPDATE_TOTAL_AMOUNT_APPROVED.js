@@ -15,6 +15,20 @@ if (typeof(RESIDENTIALREBATES) == "object") {
 		}
 	}
 }
+
+x = 0;
+if (typeof(COMMERCIALREBATES) == "object") {
+	for (x in COMMERCIALREBATES) {
+		vRebateFixture = COMMERCIALREBATES[x];
+		vRebateFixtureApprovedAmount = parseFloat(vRebateFixture["Approved Amount"]);
+		vRebateFixtureStatus = vRebateFixture["Status"] + "";
+		if (vRebateFixtureApprovedAmount != "NaN" && vRebateFixtureStatus == "Approved") {
+			vTotalAmount += vRebateFixtureApprovedAmount;
+			logDebug("Value of Rebate Fixtures = Approved: " + vTotalAmount + "Value of the Approved Amount: " + vRebateFixtureApprovedAmount);
+		}
+	}
+}
+
 if (vTotalAmount != "NaN") {
 	editAppSpecific("Total Amount Approved", toFixed(vTotalAmount, 2));
 }
