@@ -16,6 +16,6 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 		} 	}
 }
 if (vTotalFixtureCount != "NaN") {
-	editAppSpecific("Current Count", toFixed(vTotalFixtureCount, 2));
+	editAppSpecific("Current Fixture Unit Count", toFixed(vTotalFixtureCount, 2));
 }
 // End script to update the Current Count (ASI) with the sum of all Residential Fixture (ASIT) Existing Fixture values
