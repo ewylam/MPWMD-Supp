@@ -26,7 +26,7 @@ var preExecute = "PreExecuteForAfterEvents" // Standard choice to execute first 
 | END User Configurable Parameters
 /------------------------------------------------------------------------------------------------------*/
 var SCRIPT_VERSION = "9.0";
-var useCustomScriptFile = true;  // if true, use Events->Custom Script and Master Scripts, else use Events->Scripts->INCLUDES_*
+var useCustomScriptFile = true; // if true, use Events->Custom Script and Master Scripts, else use Events->Scripts->INCLUDES_*
 var useSA = false;
 var SA = null;
 var SAScript = null;
@@ -50,21 +50,22 @@ if (bzr) {
 	var bvr1 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice, "SCRIPT");
 	doScripts = bvr1.getSuccess() && bvr1.getOutput().getAuditStatus() != "I";
 	var bvr3 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice, "USE_MASTER_INCLUDES");
-	if (bvr3.getSuccess()) {if(bvr3.getOutput().getDescription() == "No") useCustomScriptFile = false}; 
+	if (bvr3.getSuccess()) {
+		if (bvr3.getOutput().getDescription() == "No")
+			useCustomScriptFile = false
+	};
 }
 
 if (SA) {
-	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", SA,useCustomScriptFile));
-	eval(getScriptText("INCLUDES_ACCELA_GLOBALS", SA,useCustomScriptFile));
+	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", SA, useCustomScriptFile));
+	eval(getScriptText("INCLUDES_ACCELA_GLOBALS", SA, useCustomScriptFile));
 	eval(getScriptText(SAScript, SA));
 } else {
-	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS",null,useCustomScriptFile));
-	eval(getScriptText("INCLUDES_ACCELA_GLOBALS",null,useCustomScriptFile));
+	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", null, useCustomScriptFile));
+	eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, useCustomScriptFile));
 }
 
-eval(getScriptText("INCLUDES_CUSTOM",null,useCustomScriptFile));  
- 
-
+eval(getScriptText("INCLUDES_CUSTOM", null, useCustomScriptFile));
 
 if (documentOnly) {
 	doStandardChoiceActions(controlString, false, 0);
@@ -76,7 +77,8 @@ if (documentOnly) {
 var prefix = lookup("EMSE_VARIABLE_BRANCH_PREFIX", vEventName);
 
 function getScriptText(vScriptName, servProvCode, useProductScripts) {
-	if (!servProvCode)  servProvCode = aa.getServiceProviderCode();
+	if (!servProvCode)
+		servProvCode = aa.getServiceProviderCode();
 	vScriptName = vScriptName.toUpperCase();
 	var emseBiz = aa.proxyInvoker.newInstance("com.accela.aa.emse.emse.EMSEBusiness").getOutput();
 	try {
@@ -127,22 +129,17 @@ resultObjArray.sort(compareResultObj);
 for (thisResult in resultObjArray) {
 	curResult = resultObjArray[thisResult];
 	if (!curResult.capIdString.equals(resultCapIdStringSave)) {
-		var capId = curResult.capId
-
-			aa.env.setValue("PermitId1", capId.getID1());
+		var capId = curResult.capId;
+		aa.env.setValue("PermitId1", capId.getID1());
 		aa.env.setValue("PermitId2", capId.getID2());
 		aa.env.setValue("PermitId3", capId.getID3());
-
 		if (SA) {
-			eval(getScriptText("INCLUDES_ACCELA_GLOBALS", SA,useCustomScriptFile));
+			eval(getScriptText("INCLUDES_ACCELA_GLOBALS", SA, useCustomScriptFile));
 		} else {
-			eval(getScriptText("INCLUDES_ACCELA_GLOBALS",null,useCustomScriptFile));
+			eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, useCustomScriptFile));
 		}
-
 		resultCapIdStringSave = capIDString;
-
 		logGlobals(AInfo);
-
 	}
 
 	/*------------------------------------------------------------------------------------------------------/
@@ -168,16 +165,14 @@ for (thisResult in resultObjArray) {
 	inspObj = aa.inspection.getInspection(capId, inspId).getOutput(); // current inspection object
 	inspComment = inspObj.getInspection().getResultComment();
 	inspGroup = inspObj.getInspection().getInspectionGroup();
-	if(inspObj.getScheduledDate()){
+	if (inspObj.getScheduledDate()) {
 		inspSchedDate = inspObj.getScheduledDate().getMonth() + "/" + inspObj.getScheduledDate().getDayOfMonth() + "/" + inspObj.getScheduledDate().getYear();
-	}
-	else {
+	} else {
 		inspSchedDate = jsDateToASIDate(new Date());
 	}
-	if (inspObj.getInspectionStatusDate()){
+	if (inspObj.getInspectionStatusDate()) {
 		inspResultDate = inspObj.getInspectionStatusDate().getMonth() + "/" + inspObj.getInspectionStatusDate().getDayOfMonth() + "/" + inspObj.getInspectionStatusDate().getYear();
-	}
-	else{
+	} else {
 		inspResultDate = jsDateToASIDate(new Date());
 	}
 	inspTotalTime = inspObj.getTimeTotal();
