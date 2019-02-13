@@ -3,6 +3,7 @@ var x = 0;
 var vFixture;
 var vFixtureTypeofFixture;
 var vFixtureExistingValue;
+var vExistingCountValue;
 var vFixturePostValue;
 var vTotalCurrentCount = 0;
 var vTotalFixtureCount = 0;
@@ -14,11 +15,12 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 		vFixtureTypeofFixture = vFixture["Type of Fixture"]
 		vFixtureExistingValue = parseFloat(vFixture["Existing Fixture"]);
 		vFixturePostValue = parseFloat(vFixture["Post Fixture"]);
+		vExistingCountValue = parseFloat(vFixture["Existing Count"]);
 		vFUV = parseFloat(vFixture["FUV"]);
 		vFixtureStatus = vFixture["Status"] + "";
 		// Calculate Current Count
-		if (vFixtureExistingValue != "NaN" && (vFixtureStatus == "Active" || vFixtureStatus == "2nd Bath Protocol")) {
-			vTotalCurrentCount += vFixtureExistingValue;
+		if (vExistingCountValue != "NaN" && (vFixtureStatus == "Active" || vFixtureStatus == "2nd Bath Protocol")) {
+			vTotalCurrentCount += vExistingCountValue;
 			logDebug("Value of the Current Count:" + vTotalCurrentCount);
 		}
 		// Calculate Fixture Counts
