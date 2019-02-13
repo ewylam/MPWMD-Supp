@@ -1,46 +1,62 @@
-var toPrecision=function(value){
-  var multiplier=10000;
-  return Math.round(value*multiplier)/multiplier;
+var toPrecision = function (value) {
+	var multiplier = 10000;
+	return Math.round(value * multiplier) / multiplier;
 }
-function addDate(iDate, nDays){ 
-	if(isNaN(nDays)){
-		throw("Day is a invalid number!");
+function addDate(iDate, nDays) {
+	if (isNaN(nDays)) {
+		throw ("Day is a invalid number!");
 	}
-	return expression.addDate(iDate,parseInt(nDays));
+	return expression.addDate(iDate, parseInt(nDays));
 }
 
-function diffDate(iDate1,iDate2){
-	return expression.diffDate(iDate1,iDate2);
+function diffDate(iDate1, iDate2) {
+	return expression.diffDate(iDate1, iDate2);
 }
 
-function parseDate(dateString){
+function parseDate(dateString) {
 	return expression.parseDate(dateString);
 }
 
-function formatDate(dateString,pattern){ 
-	if(dateString==null||dateString==''){
+function formatDate(dateString, pattern) {
+	if (dateString == null || dateString == '') {
 		return '';
 	}
-	return expression.formatDate(dateString,pattern);
+	return expression.formatDate(dateString, pattern);
 }
 
-var servProvCode=expression.getValue("$$servProvCode$$").value;
-var variable0=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Use Entitlement");
-var variable1=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Use Jurisdiction");
-var variable2=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::WDS");
-var variable3=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Water Use Credits");
-var variable4=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Adjusted Water Use Capacity");
-var variable5=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Post 2nd Bath Fixture");
-var variable6=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Pre-Paralta");
-var variable7=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Paralta");
-var variable8=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Other");
-var variable9=expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Entitlements");
-
+var servProvCode = expression.getValue("$$servProvCode$$").value;
+var vUseEntitlement = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Use Entitlement");
+var vUseJurisdiction = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Use Jurisdiction");
+var vUse2ndBath = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::AF Second Bathroom Protocol");
+var vWDS = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Use WDS");
+var vWDValue = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::WDS");
+var vWaterUseCreditis = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Water Use Credits");
+var vAdjWaterUseCapacity = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Adjusted Water Use Capacity");
+var vPost2ndBath = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Post 2nd Bath Fixture");
+var vPreParalta = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Pre-Paralta");
+var vParalta = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Paralta");
+var vOther = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Other");
+var vEntitlements = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Entitlements");
+var vEndingAdjustedWaterCapacity = 0;
 
 var totalRowCount = expression.getTotalRowCount();
 
-		if((variable0.value!=null && (variable0.value.equalsIgnoreCase('YES') || variable0.value.equalsIgnoreCase('Y') || variable0.value.equalsIgnoreCase('CHECKED') || variable0.value.equalsIgnoreCase('SELECTED') || variable0.value.equalsIgnoreCase('TRUE') || variable0.value.equalsIgnoreCase('ON'))) || (variable1.value!=null && (variable1.value.equalsIgnoreCase('YES') || variable1.value.equalsIgnoreCase('Y') || variable1.value.equalsIgnoreCase('CHECKED') || variable1.value.equalsIgnoreCase('SELECTED') || variable1.value.equalsIgnoreCase('TRUE') || variable1.value.equalsIgnoreCase('ON'))) || variable2.value!=null && variable2.value*1==toPrecision("checked") || (variable3.value!=null && (variable3.value.equalsIgnoreCase('YES') || variable3.value.equalsIgnoreCase('Y') || variable3.value.equalsIgnoreCase('CHECKED') || variable3.value.equalsIgnoreCase('SELECTED') || variable3.value.equalsIgnoreCase('TRUE') || variable3.value.equalsIgnoreCase('ON')))){
+if (vUseJurisdiction.value.equalsIgnoreCase('CHECKED')) {
+	vEndingAdjustedWaterCapacity += toPrecision(vParalta.value) + toPrecision(vPreParalta.value) + toPrecision(vOther.value);
+}
 
-			variable4.value=toPrecision((variable5.getValue() * 1 *.001)+variable6.getValue() * 1 +variable7.getValue() * 1 +variable8.getValue() * 1 +variable9.getValue() * 1 );
-		expression.setReturn(variable4);
-	}
+if (vUseEntitlement.value.equalsIgnoreCase('CHECKED')) {
+	vEndingAdjustedWaterCapacity += toPrecision(vEntitlements.value);
+}
+
+if (vWDS.value.equalsIgnoreCase('CHECKED')) {
+	vEndingAdjustedWaterCapacity += toPrecision(vWDValue.value);
+}
+
+// Get Add2ndBath
+if (vWDS.value.equalsIgnoreCase('CHECKED')) {
+	vEndingAdjustedWaterCapacity += (toPrecision(vPost2ndBath.value) * .1)
+}
+
+vAdjWaterUseCapacity.value = toPrecision(vEndingAdjustedWaterCapacity);
+expression.setReturn(vAdjWaterUseCapacity);
