@@ -45,6 +45,10 @@ if (vTotalFixtureCount != "NaN") {
 if (vTotal2ndBathFixtureCount != "NaN") {
 	editAppSpecific("Post 2nd Bath Fixture", toFixed(vTotal2ndBathFixtureCount, 2));
 }
+
+logDebug("Current Count: " + vTotalCurrentCount);
+logDebug("vTotal2ndBathFixtureCount: " + vTotal2ndBathFixtureCount);
+
 if (vTotalCurrentCount != "NaN" && vTotal2ndBathFixtureCount != "NaN") {
 	editAppSpecific("Current Fixture Unit Count", toFixed((vTotalCurrentCount - vTotal2ndBathFixtureCount), 2));
 }
