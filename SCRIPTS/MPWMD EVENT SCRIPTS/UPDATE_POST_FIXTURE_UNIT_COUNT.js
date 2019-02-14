@@ -52,6 +52,6 @@ logDebug("Current Count: " + vTotalCurrentCount);
 logDebug("vTotal2ndBathFixtureCount: " + vTotal2ndBathFixtureCount);
 
 if (vTotalCurrentCount != "NaN" && (getAppSpecific("Current Fixture Unit Count") == "" || getAppSpecific("Current Fixture Unit Count") == null)) {
-	editAppSpecific("Current Fixture Unit Count", toFixed(vTotalCurrentCount));
+	editAppSpecific("Current Fixture Unit Count", toFixed(vTotalCurrentCount, 2));
 }
 // End script to update the Post Fixture County, Post 2nd Bath Fixture, and Current Count (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
