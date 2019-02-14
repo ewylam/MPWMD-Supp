@@ -48,8 +48,7 @@ if (vTotal2ndBathFixtureCount != "NaN") {
 	editAppSpecific("Post 2nd Bath Fixture", toFixed(vTotal2ndBathFixtureCount, 2));
 }
 
-logDebug("Current Count: " + vTotalCurrentCount);
-logDebug("vTotal2ndBathFixtureCount: " + vTotal2ndBathFixtureCount);
+logDebug("Current Count: " + toFixed(vTotalCurrentCount, 2));
 
 if (vTotalCurrentCount != "NaN" && (getAppSpecific("Current Fixture Unit Count") == "" || getAppSpecific("Current Fixture Unit Count") == null)) {
 	editAppSpecific("Current Fixture Unit Count", toFixed(vTotalCurrentCount, 2));
