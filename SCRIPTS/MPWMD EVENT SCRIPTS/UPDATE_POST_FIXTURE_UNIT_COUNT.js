@@ -19,10 +19,10 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 		vFUV = parseFloat(vFixture["FUV"]);
 		vFixtureStatus = vFixture["Status"] + "";
 		// Calculate Current Count
-		//if (vExistingCountValue != "NaN" && (vFixtureStatus == "Active" || vFixtureStatus == "2nd Bath Protocol")) {
-		//	vTotalCurrentCount += vExistingCountValue;
-		//	logDebug("Value of the Current Count:" + vTotalCurrentCount);
-		//}
+		if (vFixtureExistingValue != "NaN" && (vFixtureStatus == "Active" || vFixtureStatus == "2nd Bath Protocol")) {
+			vTotalCurrentCount += vFixtureExistingValue;
+			logDebug("Value of the Current Count:" + vTotalCurrentCount);
+		}
 		// Calculate Fixture Counts
 		if (vFixturePostValue != "NaN" && vFixtureStatus == "Active") {
 			vTotalFixtureCount += vFixturePostValue;
@@ -48,10 +48,10 @@ if (vTotal2ndBathFixtureCount != "NaN") {
 	editAppSpecific("Post 2nd Bath Fixture", toFixed(vTotal2ndBathFixtureCount, 2));
 }
 
-//logDebug("Current Count: " + vTotalCurrentCount);
-//logDebug("vTotal2ndBathFixtureCount: " + vTotal2ndBathFixtureCount);
+logDebug("Current Count: " + vTotalCurrentCount);
+logDebug("vTotal2ndBathFixtureCount: " + vTotal2ndBathFixtureCount);
 
-//if (vTotalCurrentCount != "NaN") {
-//	editAppSpecific("Current Fixture Unit Count", toFixed(vTotalCurrentCount));
-//}
+if (vTotalCurrentCount != "NaN" && (getAppSpecific("Current Fixture Unit Count") == "" || getAppSpecific("Current Fixture Unit Count") == null)) {
+	editAppSpecific("Current Fixture Unit Count", toFixed(vTotalCurrentCount));
+}
 // End script to update the Post Fixture County, Post 2nd Bath Fixture, and Current Count (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
