@@ -10,7 +10,7 @@ if (parentCapId != null && parentCapId != false) {
 	//copy ASI Info from license to renewal
 	copyASIInfo(parentCapId, capId);
 	
-	//update Use ASIT
+	//update Use ASI
 	var vPermitCategory = getAppSpecific("Permit Category", parentCapId);
 	if (vPermitCategory != 'undefined' && vPermitCategory != null && vPermitCategory != '') {
 		editAppSpecific("Use", vPermitCategory);
