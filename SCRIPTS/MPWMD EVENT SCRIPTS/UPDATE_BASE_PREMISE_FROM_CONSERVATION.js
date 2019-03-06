@@ -41,7 +41,7 @@ if (wfTask == "Conservation" && wfStatus == "Push to Base Premise") {
 			addASITable(vFixtureTableName, vUpdatedFixtureASIT, vParentCapId);
 			
 			// Update Current Fixture Unit Count
-			editAppSpecInfo("Current Fixture Unit Count", vCurrentFixtureUnitCount, vParentCapId);
+			editAppSpecific("Current Fixture Unit Count", vCurrentFixtureUnitCount, vParentCapId);
 		}
 
 	}
