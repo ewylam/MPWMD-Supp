@@ -43,7 +43,9 @@ if (wfTask == "Conservation" && wfStatus == "Push to Base Premise") {
 			// Update Current Fixture Unit Count
 			editAppSpecific("Current Fixture Unit Count", vCurrentFixtureUnitCount, vParentCapId);
 		}
-
+		
+		//copy ASI Info from license to renewal
+		copyASIInfo(capId, vParentCapId);
 	}
 }
 // End script to update the parent Base Premise record with info from Conservation
