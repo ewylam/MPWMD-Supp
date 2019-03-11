@@ -2,6 +2,9 @@
 if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 	// Begin script to update the parent Base Premise record with info from Water Permit
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
+	if (vParentCapId == 'undefined' || vParentCapId == null || vParentCapId == "" || vParentCapId == false) {
+		vParentCapId = createParent("Demand","Master","Base Premise","NA",null);
+	}
 	var vPostFixtureUnitCount;
 	var v2ndBathFixtureCount;
 	var vUseJurisdiction = getAppSpecific("Use Jurisdiction");
