@@ -404,7 +404,7 @@ try {
 					case 'CARME VALLEY':
 						vJurisdiction = 'Monterey County';
 						break;
-					case ' Carmel':
+					case ' Carmel':
 						vJurisdiction = 'Carmel-by-the-Sea';
 						break;
 					case 'Salinas':
