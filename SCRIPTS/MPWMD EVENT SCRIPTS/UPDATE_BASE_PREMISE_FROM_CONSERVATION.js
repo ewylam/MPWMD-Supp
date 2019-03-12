@@ -2,7 +2,7 @@
 if (wfTask == "Conservation" && wfStatus == "Push to Base Premise") {
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
 	if (vParentCapId == 'undefined' || vParentCapId == null || vParentCapId == "" || vParentCapId == false) {
-		vParentCapId = createParent("Demand","Master","Base Premise","NA",null);
+		vParentCapId = createParent("Demand","Master","Base Premise","NA",getAppName());
 	}
 
 	// Process Permit Water Allocation and update Base Premise info
