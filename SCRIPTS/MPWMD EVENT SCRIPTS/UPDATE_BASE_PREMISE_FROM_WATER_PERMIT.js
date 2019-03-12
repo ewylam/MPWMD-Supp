@@ -133,6 +133,23 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			editAppSpecific("Year Built", vYear.getFullYear(), vParentCapId);
 			editAppSpecific("Baseline", vProposedWaterUsage, vParentCapId);
 		}
+		
+		// Copy Use, Jurisdiction, Legal Description
+		var vUse;
+		var vJurisdiction;
+		var vLegalDescrition;
+		vUse = getAppSpecific("Use");
+		if (vUse != null && vUse != "") {
+			editAppSpecific("Use", vUse, vParentCapId);
+		}
+		vJurisdiction = getAppSpecific("Jurisdiction");
+		if (vJurisdiction != null && vJurisdiction != "") {
+			editAppSpecific("Jurisdiction", vJurisdiction, vParentCapId);
+		}
+		vLegalDescription = getAppSpecific("Legal Description");
+		if (vLegalDescription != null && vLegalDescription != "") {
+			editAppSpecific("Legal Description", vLegalDescription, vParentCapId);
+		}		
 	}
 	// End script to update the parent Base Premise record with info from Water Permit
 }
