@@ -140,8 +140,8 @@ var batchJobName = "" + aa.env.getValue("batchJobName");
 // Your script goes here
 // Ex. var appGroup = getParam("Group");
 //
-	showDebug = false;
-	showMessage = true;
+showDebug = false;
+showMessage = true;
 try {
 	com.accela.aa.util.WebThreadLocal.setServiceProviderCode("MPWMD");
 
@@ -272,7 +272,7 @@ try {
 			addASITable(vTableName, vFixtureTable, capId);
 			vChanges = true;
 		}
-		
+
 		// Begin script to update the Post Fixture County and Post 2nd Bath Fixture (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
 		var w = 0;
 		var vFixture;
@@ -294,8 +294,7 @@ try {
 				}
 			}
 		}
-		
-		
+
 		if (vTotalFixtureCount != "NaN") {
 			editAppSpecific("Post Fixture Unit Count", toFixed(vTotalFixtureCount, 2));
 			vChanges = true;
@@ -352,7 +351,7 @@ try {
 			//editAppName(getAppName(capId), vBasePremiseRecId);
 		}
 
-		// Check to see if WP is the newest one linked to the Base Premise
+		// Check to see if Record is the newest one linked to the Base Premise
 		var vIsNewer = true;
 		if (vBasePremiseRecId != null) {
 			var vRelatedWPRecords = getChildren("Demand/Application/Water Permit/New", vBasePremiseRecId);
@@ -374,26 +373,34 @@ try {
 				vRelatedFileDateObj = vRelatedCap.getFileDate();
 				vRelatedFileDate = vRelatedFileDateObj.getMonth() + "/" + vRelatedFileDateObj.getDayOfMonth() + "/" + vRelatedFileDateObj.getYear();
 				vRelatedFileDateJS = new Date(vRelatedFileDate);
-				if (vCurrentRecordFileDateJS < vRelatedFileDateJS) {
-					vIsNewer = false;
+				if (vCurrentRecordFileDateJS != null && vRelatedFileDateJS != null {
+					)
+					if (vCurrentRecordFileDateJS < vRelatedFileDateJS) {
+						vIsNewer = false;
+					}
 				}
-			}
-			if (vIsNewer == true) {
-				wfTask = "Permit Issuance";
-				wfStatus = "Issued";
-				logMessage("Updating Base Premise Record: " + vBasePremiseRecId.getCustomID() + " from Water Permit: " + capId.getCustomID());
-				include("UPDATE_BASE_PREMISE_FROM_WATER_PERMIT");
-
-				var vPermitCategory = getAppSpecific("Permit Category", capId);
-				if (vPermitCategory != 'undefined' && vPermitCategory != null) {
-					// Update BP Use and Jurisdiction ASI Fields
-					vPermitCategory = vPermitCategory + "";
-					editAppSpecific("Use", vPermitCategory, vBasePremiseRecId);
+					else {
+						logMessage("Current records 'File Date' may be null: " + vCurrentRecordFileDateJS);
+						logMessage("Related records 'File Date' may be null: " + vRelatedFileDateJS);
+						vIsNewer = false;
+					}
 				}
+				if (vIsNewer == true) {
+					wfTask = "Permit Issuance";
+					wfStatus = "Issued";
+					logMessage("Updating Base Premise Record: " + vBasePremiseRecId.getCustomID() + " from Water Permit: " + capId.getCustomID());
+					include("UPDATE_BASE_PREMISE_FROM_WATER_PERMIT");
 
-				var vJurisdiction = "";
-				vJurisdiction = getAddressCity(capId) + "";
-				//if (vJurisdiction != "" && vJurisdiction != null && vJurisdiction != false) {
+					var vPermitCategory = getAppSpecific("Permit Category", capId);
+					if (vPermitCategory != 'undefined' && vPermitCategory != null) {
+						// Update BP Use and Jurisdiction ASI Fields
+						vPermitCategory = vPermitCategory + "";
+						editAppSpecific("Use", vPermitCategory, vBasePremiseRecId);
+					}
+
+					var vJurisdiction = "";
+					vJurisdiction = getAddressCity(capId) + "";
+					//if (vJurisdiction != "" && vJurisdiction != null && vJurisdiction != false) {
 					switch (vJurisdiction) {
 					case 'PG 74':
 						vJurisdiction = 'Pacific Grove';
@@ -556,189 +563,190 @@ try {
 						break;
 					case 'CARNEL VALLEY':
 						vJurisdiction = 'Monterey County';
-						break;				
+						break;
 					}
-				//}				
-				editAppSpecific("Jurisdiction", vJurisdiction, vBasePremiseRecId);				
-			}			
-		}
-	}
-	logMessage("Water Permits Updated: " + vUpdated);
-	logMessage("Water Permits Not Updated: " + vNotUpdated);
-	logMessage("Base Premise Records Created: " + vBasePremiseCreated);
-	logMessage("Base Premise Records Linked: " + vBasePremiseLinked);
-	logMessage("End Time: " + elapsed() + " Seconds");
-	aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Complete : " + x, message);
-} catch (e) {
-	showDebug = true;
-	logDebug("Error: " + e);
-}
-
-/*------------------------------------------------------------------------------------------------------/
-| <===========END=Main=Loop================>
-/-----------------------------------------------------------------------------------------------------*/
-showMessage = true;
-//showDebug = true;
-if (debug.indexOf("**ERROR") > 0) {
-	aa.env.setValue("ScriptReturnCode", "1");
-	aa.env.setValue("ScriptReturnMessage", debug);
-} else {
-	aa.env.setValue("ScriptReturnCode", "0");
-	if (showMessage)
-		aa.env.setValue("ScriptReturnMessage", message);
-	if (showDebug)
-		aa.env.setValue("ScriptReturnMessage", debug);
-}
-
-/*------------------------------------------------------------------------------------------------------/
-| <===========Internal Functions and Classes (Used by this script)
-/------------------------------------------------------------------------------------------------------*/
-function elapsed() {
-	var thisDate = new Date();
-	var thisTime = thisDate.getTime();
-	return ((thisTime - startTime) / 1000)
-}
-
-function getRecordsBySQL() {
-	// Setup variables
-	var initialContext;
-	var ds;
-	var conn;
-	var selectString;
-	var sStmt;
-	var rSet;
-	var retVal;
-	var retValArray;
-	var capIdArray;
-	var retArr;
-
-	// Setup SQL Query to return CapIds
-	initialContext = aa.proxyInvoker.newInstance("javax.naming.InitialContext", null).getOutput();
-	ds = initialContext.lookup("java:/AA");
-	conn = ds.getConnection();
-/*
-	// Get Records for Testing
-	selectString = "SELECT B.B1_PER_ID1 || '-' || B.B1_PER_ID2 || '-' || B.B1_PER_ID3 AS CapId \
-		FROM B1PERMIT B \
-		INNER JOIN B3PARCEL P ON 1=1 \
-		AND B.SERV_PROV_CODE = P.SERV_PROV_CODE \
-		AND B.B1_PER_ID1 = P.B1_PER_ID1 \
-		AND B.B1_PER_ID2 = P.B1_PER_ID2 \
-		AND B.B1_PER_ID3 = P.B1_PER_ID3 \
-		AND P.B1_PARCEL_NBR IN ( \
-		'012282012000', \
-		'007041016000', \
-		'187631008000', \
-		'157041007000', \
-		'012601034000', \
-		'197011019000', \
-		'009441015000', \
-		'008441009000')	\
-		WHERE 1=1 \
-		AND B.SERV_PROV_CODE = 'MPWMD' \
-		AND ((B.B1_PER_GROUP = 'Demand' \
-			AND B.B1_PER_TYPE = 'Application' \
-			AND B.B1_PER_SUB_TYPE = 'Water Permit' \
-			AND B.B1_PER_CATEGORY = 'New') \
-			OR (B.B1_PER_GROUP = 'Demand' \
-				AND B.B1_PER_TYPE = 'Application' \
-				AND B.B1_PER_SUB_TYPE = 'Conservation' \
-				AND B.B1_PER_CATEGORY = 'NA'))\
-		AND B.REC_STATUS = 'A' \
-		ORDER BY B.B1_FILE_DD ASC";
-*/
-
-	// Get Records
-	selectString = "SELECT B.B1_PER_ID1 || '-' || B.B1_PER_ID2 || '-' || B.B1_PER_ID3 AS CapId \
-	FROM B1PERMIT B \
-	WHERE 1=1 \
-		AND B.SERV_PROV_CODE = 'MPWMD' \
-		AND ((B.B1_PER_GROUP = 'Demand' \
-			AND B.B1_PER_TYPE = 'Application' \
-			AND B.B1_PER_SUB_TYPE = 'Water Permit' \
-			AND B.B1_PER_CATEGORY = 'New') \
-			OR (B.B1_PER_GROUP = 'Demand' \
-				AND B.B1_PER_TYPE = 'Application' \
-				AND B.B1_PER_SUB_TYPE = 'Conservation' \
-				AND B.B1_PER_CATEGORY = 'NA'))\
-		AND B.REC_STATUS = 'A' \
-		ORDER BY B.B1_FILE_DD ASC";
-
-	 
-	//logDebug(selectString);
-	
-	// Execute the SQL query to return CapIds as a CapIdModel
-	sStmt = conn.prepareStatement(selectString);
-	rSet = sStmt.executeQuery();
-	retVal = "";
-	retValArray = [];
-	capIdArray = [];
-	while (rSet.next()) {
-		retVal = rSet.getString("CapId");
-		// Separate CapId into three parts, ID1, ID2, ID3
-		retValArray = retVal.split("-");
-		// Save actual CapId object to array for processing
-		capIdArray.push(aa.cap.getCapID(retValArray[0], retValArray[1], retValArray[2]).getOutput());
-	}
-	sStmt.close();
-	conn.close();
-
-	return capIdArray;
-}
-
-function getAddressCity(pCapId) {
-	var vAddressArray = aa.address.getAddressByCapId(pCapId);
-		if (!vAddressArray.getSuccess()) {
-			return false;
-		}
-		vAddressArray = vAddressArray.getOutput();
-	var vCity = "";
-	var k = 0;
-	for (k in vAddressArray) {
-		vCity = vAddressArray[k].getCity();
-		break; // assume only one for now
-	}
-	return vCity;
-}
-
-function editAppSpecific_Local(itemName,itemValue)  // optional: itemCap
-{
-	var itemCap = capId;
-	var itemGroup = null;
-	if (arguments.length == 3) itemCap = arguments[2]; // use cap ID specified in args
-   	
-  	if (useAppSpecificGroupName)
-	{
-		if (itemName.indexOf(".") < 0)
-			{ logDebug("**WARNING: editAppSpecific requires group name prefix when useAppSpecificGroupName is true") ; return false }
-		
-		
-		itemGroup = itemName.substr(0,itemName.indexOf("."));
-		itemName = itemName.substr(itemName.indexOf(".")+1);
-	}
-   	// change 2/2/2018 - update using: aa.appSpecificInfo.editAppSpecInfoValue(asiField)
-	// to avoid issue when updating a blank custom form via script. It was wiping out the field alias 
-	// and replacing with the field name
-	
-	var asiFieldResult = aa.appSpecificInfo.getByList(itemCap, itemName);
-	if(asiFieldResult.getSuccess()){
-		var asiFieldArray = asiFieldResult.getOutput();
-		if(asiFieldArray.length > 0){
-			var asiField = asiFieldArray[0];
-			var origAsiValue = asiField.getChecklistComment();
-			asiField.setChecklistComment(itemValue);
-
-			var updateFieldResult = aa.appSpecificInfo.editAppSpecInfoValue(asiField);
-			if(updateFieldResult.getSuccess()){
-				logMessage("Successfully updated custom field: " + itemName + " with value: " + itemValue + " : " + itemCap.getCustomID());
-				if(arguments.length < 3) //If no capId passed update the ASI Array
-				AInfo[itemName] = itemValue; 
+					//}
+					if (vJurisdiction != null && vJurisdiction != "") {
+						editAppSpecific("Jurisdiction", vJurisdiction, vBasePremiseRecId);
+					}
+				}
 			}
-			else
-			{ logDebug( "WARNING: " + itemName + " was not updated."); }
 		}
+		logMessage("Water Permits Updated: " + vUpdated);
+		logMessage("Water Permits Not Updated: " + vNotUpdated);
+		logMessage("Base Premise Records Created: " + vBasePremiseCreated);
+		logMessage("Base Premise Records Linked: " + vBasePremiseLinked);
+		logMessage("End Time: " + elapsed() + " Seconds");
+		aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Complete : " + x, message);
+	} catch (e) {
+		showDebug = true;
+		logDebug("Error: " + e);
 	}
-	else {
-		logDebug("ERROR: " + asiFieldResult.getErrorMessage());
-	}
-} 
+
+	/*------------------------------------------------------------------------------------------------------/
+	| <===========END=Main=Loop================>
+	/-----------------------------------------------------------------------------------------------------*/
+	showMessage = true;
+	//showDebug = true;
+	if (debug.indexOf("**ERROR") > 0) {
+		aa.env.setValue("ScriptReturnCode", "1");
+		aa.env.setValue("ScriptReturnMessage", debug);
+	} else {
+		aa.env.setValue("ScriptReturnCode", "0");
+		if (showMessage)
+			aa.env.setValue("ScriptReturnMessage", message);
+			if (showDebug)
+				aa.env.setValue("ScriptReturnMessage", debug);
+		}
+
+		/*------------------------------------------------------------------------------------------------------/
+		| <===========Internal Functions and Classes (Used by this script)
+		/------------------------------------------------------------------------------------------------------*/
+		function elapsed() {
+			var thisDate = new Date();
+			var thisTime = thisDate.getTime();
+			return ((thisTime - startTime) / 1000)
+		}
+
+		function getRecordsBySQL() {
+			// Setup variables
+			var initialContext;
+			var ds;
+			var conn;
+			var selectString;
+			var sStmt;
+			var rSet;
+			var retVal;
+			var retValArray;
+			var capIdArray;
+			var retArr;
+
+			// Setup SQL Query to return CapIds
+			initialContext = aa.proxyInvoker.newInstance("javax.naming.InitialContext", null).getOutput();
+			ds = initialContext.lookup("java:/AA");
+			conn = ds.getConnection();
+			/*
+			// Get Records for Testing
+			selectString = "SELECT B.B1_PER_ID1 || '-' || B.B1_PER_ID2 || '-' || B.B1_PER_ID3 AS CapId \
+			FROM B1PERMIT B \
+			INNER JOIN B3PARCEL P ON 1=1 \
+			AND B.SERV_PROV_CODE = P.SERV_PROV_CODE \
+			AND B.B1_PER_ID1 = P.B1_PER_ID1 \
+			AND B.B1_PER_ID2 = P.B1_PER_ID2 \
+			AND B.B1_PER_ID3 = P.B1_PER_ID3 \
+			AND P.B1_PARCEL_NBR IN ( \
+			'012282012000', \
+			'007041016000', \
+			'187631008000', \
+			'157041007000', \
+			'012601034000', \
+			'197011019000', \
+			'009441015000', \
+			'008441009000')	\
+			WHERE 1=1 \
+			AND B.SERV_PROV_CODE = 'MPWMD' \
+			AND ((B.B1_PER_GROUP = 'Demand' \
+			AND B.B1_PER_TYPE = 'Application' \
+			AND B.B1_PER_SUB_TYPE = 'Water Permit' \
+			AND B.B1_PER_CATEGORY = 'New') \
+			OR (B.B1_PER_GROUP = 'Demand' \
+			AND B.B1_PER_TYPE = 'Application' \
+			AND B.B1_PER_SUB_TYPE = 'Conservation' \
+			AND B.B1_PER_CATEGORY = 'NA'))\
+			AND B.REC_STATUS = 'A' \
+			ORDER BY B.B1_FILE_DD ASC";
+			 */
+
+			// Get Records
+			selectString = "SELECT B.B1_PER_ID1 || '-' || B.B1_PER_ID2 || '-' || B.B1_PER_ID3 AS CapId \
+				FROM B1PERMIT B \
+				WHERE 1=1 \
+				AND B.SERV_PROV_CODE = 'MPWMD' \
+				AND ((B.B1_PER_GROUP = 'Demand' \
+				AND B.B1_PER_TYPE = 'Application' \
+				AND B.B1_PER_SUB_TYPE = 'Water Permit' \
+				AND B.B1_PER_CATEGORY = 'New') \
+				OR (B.B1_PER_GROUP = 'Demand' \
+				AND B.B1_PER_TYPE = 'Application' \
+				AND B.B1_PER_SUB_TYPE = 'Conservation' \
+				AND B.B1_PER_CATEGORY = 'NA'))\
+				AND B.REC_STATUS = 'A' \
+				ORDER BY B.B1_FILE_DD ASC";
+
+			//logDebug(selectString);
+
+			// Execute the SQL query to return CapIds as a CapIdModel
+			sStmt = conn.prepareStatement(selectString);
+			rSet = sStmt.executeQuery();
+			retVal = "";
+			retValArray = [];
+			capIdArray = [];
+			while (rSet.next()) {
+				retVal = rSet.getString("CapId");
+				// Separate CapId into three parts, ID1, ID2, ID3
+				retValArray = retVal.split("-");
+				// Save actual CapId object to array for processing
+				capIdArray.push(aa.cap.getCapID(retValArray[0], retValArray[1], retValArray[2]).getOutput());
+			}
+			sStmt.close();
+			conn.close();
+
+			return capIdArray;
+		}
+
+		function getAddressCity(pCapId) {
+			var vAddressArray = aa.address.getAddressByCapId(pCapId);
+			if (!vAddressArray.getSuccess()) {
+				return false;
+			}
+			vAddressArray = vAddressArray.getOutput();
+			var vCity = "";
+			var k = 0;
+			for (k in vAddressArray) {
+				vCity = vAddressArray[k].getCity();
+				break; // assume only one for now
+			}
+			return vCity;
+		}
+
+		function editAppSpecific_Local(itemName, itemValue) // optional: itemCap
+		{
+			var itemCap = capId;
+			var itemGroup = null;
+			if (arguments.length == 3)
+				itemCap = arguments[2]; // use cap ID specified in args
+
+			if (useAppSpecificGroupName) {
+				if (itemName.indexOf(".") < 0) {
+					logDebug("**WARNING: editAppSpecific requires group name prefix when useAppSpecificGroupName is true");
+					return false
+				}
+
+				itemGroup = itemName.substr(0, itemName.indexOf("."));
+				itemName = itemName.substr(itemName.indexOf(".") + 1);
+			}
+			// change 2/2/2018 - update using: aa.appSpecificInfo.editAppSpecInfoValue(asiField)
+			// to avoid issue when updating a blank custom form via script. It was wiping out the field alias
+			// and replacing with the field name
+
+			var asiFieldResult = aa.appSpecificInfo.getByList(itemCap, itemName);
+			if (asiFieldResult.getSuccess()) {
+				var asiFieldArray = asiFieldResult.getOutput();
+				if (asiFieldArray.length > 0) {
+					var asiField = asiFieldArray[0];
+					var origAsiValue = asiField.getChecklistComment();
+					asiField.setChecklistComment(itemValue);
+
+					var updateFieldResult = aa.appSpecificInfo.editAppSpecInfoValue(asiField);
+					if (updateFieldResult.getSuccess()) {
+						logMessage("Successfully updated custom field: " + itemName + " with value: " + itemValue + " : " + itemCap.getCustomID());
+						if (arguments.length < 3) //If no capId passed update the ASI Array
+							AInfo[itemName] = itemValue;
+					} else {
+						logDebug("WARNING: " + itemName + " was not updated.");
+					}
+				}
+			} else {
+				logDebug("ERROR: " + asiFieldResult.getErrorMessage());
+			}
+		}
