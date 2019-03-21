@@ -16,7 +16,7 @@ if(wfTask == "Application Received" && wfStatus == "Accepted"){
     if(perCat == "Residential"){
         //B
         if(secondBath != "CHECKED" && checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture",
-                                                       ["Toilet, High Efficiency (HET)", "Toilet, Ultra High Efficiency (UHET)",
+                                                       ["Toilet, Ultra High Efficiency (UHET)",
                                                         "Dishwasher, High Efficiency (with opt. sink)", "Clothes Washer, (HEW) 5.0 water factor or less",
                                                         "Instant Access Hot Water"])){
             var fieldRow = aa.util.newHashMap();
@@ -25,14 +25,14 @@ if(wfTask == "Application Received" && wfStatus == "Accepted"){
         }
         //C
         if(secondBath == "CHECKED" && checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture",
-                                                       ["Toilet, High Efficiency (HET)", "Toilet, Ultra High Efficiency (UHET)", "Dishwasher, High Efficiency (with opt. sink)"])){
+                                                       ["Toilet, Ultra High Efficiency (UHET)", "Dishwasher, High Efficiency (with opt. sink)"])){
             var fieldRow = aa.util.newHashMap();
             fieldRow.put("Form", "1.4.1 2nd Bath Special Fixtures");
             rowFieldArray.push(fieldRow);
         }
         //D
         if(secondBath == "CHECKED" && !checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture",
-                                                       ["Toilet, High Efficiency (HET)", "Toilet, Ultra High Efficiency (UHET)", "Dishwasher, High Efficiency (with opt. sink)"])){
+                                                       ["Toilet, Ultra High Efficiency (UHET)", "Dishwasher, High Efficiency (with opt. sink)"])){
             var fieldRow = aa.util.newHashMap();
             fieldRow.put("Form", "1.4.0 2nd Bathroom Addition");
             rowFieldArray.push(fieldRow);
