@@ -582,7 +582,7 @@ try {
 	showDebug = true;
 	logDebug("Error: " + e);
 	if (capId.getCustomID() != null) {
-		logDebug(Record: " + capId.getCustomID());
+		logDebug("Record: " + capId.getCustomID());
 	}
 }
 
