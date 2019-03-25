@@ -164,9 +164,9 @@ try {
 
 	for (x in capList) {
 
-		if (x > 20) {
-			break;
-		}
+		//if (x > 20) {
+		//	break;
+		//}
 
 		if (x % 500 === 0) {
 			aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Progress Results : " + x, message);
@@ -581,6 +581,9 @@ try {
 } catch (e) {
 	showDebug = true;
 	logDebug("Error: " + e);
+	if (capId.getCustomID() != null) {
+		logDebug(Record: " + capId.getCustomID());
+	}
 }
 
 /*------------------------------------------------------------------------------------------------------/
