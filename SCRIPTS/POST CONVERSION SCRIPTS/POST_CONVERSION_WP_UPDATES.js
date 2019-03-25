@@ -325,7 +325,7 @@ try {
 			// Link to base premise
 			for (l in vRelatedBasePremises) {
 				vBasePremiseRecId = vRelatedBasePremises[l].getCapID();
-				if (getRecordStatus(vBasePremiseRecId) == "Active") {
+				if (vBasePremiseRecId != null && vBasePremiseRecId != '' && getRecordStatus(vBasePremiseRecId) == "Active") {
 					// Relate Base Premise record
 					addParent(vBasePremiseRecId);
 					vBasePremiseLinked++;
@@ -371,16 +371,18 @@ try {
 				vRelatedRecordId = vRelatedRecords[m];
 				vRelatedCap = aa.cap.getCap(vRelatedRecordId).getOutput();
 				vRelatedFileDateObj = vRelatedCap.getFileDate();
-				vRelatedFileDate = vRelatedFileDateObj.getMonth() + "/" + vRelatedFileDateObj.getDayOfMonth() + "/" + vRelatedFileDateObj.getYear();
-				vRelatedFileDateJS = new Date(vRelatedFileDate);
-				if (vCurrentRecordFileDateJS != null && vRelatedFileDateJS != null) {
-					if (vCurrentRecordFileDateJS < vRelatedFileDateJS) {
+				if (vRelatedFileDateObj != null && vRelatedFileDateObj != "") {
+					vRelatedFileDate = vRelatedFileDateObj.getMonth() + "/" + vRelatedFileDateObj.getDayOfMonth() + "/" + vRelatedFileDateObj.getYear();
+					vRelatedFileDateJS = new Date(vRelatedFileDate);
+					if (vCurrentRecordFileDateJS != null && vRelatedFileDateJS != null) {
+						if (vCurrentRecordFileDateJS < vRelatedFileDateJS) {
+							vIsNewer = false;
+						}
+					} else {
+						logMessage("Current records 'File Date' may be null: " + vCurrentRecordFileDateJS);
+						logMessage("Related records 'File Date' may be null: " + vRelatedFileDateJS);
 						vIsNewer = false;
 					}
-				} else {
-					logMessage("Current records 'File Date' may be null: " + vCurrentRecordFileDateJS);
-					logMessage("Related records 'File Date' may be null: " + vRelatedFileDateJS);
-					vIsNewer = false;
 				}
 			}
 			if (vIsNewer == true) {

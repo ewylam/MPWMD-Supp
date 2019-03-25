@@ -3,7 +3,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 	// Begin script to update the parent Base Premise record with info from Water Permit
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
 	if (vParentCapId == 'undefined' || vParentCapId == null || vParentCapId == "" || vParentCapId == false) {
-		vParentCapId = createParent("Demand","Master","Base Premise","NA",getAppName());
+		vParentCapId = createParent("Demand", "Master", "Base Premise", "NA", getAppName());
 	}
 	var vPostFixtureUnitCount;
 	var v2ndBathFixtureCount;
@@ -23,13 +23,16 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 	// Process Permit Water Allocation and update Base Premise info
 	if (vParentCapId != null && vParentCapId != "") {
 		// Update Current Fixture Unit Count (Base Premise ASI) from Post Fixture Unit Count (Water Permit ASI)
-		vPostFixtureUnitCount = getAppSpecific("Post Fixture Unit Count");
-		editAppSpecific("Current Fixture Unit Count", vPostFixtureUnitCount, vParentCapId);
+		vPostFixtureUnitCount = getAppSpecific("Post Fixture Unit Count")
+			if (vPostFixtureUnitCount != null && vPostFixtureUnitCount != "") {
+				editAppSpecific("Current Fixture Unit Count", vPostFixtureUnitCount, vParentCapId);
+			}
 
-		// Update 2nd Bath (Base Premise ASI) from Post 2nd Bath Fixture (Water Permit ASI)
-		v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
-		editAppSpecific("2nd Bath Fixture Unit Count", v2ndBathFixtureCount, vParentCapId);
-
+			// Update 2nd Bath (Base Premise ASI) from Post 2nd Bath Fixture (Water Permit ASI)
+			v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
+		if (v2ndBathFixtureCount != null && v2ndBathFixtureCount != "") {
+			editAppSpecific("2nd Bath Fixture Unit Count", v2ndBathFixtureCount, vParentCapId);
+		}
 		//if (vPermitType != "New Construction") {
 		//editAppSpecific("Additional JAE Amount Granted", vWaterAllocationAmountJAE, vParentCapId);
 		if (vUseWUC == "CHECKED") {
@@ -42,7 +45,31 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 			editAppSpecific("WDS Used", vWDS, vParentCapId);
 		}
 		if (vUseJurisdiction == "CHECKED") {
-			vJurisdictionAmount = parseFloat(vParalta) + parseFloat(vPreParalta) + parseFloat(vPublic) + parseFloat(vOther);
+			if (vParalta != null && vParalta != "") {
+				vParalta = parseFloat(vParalta);
+			}
+			else {
+				vParalta = 0;
+			}
+			if (vPreParalta != null && vPreParalta != "") {
+				vPreParalta = parseFloat(vPreParalta);
+			}
+			else {
+				vPreParalta = 0;
+			}
+			if (vPublic != null && vPublic != "") {
+				vPublic = parseFloat(vPublic);
+			}
+			else {
+				vPublic = 0;
+			}	
+			if (vOther != null && vOther != "") {
+				vOther = parseFloat(vOther);
+			}
+			else {
+				vOther = 0;
+			}			
+			vJurisdictionAmount = vParalta + vPreParalta + vPublic + vOther;
 			logDebug("Paralta =" + vParalta + " Pre-Paralta + " + vPreParalta + "  Jurisdiciton amount = " + vJurisdictionAmount);
 			//+ vPreParalta.value + vPublic.value + vOther.value;
 			editAppSpecific("Water Authorized by Jurisdiction", vJurisdictionAmount, vParentCapId);
@@ -131,9 +158,11 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		var vYear = new Date();
 		if (vPermitType == "New Construction") {
 			editAppSpecific("Year Built", vYear.getFullYear(), vParentCapId);
-			editAppSpecific("Baseline", vProposedWaterUsage, vParentCapId);
+			if (vProposedWaterUsage != null && vProposedWaterUsage != "") {
+				editAppSpecific("Baseline", vProposedWaterUsage, vParentCapId);
+			}
 		}
-		
+
 		// Copy Use, Jurisdiction, Legal Description
 		var vUse;
 		var vJurisdiction;
@@ -149,7 +178,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		vLegalDescription = getAppSpecific("Legal Description");
 		if (vLegalDescription != null && vLegalDescription != "") {
 			editAppSpecific("Legal Description", vLegalDescription, vParentCapId);
-		}		
+		}
 	}
 	// End script to update the parent Base Premise record with info from Water Permit
 }
