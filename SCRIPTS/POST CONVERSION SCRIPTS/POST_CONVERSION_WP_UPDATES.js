@@ -296,11 +296,11 @@ try {
 		}
 
 		if (vTotalFixtureCount != "NaN") {
-			editAppSpecific("Post Fixture Unit Count", toFixed(vTotalFixtureCount, 2));
+			editAppSpecific_Local("Post Fixture Unit Count", toFixed(vTotalFixtureCount, 2));
 			vChanges = true;
 		}
 		if (vTotal2ndBathFixtureCount != "NaN") {
-			editAppSpecific("Post 2nd Bath Fixture", toFixed(vTotal2ndBathFixtureCount, 2));
+			editAppSpecific_Local("Post 2nd Bath Fixture", toFixed(vTotal2ndBathFixtureCount, 2));
 			vChanges = true;
 		}
 		// End script to update the Post Fixture County and Post 2nd Bath Fixture (ASI) with the sum of all Residential Fixture (ASIT) Post Fixture values.
@@ -713,40 +713,40 @@ function editAppSpecific_Local(itemName, itemValue) // optional: itemCap
 {
 	var itemCap = capId;
 	var itemGroup = null;
-	if (arguments.length == 3)
-		itemCap = arguments[2]; // use cap ID specified in args
-
-	if (useAppSpecificGroupName) {
-		if (itemName.indexOf(".") < 0) {
-			logDebug("**WARNING: editAppSpecific requires group name prefix when useAppSpecificGroupName is true");
-			return false
-		}
-
-		itemGroup = itemName.substr(0, itemName.indexOf("."));
-		itemName = itemName.substr(itemName.indexOf(".") + 1);
+	if (arguments.length == 3) itemCap = arguments[2]; // use cap ID specified in args
+   	
+  	if (useAppSpecificGroupName)
+	{
+		if (itemName.indexOf(".") < 0)
+			{ logDebug("**WARNING: editAppSpecific requires group name prefix when useAppSpecificGroupName is true") ; return false }
+		
+		
+		itemGroup = itemName.substr(0,itemName.indexOf("."));
+		itemName = itemName.substr(itemName.indexOf(".")+1);
 	}
-	// change 2/2/2018 - update using: aa.appSpecificInfo.editAppSpecInfoValue(asiField)
-	// to avoid issue when updating a blank custom form via script. It was wiping out the field alias
+   	// change 2/2/2018 - update using: aa.appSpecificInfo.editAppSpecInfoValue(asiField)
+	// to avoid issue when updating a blank custom form via script. It was wiping out the field alias 
 	// and replacing with the field name
-
+	
 	var asiFieldResult = aa.appSpecificInfo.getByList(itemCap, itemName);
-	if (asiFieldResult.getSuccess()) {
+	if(asiFieldResult.getSuccess()){
 		var asiFieldArray = asiFieldResult.getOutput();
-		if (asiFieldArray.length > 0) {
+		if(asiFieldArray.length > 0){
 			var asiField = asiFieldArray[0];
 			//var origAsiValue = asiField.getChecklistComment();
 			asiField.setChecklistComment(itemValue);
 
 			var updateFieldResult = aa.appSpecificInfo.editAppSpecInfoValue(asiField);
-			if (updateFieldResult.getSuccess()) {
-				logMessage("Successfully updated custom field: " + itemName + " with value: " + itemValue + " : " + itemCap.getCustomID());
-				if (arguments.length < 3) //If no capId passed update the ASI Array
-					AInfo[itemName] = itemValue;
-			} else {
-				logDebug("WARNING: " + itemName + " was not updated.");
+			if(updateFieldResult.getSuccess()){
+				logDebug("Successfully updated custom field: " + itemName + " with value: " + itemValue);
+				if(arguments.length < 3) //If no capId passed update the ASI Array
+				AInfo[itemName] = itemValue; 
 			}
+			else
+			{ logDebug( "WARNING: " + itemName + " was not updated."); }
 		}
-	} else {
+	}
+	else {
 		logDebug("ERROR: " + asiFieldResult.getErrorMessage());
 	}
 }
