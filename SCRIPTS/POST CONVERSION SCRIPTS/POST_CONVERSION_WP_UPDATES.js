@@ -495,7 +495,7 @@ try {
 				case 'SAND CITY':
 					vJurisdiction = 'Sand City';
 					break;
-				case ' PEBBLE BEACH':
+				case ' PEBBLE BEACH':
 					vJurisdiction = 'Monterey County';
 					break;
 				case 'mo':
@@ -734,7 +734,7 @@ function editAppSpecific_Local(itemName, itemValue) // optional: itemCap
 		var asiFieldArray = asiFieldResult.getOutput();
 		if (asiFieldArray.length > 0) {
 			var asiField = asiFieldArray[0];
-			var origAsiValue = asiField.getChecklistComment();
+			//var origAsiValue = asiField.getChecklistComment();
 			asiField.setChecklistComment(itemValue);
 
 			var updateFieldResult = aa.appSpecificInfo.editAppSpecInfoValue(asiField);
