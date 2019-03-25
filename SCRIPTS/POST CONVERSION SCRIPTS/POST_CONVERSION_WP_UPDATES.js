@@ -164,9 +164,9 @@ try {
 
 	for (x in capList) {
 
-		//if (x > 20) {
-		//	break;
-		//}
+		if (x > 20) {
+			break;
+		}
 
 		if (x % 500 === 0) {
 			aa.sendMail("noReply@accela.com", "ewylam@etechconsultingllc.com", "", batchJobName + " Progress Results : " + x, message);
@@ -713,40 +713,44 @@ function editAppSpecific_Local(itemName, itemValue) // optional: itemCap
 {
 	var itemCap = capId;
 	var itemGroup = null;
-	if (arguments.length == 3) itemCap = arguments[2]; // use cap ID specified in args
-   	
-  	if (useAppSpecificGroupName)
-	{
-		if (itemName.indexOf(".") < 0)
-			{ logDebug("**WARNING: editAppSpecific requires group name prefix when useAppSpecificGroupName is true") ; return false }
-		
-		
-		itemGroup = itemName.substr(0,itemName.indexOf("."));
-		itemName = itemName.substr(itemName.indexOf(".")+1);
-	}
-   	// change 2/2/2018 - update using: aa.appSpecificInfo.editAppSpecInfoValue(asiField)
-	// to avoid issue when updating a blank custom form via script. It was wiping out the field alias 
-	// and replacing with the field name
-	
-	var asiFieldResult = aa.appSpecificInfo.getByList(itemCap, itemName);
-	if(asiFieldResult.getSuccess()){
-		var asiFieldArray = asiFieldResult.getOutput();
-		if(asiFieldArray.length > 0){
-			var asiField = asiFieldArray[0];
-			//var origAsiValue = asiField.getChecklistComment();
-			asiField.setChecklistComment(itemValue);
+	if (arguments.length == 3)
+		itemCap = arguments[2]; // use cap ID specified in args
 
-			var updateFieldResult = aa.appSpecificInfo.editAppSpecInfoValue(asiField);
-			if(updateFieldResult.getSuccess()){
-				logDebug("Successfully updated custom field: " + itemName + " with value: " + itemValue);
-				if(arguments.length < 3) //If no capId passed update the ASI Array
-				AInfo[itemName] = itemValue; 
-			}
-			else
-			{ logDebug( "WARNING: " + itemName + " was not updated."); }
+	if (useAppSpecificGroupName) {
+		if (itemName.indexOf(".") < 0) {
+			logDebug("**WARNING: editAppSpecific requires group name prefix when useAppSpecificGroupName is true");
+			return false
 		}
+
+		itemGroup = itemName.substr(0, itemName.indexOf("."));
+		itemName = itemName.substr(itemName.indexOf(".") + 1);
 	}
-	else {
+	// change 2/2/2018 - update using: aa.appSpecificInfo.editAppSpecInfoValue(asiField)
+	// to avoid issue when updating a blank custom form via script. It was wiping out the field alias
+	// and replacing with the field name
+
+	var asiFieldResult = aa.appSpecificInfo.getByList(itemCap, itemName);
+	if (asiFieldResult.getSuccess()) {
+		var asiFieldArray = asiFieldResult.getOutput();
+		if (asiFieldArray.length > 0) {
+			var asiField = asiFieldArray[0];
+			if (asiField != null) {
+				//var origAsiValue = asiField.getChecklistComment();
+				asiField.setChecklistComment(itemValue);
+
+				var updateFieldResult = aa.appSpecificInfo.editAppSpecInfoValue(asiField);
+				if (updateFieldResult.getSuccess()) {
+					logDebug("Successfully updated custom field: " + itemName + " with value: " + itemValue);
+					if (arguments.length < 3) //If no capId passed update the ASI Array
+						AInfo[itemName] = itemValue;
+				} else {
+					logDebug("WARNING: " + itemName + " was not updated.");
+				}
+			} else {
+				logDebug("WARNING: " + itemName + " was not updated. Field not found");
+			}
+		}
+	} else {
 		logDebug("ERROR: " + asiFieldResult.getErrorMessage());
 	}
 }
