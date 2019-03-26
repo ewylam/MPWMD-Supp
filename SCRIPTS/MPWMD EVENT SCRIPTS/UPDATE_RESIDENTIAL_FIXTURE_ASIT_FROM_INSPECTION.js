@@ -1,5 +1,5 @@
 //Begin script to get the most recent inspection and update the fixture ASIT from the guidesheet data
-if (wfTask == "Conservation" && wfStatus == "Update from Checklist") {
+if ((wfTask == "Conservation" && wfStatus == "Update from Checklist") || (wfTask == "Inspection" && wfStatus == "Update from Checklist")) {
 	var vInspectionId;
 	var vInspectionGuideSheetObjects;
 	var vGuideSheetObject;
