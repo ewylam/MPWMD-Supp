@@ -15,7 +15,7 @@ function setTransParcelLegalDescription(vCapId, vLegalDescription) {
 		var capPrclObj = aa.parcel.warpCapIdParcelModel2CapParcelModel(vCapId, parcel);
 		if (capPrclObj.getSuccess()) {
 			capPrclObj = capPrclObj.getOutput();
-			vResult = aa.parcel.updateDailyParcelWithAPOAttribute(capPrclObj).getSuccess();
+			vResult = aa.parcel.updateDailyParcelWithAPOAttribute(capPrclObj);
 			if (vResult.getSuccess()) {
 				return vResult;
 			} else {
