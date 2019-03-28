@@ -37,6 +37,7 @@ if (vTemplateName != null && vTemplateName != '') {
 	// populate email parameters
 	vEParams = aa.util.newHashtable();
 	addParameter(vEParams, "$$CAPPARCEL$$", getPrimaryParcel());
+	addParameter(vEParams, "$$ParcelOwner$$", getOwnersFullName());
 	addParameter(vEParams, "$$InspectionDate$$", inspResultDate);
 	addParameter(vEParams, "$$InspectorFullName$$", vStaffFullName);
 	addParameter(vEParams, "$$InspectionType$$", inspResultDate);
