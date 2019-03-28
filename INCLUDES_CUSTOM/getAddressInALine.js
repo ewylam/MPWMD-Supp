@@ -1,10 +1,5 @@
-
-
-
-
-
 function getAddressInALine() {
-
+	// Customized for MPWMD
 	var capAddrResult = aa.address.getAddressByCapId(capId);
 	var addressToUse = null;
 	var strAddress = "";
@@ -21,7 +16,8 @@ function getAddressInALine() {
 				addressToUse = addresses[0];
 
 			if (addressToUse) {
-			    strAddress = addressToUse.getHouseNumberStart();
+			    //strAddress = addressToUse.getHouseNumberStart();
+				strAddress = addressToUse.getHouseNumberAlphaStart();
 			    var addPart = addressToUse.getStreetDirection();
 			    if (addPart && addPart != "") 
 			    	strAddress += " " + addPart;
