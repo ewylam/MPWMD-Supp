@@ -14,9 +14,9 @@ if (inspResult == "Pass") {
 }
 if (vTemplateName != null && vTemplateName != '') {
 	// create staff full name value
-	vStaffFirstName = aa.env.GetValue("StaffFirstName");
-	vStaffMiddleName = aa.env.GetValue("StaffMiddleName");
-	vStaffLastName = aa.env.GetValue("StaffLastName");
+	vStaffFirstName = aa.env.getValue("StaffFirstName");
+	vStaffMiddleName = aa.env.getValue("StaffMiddleName");
+	vStaffLastName = aa.env.getValue("StaffLastName");
 	if (vStaffFirstName != null && vStaffFirstName != "") {
 		vStaffFullName = vStaffFirstName;
 	}
