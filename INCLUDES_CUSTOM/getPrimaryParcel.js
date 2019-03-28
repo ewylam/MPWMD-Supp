@@ -13,6 +13,8 @@ function getPrimaryParcel() {
 						return parcels[cnt].getParcelNumber();
 					}
 				}
+				// no primary parcel, return first parcel
+				return parcels[0].getParcelNumber();
 			}
 		}
 		return null;
