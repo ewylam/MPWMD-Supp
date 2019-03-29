@@ -25,6 +25,7 @@ function formatDate(dateString, pattern) {
 }
 
 var servProvCode = expression.getValue("$$servProvCode$$").value;
+var vCapacityStatus = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Capacity Status");
 var vUseEntitlement = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Use Entitlement");
 var vUseJurisdiction = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::Use Jurisdiction");
 var vUse2ndBath = expression.getValue("ASI::AUTHORIZATION FOR WATER PERMIT::AF Second Bathroom Protocol");
@@ -43,30 +44,35 @@ var vMSG = "";
 
 var totalRowCount = expression.getTotalRowCount();
 
-if (vUseJurisdiction.value.equalsIgnoreCase('CHECKED')) {
-	vEndingAdjustedWaterCapacity += toPrecision(vParalta.value) + toPrecision(vPreParalta.value) + toPrecision(vOther.value);
-	vMSG += (toPrecision(vParalta.value) + toPrecision(vPreParalta.value) + toPrecision(vOther.value)) + "";
+if (vCapacityStatus.value == "Calculate Capacity") {
+	if (vUseJurisdiction.value.equalsIgnoreCase('CHECKED')) {
+		vEndingAdjustedWaterCapacity += toPrecision(vParalta.value) + toPrecision(vPreParalta.value) + toPrecision(vOther.value);
+		vMSG += (toPrecision(vParalta.value) + toPrecision(vPreParalta.value) + toPrecision(vOther.value)) + "";
+	}
+
+	if (vUseEntitlement.value.equalsIgnoreCase('CHECKED')) {
+		vEndingAdjustedWaterCapacity += toPrecision(vEntitlements.value);
+		vMSG += " + " + toPrecision(vEntitlements.value);
+	}
+
+	if (vWDS.value.equalsIgnoreCase('CHECKED')) {
+		vEndingAdjustedWaterCapacity += toPrecision(vWDValue.value);
+		vMSG += " + " + toPrecision(vWDValue.value);
+	}
+
+	// Get Add2ndBath
+	if (vUse2ndBath.value.equalsIgnoreCase('CHECKED')) {
+		vEndingAdjustedWaterCapacity += (toPrecision(vPost2ndBath.value) * .01);
+		vMSG += " + " + (toPrecision(vPost2ndBath.value) * .01);
+	}
+
+	vAdjWaterUseCapacity.value = toPrecision(vEndingAdjustedWaterCapacity);
+	//vAdjWaterUseCapacity.message = "Yo its this -> " + vMSG + " = " + toPrecision(vEndingAdjustedWaterCapacity) + " amount";
+	expression.setReturn(vAdjWaterUseCapacity);
+
+	//vForm.message = "Yo its this -> " + vMSG + " = " + toPrecision(vEndingAdjustedWaterCapacity) + " amount";
+	//expression.setReturn(vForm);
+} else {
+	vAdjWaterUseCapacity.value = '';
+	expression.setReturn(vAdjWaterUseCapacity);
 }
-
-if (vUseEntitlement.value.equalsIgnoreCase('CHECKED')) {
-	vEndingAdjustedWaterCapacity += toPrecision(vEntitlements.value);
-	vMSG += " + " + toPrecision(vEntitlements.value);
-}
-
-if (vWDS.value.equalsIgnoreCase('CHECKED')) {
-	vEndingAdjustedWaterCapacity += toPrecision(vWDValue.value);
-	vMSG += " + " + toPrecision(vWDValue.value);
-}
-
-// Get Add2ndBath
-if (vUse2ndBath.value.equalsIgnoreCase('CHECKED')) {
-	vEndingAdjustedWaterCapacity += (toPrecision(vPost2ndBath.value) * .01);
-	vMSG += " + " + (toPrecision(vPost2ndBath.value) * .01);
-}
-
-vAdjWaterUseCapacity.value = toPrecision(vEndingAdjustedWaterCapacity);
-vAdjWaterUseCapacity.message = "Yo its this -> " + vMSG + " = " + toPrecision(vEndingAdjustedWaterCapacity) + " amount";
-expression.setReturn(vAdjWaterUseCapacity);
-
-	vForm.message = "Yo its this -> " + vMSG + " = " + toPrecision(vEndingAdjustedWaterCapacity) + " amount";
-	expression.setReturn(vForm);
