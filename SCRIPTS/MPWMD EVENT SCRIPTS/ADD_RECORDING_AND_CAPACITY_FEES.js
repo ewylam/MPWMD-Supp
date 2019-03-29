@@ -13,7 +13,7 @@ if (wfTask == "Review" && wfStatus == "Deed Restriction Required") {
 		for (x in DEEDRESTRICTIONS) {
 			vFixture = DEEDRESTRICTIONS[x];
 			vFormValue = vFixture["Form"] + "";
-			logDebug("vFormValue:  " + vFormValue);
+			//logDebug("vFormValue:  " + vFormValue);
 			if (vFormValue != "2.2.0 Public Access") {
 				vTotalQty++;
 			}
@@ -26,7 +26,7 @@ if (wfTask == "Review" && wfStatus == "Deed Restriction Required") {
 	updateFee("REC_DEED REV", feeSched, feePeriod, 1, invFee);
 	updateFee("REC_IMAGING", feeSched, feePeriod, 1, invFee);
 
-	if (AInfo["Capacity Status"] == "Calculate Capacity" && AInfo["Adjusted Water Use Capacity"] != null) {
+	if (AInfo["Capacity Status"] == "Calculate Capacity" && AInfo["Adjusted Water Use Capacity"] != null && !feeExists("PM_CAPACITY","NEW","INVOICED")) {
 		addFeeWithExtraData("PM_CAPACITY", "MP_PERMIT", feePeriod, 1, invFee, capId, capacity, "", "");
 	}
 }
