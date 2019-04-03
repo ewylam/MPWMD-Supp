@@ -27,7 +27,7 @@ if (vPermitCategory == "Residential") {
 			vCurrentFixtureUnitCount = 0;
 		}
 
-		vCurrentPermitOnsiteCredit = vPostFixtureUnitCount - vCurrentFixtureUnitCount;
+		vCurrentPermitOnsiteCredit = vCurrentFixtureUnitCount - vPostFixtureUnitCount;
 		if (vCurrentPermitOnsiteCredit > 0) {
 			editAppSpecific("Current Permit Onsite Credit", toFixed((vCurrentPermitOnsiteCredit * .01), 4));
 		}
@@ -36,9 +36,6 @@ if (vPermitCategory == "Residential") {
 			vPostFixtureUnitCount = parseFloat(vPostFixtureUnitCount);
 		} else {
 			vPostFixtureUnitCount = 0;
-		}
-		if (v2ndBathFixtureCount != null && v2ndBathFixtureCount != "") {
-			vPostFixtureUnitCount += parseFloat(v2ndBathFixtureCount);
 		}
 		if (vCurrentFixtureUnitCount != null && vCurrentFixtureUnitCount != "") {
 			vCurrentFixtureUnitCount = parseFloat(vCurrentFixtureUnitCount);
