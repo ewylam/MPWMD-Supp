@@ -12,7 +12,7 @@ if (vPermitCategory == "Residential") {
 	vPostFixtureUnitCount = getAppSpecific("Post Fixture Unit Count");
 	v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
 	vCurrentFixtureUnitCount = getAppSpecific("Current Fixture Unit Count");
-	if (v2ndBathFixtureCount != null && v2ndBathFixtureCount != "") {
+	if (v2ndBathFixtureCount != null && v2ndBathFixtureCount != "" && v2ndBathFixtureCount != 0) {
 		v2ndBathFixtureCount = parseFloat(v2ndBathFixtureCount) * .01;
 		editAppSpecific("Proposed Water Usage", toFixed(v2ndBathFixtureCount, 4));
 
