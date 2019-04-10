@@ -5,7 +5,3 @@ include("FIND_RELATE_BASE_PREMISE");
 // Begin script that copies data from Base Premise record to Water Use Permit record.
 include("COPY_BASE_PREMISE_INFO_TO_WATER_PERMIT");
 // End script that copies data from Base Premise record to Water Use Permit record.
-
-// Begin script to assess water permit fees
-include("ASSESS_WATER_PERMIT_FEES");
-// End script to assess water permit fees
