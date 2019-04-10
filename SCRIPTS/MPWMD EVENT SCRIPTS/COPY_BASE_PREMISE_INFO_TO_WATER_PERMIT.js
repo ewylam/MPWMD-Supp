@@ -8,7 +8,7 @@ if (parentCapId != null && parentCapId != false) {
 	copyAddress(parentCapId, capId);
 
 	//copy ASI Info from license to renewal
-	copyASIInfo(parentCapId, capId);
+	//copyASIInfo(parentCapId, capId);
 	
 	//update Use ASI
 	var vPermitCategory = getAppSpecific("Use", parentCapId);
@@ -20,7 +20,7 @@ if (parentCapId != null && parentCapId != false) {
 	copyASITables(parentCapId, capId);
 
 	//Copy Contacts from license to renewal
-	copyContacts3_0(parentCapId, capId);
+	//copyContacts3_0(parentCapId, capId);
 
 	//Copy Work Description from license to renewal
 	aa.cap.copyCapWorkDesInfo(parentCapId, capId);
