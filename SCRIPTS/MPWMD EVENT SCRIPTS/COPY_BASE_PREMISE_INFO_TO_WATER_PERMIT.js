@@ -5,10 +5,10 @@ if (parentCapId != null && parentCapId != false) {
 	copyParcels(parentCapId, capId);
 
 	//Copy addresses from license to renewal
-	copyAddress(parentCapId, capId);
+	//copyAddress(parentCapId, capId);
 
 	//copy ASI Info from license to renewal
-	//copyASIInfo(parentCapId, capId);
+	copyASIInfo(parentCapId, capId);
 	
 	//update Use ASI
 	var vPermitCategory = getAppSpecific("Use", parentCapId);
