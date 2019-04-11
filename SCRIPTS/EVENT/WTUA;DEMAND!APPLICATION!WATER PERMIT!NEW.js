@@ -17,3 +17,7 @@ include("ADD_RECORDING_AND_CAPACITY_FEES");
 //Begin script to get the most recent inspection and update the fixture ASIT from the guidesheet data
 include("UPDATE_RESIDENTIAL_FIXTURE_ASIT_FROM_INSPECTION");
 //End script to get the most recent inspection and update the fixture ASIT from the guidesheet data
+
+//Begin script to add water permit application fee in Application Received Task Status Accepted
+include("ASSESS_WATER_PERMIT_FEES");
+//End script to add water permit application fee in Application Received Task Status Accepted
