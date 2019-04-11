@@ -13,7 +13,3 @@ include("UPDATE_CURRENT_FIXTURE_UNIT_COUNT_COMMERCIAL");
 // Begin script to update the Post Non-Residential with the sum of all Commercial (ASIT) Post Capacity values.
 include("UPDATE_POST_CAPACITY_COUNT_COMMERCIAL");
 // End script to update the Post Non-Residential with the sum of all Commercial (ASIT) Post Capacity values.
-
-// Begin script to add application permit fee based on Permit Category at Application Accepted.
-include("ASSESS_WATER_PERMIT_FEES");
-// End script to  add application permit fee based on Permit Category at Application Accepted.
