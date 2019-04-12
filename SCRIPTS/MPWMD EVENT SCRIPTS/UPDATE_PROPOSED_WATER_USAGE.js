@@ -14,7 +14,7 @@ if (vPermitCategory == "Residential") {
 	vCurrentFixtureUnitCount = getAppSpecific("Current Fixture Unit Count");
 	if (v2ndBathFixtureCount != null && v2ndBathFixtureCount != "" && v2ndBathFixtureCount != 0) {
 		v2ndBathFixtureCount = parseFloat(v2ndBathFixtureCount) * .01;
-		editAppSpecific("Proposed Water Usage", toFixed(v2ndBathFixtureCount, 4));
+		editAppSpecific("Proposed Water Usage", toFixed(v2ndBathFixtureCount, 3));
 
 		if (vPostFixtureUnitCount != null && vPostFixtureUnitCount != "") {
 			vPostFixtureUnitCount = parseFloat(vPostFixtureUnitCount);
@@ -29,7 +29,7 @@ if (vPermitCategory == "Residential") {
 
 		vCurrentPermitOnsiteCredit = vCurrentFixtureUnitCount - vPostFixtureUnitCount;
 		if (vCurrentPermitOnsiteCredit > 0) {
-			editAppSpecific("Current Permit Onsite Credit", toFixed((vCurrentPermitOnsiteCredit * .01), 4));
+			editAppSpecific("Current Permit Onsite Credit", toFixed((vCurrentPermitOnsiteCredit * .01), 3));
 		}
 	} else {
 		if (vPostFixtureUnitCount != null && vPostFixtureUnitCount != "") {
@@ -46,10 +46,12 @@ if (vPermitCategory == "Residential") {
 		if (parseFloat(vProposedWaterUsage) != "NaN") {
 			//if less water demand (Proposed water usage <0)put the absolute value of the proposed water usage into the Current Permit Onsite Credit
 			if (parseFloat(vProposedWaterUsage) < 0) {
-				vCurrentPermitOnsiteCredit = Math.abs(toFixed(vProposedWaterUsage, 4));
-				editAppSpecific("Current Permit Onsite Credit", toFixed(vCurrentPermitOnsiteCredit, 4));
+				vCurrentPermitOnsiteCredit = Math.abs(toFixed(vProposedWaterUsage, 3));
+				editAppSpecific("Current Permit Onsite Credit", toFixed(vCurrentPermitOnsiteCredit, 3));
+				editAppSpecific("Proposed Water Usage", 0);
 			} else {
-				editAppSpecific("Proposed Water Usage", toFixed(vProposedWaterUsage, 4));
+				editAppSpecific("Proposed Water Usage", toFixed(vProposedWaterUsage, 3));
+				editAppSpecific("Current Permit Onsite Credit", 0);
 			}
 		}
 	}
@@ -70,10 +72,12 @@ if (vPermitCategory == "Residential") {
 	if (parseFloat(vProposedWaterUsage) != "NaN") {
 		//if less water demand (Proposed water usage <0)put the absolute value of the proposed water usage into the Current Permit Onsite Credit
 		if (parseFloat(vProposedWaterUsage) < 0) {
-			vCurrentPermitOnsiteCredit = Math.abs(toFixed(vProposedWaterUsage, 4));
-			editAppSpecific("Current Permit Onsite Credit", toFixed(vCurrentPermitOnsiteCredit, 4));
+			vCurrentPermitOnsiteCredit = Math.abs(toFixed(vProposedWaterUsage, 3));
+			editAppSpecific("Current Permit Onsite Credit", toFixed(vCurrentPermitOnsiteCredit, 3));
+			editAppSpecific("Proposed Water Usage", 0);
 		} else {
-			editAppSpecific("Proposed Water Usage", toFixed(vProposedWaterUsage, 4));
+			editAppSpecific("Proposed Water Usage", toFixed(vProposedWaterUsage, 3));
+			editAppSpecific("Current Permit Onsite Credit", 0);
 		}
 	}
 } else if (vPermitCategory == "Mixed-Use") {
@@ -109,10 +113,10 @@ if (vPermitCategory == "Residential") {
 	if (parseFloat(vProposedWaterUsage) != "NaN") {
 		//if less water demand (Proposed water usage <0)put the absolute value of the proposed water usage into the Current Permit Onsite Credit
 		if (parseFloat(vProposedWaterUsage) < 0) {
-			vCurrentPermitOnsiteCredit = Math.abs(toFixed(vProposedWaterUsage, 4));
-			editAppSpecific("Current Permit Onsite Credit", toFixed(vCurrentPermitOnsiteCredit, 4));
+			vCurrentPermitOnsiteCredit = Math.abs(toFixed(vProposedWaterUsage, 3));
+			editAppSpecific("Current Permit Onsite Credit", toFixed(vCurrentPermitOnsiteCredit, 3));
 		} else {
-			editAppSpecific("Proposed Water Usage", toFixed(vProposedWaterUsage, 4));
+			editAppSpecific("Proposed Water Usage", toFixed(vProposedWaterUsage, 3));
 		}
 	}
 }
