@@ -20,12 +20,11 @@ if (wfTask == "Review" && wfStatus == "Deed Restriction Required") {
 		}
 		if (vTotalQty > 0) {
 			updateFee("REC_DEEDPROC", feeSched, feePeriod, vTotalQty, invFee);
+			updateFee("REC_DEED REV", feeSched, feePeriod, 1, invFee);
+			updateFee("REC_IMAGING", feeSched, feePeriod, 1, invFee);
 		}
 	}
-
-	updateFee("REC_DEED REV", feeSched, feePeriod, 1, invFee);
-	updateFee("REC_IMAGING", feeSched, feePeriod, 1, invFee);
-
+	
 	if (AInfo["Capacity Status"] == "Calculate Capacity" && AInfo["Adjusted Water Use Capacity"] != null && !feeExists("PM_CAPACITY","NEW","INVOICED")) {
 		addFeeWithExtraData("PM_CAPACITY", "MP_PERMIT", feePeriod, 1, invFee, capId, capacity, "", "");
 	}
