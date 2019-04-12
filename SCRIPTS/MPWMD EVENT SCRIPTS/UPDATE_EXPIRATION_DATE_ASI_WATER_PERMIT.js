@@ -15,7 +15,7 @@ if (wfTask == "Permit Issuance" && matches(wfStatus,"Issued", "Issued in Zone"))
 	vToday_dd = (vToday_dd < 10) ? '0' + vToday_dd : vToday_dd;
 	vToday_yyyy = vToday.getFullYear();
 	vExpDateString = vToday_mm + "/" + vToday_dd + "/" + (vToday_yyyy + 2);
-	vIssuedDateString = vToday_mm + "/" + vToday_dd + "/" + (vToday_yyyy);
+	vIssuedDateString = wfDateMMDDYYYY;
 	
 	//Save to ASI Expiration Date
 	if (vExpDateString != null && vExpDateString!= "") {
