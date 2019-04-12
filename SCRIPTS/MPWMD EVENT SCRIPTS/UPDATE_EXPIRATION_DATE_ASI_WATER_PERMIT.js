@@ -1,10 +1,11 @@
 // Begin script to update the expiration date
-if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
+if (wfTask == "Permit Issuance" && matches(wfStatus,"Issued", "Issued in Zone")) {
 	var vToday;
 	var vToday_mm;
 	var vToday_dd;
 	var vToday_yyyy;
 	var vExpDateString;
+	var vIssuedDateString;
 	
 	//get today as a string "MM/DD/YYYY"
 	vToday = new Date();
@@ -14,10 +15,15 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 	vToday_dd = (vToday_dd < 10) ? '0' + vToday_dd : vToday_dd;
 	vToday_yyyy = vToday.getFullYear();
 	vExpDateString = vToday_mm + "/" + vToday_dd + "/" + (vToday_yyyy + 2);
+	vIssuedDateString = vToday_mm + "/" + vToday_dd + "/" + (vToday_yyyy);
 	
 	//Save to ASI Expiration Date
 	if (vExpDateString != null && vExpDateString!= "") {
 		editAppSpecific("Expiration Date", vExpDateString);
 	}
+	if (vIssuedDateString != null && vIssuedDateString!= "") {
+		editAppSpecific("Issued Date", vIssuedDateString);
+	}
 }
 // End script to update the expiration date
+
