@@ -8,7 +8,7 @@ if (wfTask == "Permit Issuance" && matches(wfStatus,"Issued", "Issued in Zone"))
 	var vIssuedDateString;
 	
 	//get today as a string "MM/DD/YYYY"
-	vToday = new Date();
+	vToday = new Date(wfDateMMDDYYYY);
 	vToday_mm = vToday.getMonth() + 1;
 	vToday_mm = (vToday_mm < 10) ? '0' + vToday_mm : vToday_mm;
 	vToday_dd = vToday.getDate();
