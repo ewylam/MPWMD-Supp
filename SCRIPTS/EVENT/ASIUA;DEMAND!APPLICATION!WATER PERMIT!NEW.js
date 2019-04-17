@@ -13,3 +13,7 @@ include("UPDATE_CURRENT_FIXTURE_UNIT_COUNT_COMMERCIAL");
 // Begin script to update the Post Non-Residential with the sum of all Commercial (ASIT) Post Capacity values.
 include("UPDATE_POST_CAPACITY_COUNT_COMMERCIAL");
 // End script to update the Post Non-Residential with the sum of all Commercial (ASIT) Post Capacity values.
+
+// Begin script to convert old fixture names to new ones and add the sort order
+include("UPDATE_FIXTURE_TYPE_AND_SORT_ORDER");
+// End script to convert old fixture names to new ones and add the sort order
