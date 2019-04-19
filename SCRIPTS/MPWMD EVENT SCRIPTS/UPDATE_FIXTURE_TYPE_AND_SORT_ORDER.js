@@ -8,6 +8,8 @@ var vExistingCount;
 var vPostCount;
 var vExistingCountInt;
 var vPostCountInt;
+var vFUV;
+var vFUVInt;
 var vSortOrder;
 var vSortLookup;
 var vNewFixtureType;
@@ -35,10 +37,13 @@ for (x in vFixtureTable) {
 	//Remove "0" decimals
 	vExistingCount = vFixture["Existing Count"];
 	vPostCount = vFixture["Post Count"];
+	vFUV = vFixture["FUV"];
 	vExistingCountInt = parseInt(vExistingCount.fieldValue);
 	vPostCountInt = parseInt(vPostCount.fieldValue);
+	vFUVInt = toFixed(parseFloat(vFUV.fieldValue),1);
 	vExistingCount.fieldValue = vExistingCountInt + "";
 	vPostCount.fieldValue = vPostCountInt + "";
+	vFUV.fieldValue = vFUVInt + "";
 	vASITChanges = true;
 }
 // Save updated ASIT back to the record
