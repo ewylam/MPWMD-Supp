@@ -8,47 +8,47 @@ if (vCalculationMethod != null && vCalculationMethod != "") {
 	var rowFieldArray = [];
 
 	//Scenario A from specs
-	if (perCat == "Non-Residential") {
+	if (perCat == "Non-Residential" && !checkTable4Value("DEED RESTRICTIONS", "Form", ["1.0.0 Limitation on Use of Water"])) {
 		var fieldRow = aa.util.newHashMap();
 		fieldRow.put("Form", "1.0.0 Limitation on Use of Water");
+		fieldRow.put("Pages", lookup("MP_Deed Restriction Name","1.0.0 Limitation on Use of Water"));
 		rowFieldArray.push(fieldRow);
 	}
 
 	//Scenario B, C, D
 	if (perCat == "Residential") {
 		//B
-		if (secondBath != "CHECKED" && checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture",
-				["Toilet, UHET",
-					"Dishwasher, HE (opt. sink)", "Clothes Washer, (HEW) 5.0 ",
-					"Instant Access Hot Water"])) {
+		if (secondBath != "CHECKED" && checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture", ["Toilet, UHET", "Dishwasher, HE (opt. sink)", "Clothes Washer, (HEW) 5.0 ", "Instant Access Hot Water"]) && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.1.0 Special Fixtures"])) {
 			var fieldRow = aa.util.newHashMap();
 			fieldRow.put("Form", "1.1.0 Special Fixtures");
+			fieldRow.put("Pages", lookup("MP_Deed Restriction Name","1.1.0 Special Fixtures"));
 			rowFieldArray.push(fieldRow);
 		}
 		//C
-		if (secondBath == "CHECKED" && checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture",
-				["Toilet, UHET", "Dishwasher, HE (opt. sink)"])) {
+		if (secondBath == "CHECKED" && checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture",["Toilet, UHET", "Dishwasher, HE (opt. sink)"]) && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.4.1 2nd Bath Special Fixtures"])) {
 			var fieldRow = aa.util.newHashMap();
 			fieldRow.put("Form", "1.4.1 2nd Bath Special Fixtures");
+			fieldRow.put("Pages", lookup("MP_Deed Restriction Name","1.4.1 2nd Bath Special Fixtures"));
 			rowFieldArray.push(fieldRow);
 		}
 		//D
-		if (secondBath == "CHECKED" && !checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture",
-				["Toilet, UHET", "Dishwasher, HE (opt. sink)"])) {
+		if (secondBath == "CHECKED" && !checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture",["Toilet, UHET", "Dishwasher, HE (opt. sink)"]) && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.4.0 2nd Bathroom Addition"])) {
 			var fieldRow = aa.util.newHashMap();
 			fieldRow.put("Form", "1.4.0 2nd Bathroom Addition");
+			fieldRow.put("Pages", lookup("MP_Deed Restriction Name","1.4.0 2nd Bathroom Addition"));
 			rowFieldArray.push(fieldRow);
 		}
 	}
 	//Scenario E
-	if (AInfo["Landscape Included"] == "Yes") {
+	if (AInfo["Landscape Included"] == "Yes" && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.9.0 Landscape Limitation"])) {
 		var fieldRow = aa.util.newHashMap();
 		fieldRow.put("Form", "1.9.0 Landscape Limitation");
+		fieldRow.put("Pages", lookup("MP_Deed Restriction Name","1.9.0 Landscape Limitation"));
 		rowFieldArray.push(fieldRow);
 	}
 
 	//Scenario F
-	if (checkTable4Value("RESIDENTIAL FIXTURES", "Type of Fixture", ["Swim Pool (each 100 sq-ft)"])) {
+	if (checkTable4Value("RESIDENTIAL FIXTURES", "Type of Fixture", ["Swim Pool (each 100 sq-ft)"]) && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.5.0 Abandonment of Use of Swimming Pool"])) {
 		var thisTable = loadASITable("RESIDENTIAL FIXTURES");
 		for (jj in thisTable) {
 			var thisRow = thisTable[jj];
@@ -56,6 +56,7 @@ if (vCalculationMethod != null && vCalculationMethod != "") {
 				if (parseInt(thisRow["Existing Count"]) > 0 && parseInt(thisRow["Post Count"]) == 0) {
 					var fieldRow = aa.util.newHashMap();
 					fieldRow.put("Form", "1.5.0 Abandonment of Use of Swimming Pool");
+					fieldRow.put("Pages", lookup("MP_Deed Restriction Name","1.5.0 Abandonment of Use of Swimming Pool"));
 					rowFieldArray.push(fieldRow);
 					break;
 				}
@@ -64,13 +65,15 @@ if (vCalculationMethod != null && vCalculationMethod != "") {
 	}
 
 	//Scenario 2A
-	if (getContactByType('Tenant', capId) && perCat == "Non-Residential") {
+	if (getContactByType('Tenant', capId) && perCat == "Non-Residential" && !checkTable4Value("DEED RESTRICTIONS", "Form",["2.2.1 Public Access with Tenants"])) {
 		var fieldRow = aa.util.newHashMap();
 		fieldRow.put("Form", "2.2.1 Public Access with Tenants");
+		fieldRow.put("Pages", lookup("MP_Deed Restriction Name","2.2.1 Public Access with Tenants"));
 		rowFieldArray.push(fieldRow);
-	} else {
+	} else if (!checkTable4Value("DEED RESTRICTIONS", "Form",["2.2.0 Public Access"])) {
 		var fieldRow = aa.util.newHashMap();
 		fieldRow.put("Form", "2.2.0 Public Access");
+		fieldRow.put("Pages", lookup("MP_Deed Restriction Name","2.2.0 Public Access"));
 		rowFieldArray.push(fieldRow);
 	}
 
