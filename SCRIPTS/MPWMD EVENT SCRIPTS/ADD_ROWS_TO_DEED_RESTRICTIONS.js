@@ -18,7 +18,7 @@ if (vCalculationMethod != null && vCalculationMethod != "") {
 	//Scenario B, C, D
 	if (perCat == "Residential") {
 		//B
-		if (secondBath != "CHECKED" && checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture", ["Toilet, UHET", "Dishwasher, HE (opt. sink)", "Clothes Washer, (HEW) 5.0 ", "Instant Access Hot Water"]) && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.1.0 Special Fixtures"])) {
+		if (secondBath != "CHECKED" && checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture", ["Toilet, UHET", "Dishwasher, HE (opt. sink)", "Clothes Washer, (HEW) 5.0", "Instant Access Hot Water"]) && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.1.0 Special Fixtures"])) {
 			var fieldRow = aa.util.newHashMap();
 			fieldRow.put("Form", "1.1.0 Special Fixtures");
 			fieldRow.put("Pages", lookup("MP_Deed Restriction Name","1.1.0 Special Fixtures"));
