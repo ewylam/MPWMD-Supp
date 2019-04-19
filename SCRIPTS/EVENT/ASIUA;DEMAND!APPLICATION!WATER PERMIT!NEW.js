@@ -17,3 +17,7 @@ include("UPDATE_POST_CAPACITY_COUNT_COMMERCIAL");
 // Begin script to convert old fixture names to new ones and add the sort order
 include("UPDATE_FIXTURE_TYPE_AND_SORT_ORDER");
 // End script to convert old fixture names to new ones and add the sort order
+
+// Begin script to add rows to custom list (Data Table) DEED RESTRICTIONS 
+include("ADD_ROWS_TO_DEED_RESTRICTIONS");
+// End script to add rows to custom list DEED RESTRICTIONS
