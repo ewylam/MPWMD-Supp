@@ -4,6 +4,10 @@ var vTableName = "RESIDENTIAL  FIXTURES";
 var vFixtureTable = loadASITable(vTableName);
 var vFixture;
 var vFixtureType;
+var vExistingCount;
+var vPostCount;
+var vExistingCountInt;
+var vPostCountInt;
 var vSortOrder;
 var vSortLookup;
 var vNewFixtureType;
@@ -28,6 +32,14 @@ for (x in vFixtureTable) {
 			vASITChanges = true;
 		}
 	}
+	//Remove "0" decimals
+	vExistingCount = vFixture["Existing Count"];
+	vPostCount = vFixture["Post Count"];
+	vExistingCountInt = parseInt(vExistingCount.fieldValue);
+	vPostCountInt = parseInt(vPostCount.fieldValue);
+	vExistingCount.fieldValue = vExistingCountInt + "";
+	vPostCount.fieldValue = vPostCountInt + "";
+	vASITChanges = true;
 }
 // Save updated ASIT back to the record
 if (vASITChanges) {
