@@ -48,8 +48,8 @@ if (vCalculationMethod != null && vCalculationMethod != "") {
 	}
 
 	//Scenario F
-	if (checkTable4Value("RESIDENTIAL FIXTURES", "Type of Fixture", ["Swim Pool (each 100 sq-ft)"]) && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.5.0 Abandonment of Use of Swimming Pool"])) {
-		var thisTable = loadASITable("RESIDENTIAL FIXTURES");
+	if (checkTable4Value("RESIDENTIAL  FIXTURES", "Type of Fixture", ["Swim Pool (each 100 sq-ft)"]) && !checkTable4Value("DEED RESTRICTIONS", "Form",["1.5.0 Abandonment of Use of Swimming Pool"])) {
+		var thisTable = loadASITable("RESIDENTIAL  FIXTURES");
 		for (jj in thisTable) {
 			var thisRow = thisTable[jj];
 			if (thisRow["Type of Fixture"] == "Swim Pool (each 100 sq-ft)") {
