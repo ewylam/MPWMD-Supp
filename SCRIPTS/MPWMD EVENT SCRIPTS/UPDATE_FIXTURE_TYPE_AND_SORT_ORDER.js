@@ -12,7 +12,7 @@ var vASITChanges = false;
 for (x in vFixtureTable) {
 	vFixture = vFixtureTable[x];
 	vFixtureType = vFixture["Type of Fixture"];
-	vSortOrder = vFixture["SortId"];
+	vSortOrder = vFixture["Sort"];
 	vNewFixtureType = lookup('MPWMD_Fixture_Type_Conversion', vFixtureType.fieldValue);
 	if (vNewFixtureType != "" && vNewFixtureType != null) {
 		logDebug("Updating " + vFixtureType + " to " + vNewFixtureType + ".");
