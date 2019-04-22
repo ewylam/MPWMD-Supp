@@ -29,6 +29,7 @@ for (x in vFixtureTable) {
 		vFixtureType = vFixture["Type of Fixture"];
 		vSortLookup = getSDDLSortOrder('MP_Type of Fixture', vFixtureType.fieldValue);
 		if (vSortLookup != "" && vSortLookup != null) {
+			logDebug("vSortLookup.length: " + vSortLookup.length)
 			if (vSortLookup.length == 1) {
 				vSortLookup = '0' + vSortLookup;
 			}
