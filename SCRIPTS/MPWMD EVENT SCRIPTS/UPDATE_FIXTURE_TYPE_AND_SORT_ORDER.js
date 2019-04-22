@@ -30,7 +30,7 @@ for (x in vFixtureTable) {
 		vSortLookup = getSDDLSortOrder('MP_Type of Fixture', vFixtureType.fieldValue);
 		if (vSortLookup != "" && vSortLookup != null) {
 			logDebug("vSortLookup.length: " + vSortLookup.length)
-			if (vSortLookup.length == 1) {
+			if (parseFloat(vSortLookup.length) < 10) {
 				vSortLookup = '0' + vSortLookup;
 			}
 			logDebug("Updating sort order for " + vFixtureType + " to " + vSortLookup + ".");
