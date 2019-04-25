@@ -39,14 +39,14 @@ for (x in vFixtureTable) {
 	}
 	//Remove "0" decimals
 	vExistingCount = vFixture["Existing Count"];
-	vExistingCountInt = parseInt(vExistingCount.fieldValue);
+	vExistingCountInt = parseFloat(vExistingCount.fieldValue);
 	vExistingCount.fieldValue = vExistingCountInt + "";
 	vFUV = vFixture["FUV"];
 	vFUVInt = toFixed(parseFloat(vFUV.fieldValue), 1);
 	vFUV.fieldValue = vFUVInt + "";
 	if (!appMatch("Demand/Master/Base Premise/NA")) {
 		vPostCount = vFixture["Post Count"];
-		vPostCountInt = parseInt(vPostCount.fieldValue);
+		vPostCountInt = parseFloat(vPostCount.fieldValue);
 		vPostCount.fieldValue = vPostCountInt + "";
 	}
 	vASITChanges = true;
