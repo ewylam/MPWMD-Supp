@@ -64,6 +64,13 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		if (parseFloat(vCreditsRemaining) != "NaN") {
 			editAppSpecific("Credits Remaining", toFixed(vCreditsRemaining, 4), vParentCapId);
 		}
+		
+		// Update Entitlement Name ASI
+		var vEntitlementName;
+		vEntitlementName = getAppSpecific("Entitlement Name");
+		if (vEntitlementName != null && vEntitlementName != "") {
+			editAppSpecific("Entitlement Name", vEntitlementName, vParentCapId);
+		}
 	}
 }
 // End script to update the parent Base Premise record with info from Water Use Permit
