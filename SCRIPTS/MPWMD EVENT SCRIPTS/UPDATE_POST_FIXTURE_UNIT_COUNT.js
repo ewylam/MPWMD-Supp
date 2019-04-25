@@ -19,7 +19,7 @@ if (typeof(RESIDENTIALFIXTURES) == "object") {
 		vFUV = parseFloat(vFixture["FUV"]);
 		vFixtureStatus = vFixture["Status"] + "";
 		// Calculate Current Count
-		if (vFixtureExistingValue != "NaN" && (vFixtureStatus == "Active" || vFixtureStatus == "2nd Bath Protocol")) {
+		if (vFixtureExistingValue != "NaN") {
 			vTotalCurrentCount += vFixtureExistingValue;
 			logDebug("Value of the Current Count:" + vTotalCurrentCount);
 		}
