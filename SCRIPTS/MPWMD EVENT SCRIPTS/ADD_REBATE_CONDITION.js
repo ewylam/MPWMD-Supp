@@ -1,5 +1,5 @@
 //Begin script to add a "Rebate" condition to the Base Permise record
-if (wfTask == "Review" && wfStatus == "Approved") {
+if (wfTask == "Application Received" && wfStatus == "Approved") {
 	var vParent = getParent("Demand/Master/Base Premise/NA");
 	var vConditionType = "Rebates";
 	var vConditionStatus = "Applied";
