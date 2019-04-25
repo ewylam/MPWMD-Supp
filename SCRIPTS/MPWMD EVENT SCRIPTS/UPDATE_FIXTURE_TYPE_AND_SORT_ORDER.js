@@ -39,14 +39,16 @@ for (x in vFixtureTable) {
 	}
 	//Remove "0" decimals
 	vExistingCount = vFixture["Existing Count"];
-	vPostCount = vFixture["Post Count"];
-	vFUV = vFixture["FUV"];
-	vExistingCountInt = parseInt(vExistingCount.fieldValue);
-	vPostCountInt = parseInt(vPostCount.fieldValue);
-	vFUVInt = toFixed(parseFloat(vFUV.fieldValue),1);
 	vExistingCount.fieldValue = vExistingCountInt + "";
-	vPostCount.fieldValue = vPostCountInt + "";
+	vFUV = vFixture["FUV"];
+	vFUVInt = toFixed(parseFloat(vFUV.fieldValue), 1);
 	vFUV.fieldValue = vFUVInt + "";
+	vExistingCountInt = parseInt(vExistingCount.fieldValue);
+	if (!appMatch("Demand/Master/Base Premise/NA")) {
+		vPostCount = vFixture["Post Count"];
+		vPostCountInt = parseInt(vPostCount.fieldValue);
+		vPostCount.fieldValue = vPostCountInt + "";
+	}
 	vASITChanges = true;
 }
 // Save updated ASIT back to the record
