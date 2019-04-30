@@ -1,5 +1,5 @@
 // Begin script to update the parent Base Premise record with info from Water Permit
-if ((wfTask == "Permit Issuance" && matches(wfStatus,"Issued","Issued in Zone") || (wfTask == "Inspection" && wfStatus == "Push to Base Premise")) {
+if ((wfTask == "Permit Issuance" && matches(wfStatus,"Issued","Issued in Zone")) || (wfTask == "Inspection" && wfStatus == "Push to Base Premise")) {
 	// Begin script to update the parent Base Premise record with info from Water Permit
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
 	if (vParentCapId == 'undefined' || vParentCapId == null || vParentCapId == "" || vParentCapId == false) {
