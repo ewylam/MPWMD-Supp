@@ -1,6 +1,9 @@
 // Begin script to update the parent Base Premise record with info from Water Use Permit
 if (wfTask == "Permit Issuance" && matches(wfStatus,"Issued","Issued in Zone")) {
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
+	if (vParentCapId == 'undefined' || vParentCapId == null || vParentCapId == "" || vParentCapId == false) {
+		vParentCapId = createParent("Demand", "Master", "Base Premise", "NA", getAppName());
+	}
 	var vPostFixtureUnitCount;
 	if (vParentCapId != null && vParentCapId != "") {
 		// Update Purchased Water (Base Premise ASI) with current value plus Amount of Water Purchased (Water Use Permit ASI)
