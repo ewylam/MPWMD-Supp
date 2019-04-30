@@ -1,5 +1,5 @@
 // Begin script to update the parent Base Premise record with info from Water Use Permit
-if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
+if (wfTask == "Permit Issuance" && matches(wfStatus,"Issued","Issued in Zone") {
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
 	var vPostFixtureUnitCount;
 	if (vParentCapId != null && vParentCapId != "") {
