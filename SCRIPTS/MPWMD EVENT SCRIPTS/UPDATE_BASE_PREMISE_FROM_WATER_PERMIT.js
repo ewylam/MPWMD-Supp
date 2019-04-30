@@ -1,5 +1,5 @@
 // Begin script to update the parent Base Premise record with info from Water Permit
-if ((wfTask == "Permit Issuance" && wfStatus == "Issued") || (wfTask == "Inspection" && wfStatus == "Push to Base Premise")) {
+if ((wfTask == "Permit Issuance" && matches(wfStatus,"Issued","Issued in Zone") || (wfTask == "Inspection" && wfStatus == "Push to Base Premise")) {
 	// Begin script to update the parent Base Premise record with info from Water Permit
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
 	if (vParentCapId == 'undefined' || vParentCapId == null || vParentCapId == "" || vParentCapId == false) {
@@ -124,7 +124,7 @@ if ((wfTask == "Permit Issuance" && wfStatus == "Issued") || (wfTask == "Inspect
 		}
 		vPurchasedWaterRemaining = vPurchasedWater - vPurchasedWaterUsed;
 		if (parseFloat(vPurchasedWaterRemaining) != "NaN") {
-			editAppSpecific("Purchased Water Remaining", toFixed(vPurchasedWaterRemaining, 4), vParentCapId);
+			editAppSpecific("Purchased Water Remaining", toFixed(vPurchasedWaterRemaining, 3), vParentCapId);
 		}
 
 		// Update Credits Remaining (Base Premise ASI) with Credits Received minus Credits Used (Base Premise ASI)
@@ -145,7 +145,7 @@ if ((wfTask == "Permit Issuance" && wfStatus == "Issued") || (wfTask == "Inspect
 		}
 		vCreditsRemaining = vCreditsRecieved - vCreditsUsed;
 		if (parseFloat(vCreditsRemaining) != "NaN") {
-			editAppSpecific("Credits Remaining", toFixed(vCreditsRemaining, 4), vParentCapId);
+			editAppSpecific("Credits Remaining", toFixed(vCreditsRemaining, 3), vParentCapId);
 		}
 
 		// Copy Proposed (ASI)
