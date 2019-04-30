@@ -1,6 +1,6 @@
 // Begin script to update the Credit Amount Granted (ASI) with the result of the Post Fixture Unit Count (ASI) minus Current Fixture Unit Count (ASI)
 var vCreditTrigger = getAppSpecific("Credit Trigger");
-if (vCreditTrigger != "Onsite Credit from Permit") {
+if (vCreditTrigger != "Onsite Credit from Permit" && vCreditTrigger != "Historic") {
 	var vPostFixtureUnitCount;
 	var vCurrentFixtureUnitCount;
 	var vProposedWaterUsage;
