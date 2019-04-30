@@ -1,5 +1,5 @@
 // Begin script to update the parent Base Premise record with info from Water Use Credit
-if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
+if (wfTask == "Permit Issuance" && matches(wfStatus,"Issued","Issued in Zone")) {
 	var vParentCapId = getParent("Demand/Master/Base Premise/NA");
 	var vPostFixtureUnitCount;
 	if (vParentCapId != null && vParentCapId != "") {
@@ -44,7 +44,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		}		
 		vNewCreditsRecieved = vCreditsRecieved + vCreditAmountGranted;
 		if (parseFloat(vNewCreditsRecieved) != "NaN") {
-			editAppSpecific("Credits Received", toFixed(vNewCreditsRecieved,4), vParentCapId);
+			editAppSpecific("Credits Received", toFixed(vNewCreditsRecieved,3), vParentCapId);
 		}
 		
 		// Update Credits Remaining (Base Premise ASI) with Credits Received minus Credits Used (Base Premise ASI)
@@ -65,7 +65,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		}
 		vCreditsRemaining = vCreditsRecieved - vCreditsUsed;
 		if (parseFloat(vCreditsRemaining) != "NaN") {
-			editAppSpecific("Credits Remaining", toFixed(vCreditsRemaining, 4), vParentCapId);
+			editAppSpecific("Credits Remaining", toFixed(vCreditsRemaining, 3), vParentCapId);
 		}			
 	}
 }
