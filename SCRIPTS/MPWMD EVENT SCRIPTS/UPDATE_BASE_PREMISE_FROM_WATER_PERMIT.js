@@ -122,6 +122,11 @@ if ((wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone"
 		} else {
 			vPurchasedWaterUsed = 0;
 		}
+		
+		logDebug("Purchased Water (Base Premise): " + vPurchasedWater);
+		logDebug("Purchased Water Used (Base Premise): " + vPurchasedWaterUsed);
+		logDebug("Entitlement (Water Permit): " + vEntitlement);
+		
 		vPurchasedWaterRemaining = vPurchasedWater - (vPurchasedWaterUsed + vEntitlement);
 		if (parseFloat(vPurchasedWaterRemaining) != "NaN") {
 			editAppSpecific("Purchased Water Remaining", toFixed(vPurchasedWaterRemaining, 3), vParentCapId);
