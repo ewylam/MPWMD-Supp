@@ -1,5 +1,5 @@
 // Begin script to assess amendment permit fees and populate Deed Restriction table
-if (wfTask == "Inspections" && wfStatus == "Amendment Required") {
+if (wfTask == "Inspection" && wfStatus == "Amendment Required") {
 	// Asses fees
 	var vPermitCategory = getAppSpecific("Permit Category");
 	if (vPermitCategory == "Residential") {
