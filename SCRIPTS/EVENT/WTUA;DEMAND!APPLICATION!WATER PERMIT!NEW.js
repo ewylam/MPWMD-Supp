@@ -14,3 +14,6 @@ include("ADD_RECORDING_AND_CAPACITY_FEES");
 include("UPDATE_RESIDENTIAL_FIXTURE_ASIT_FROM_INSPECTION");
 //End script to get the most recent inspection and update the fixture ASIT from the guidesheet data
 
+// Begin script to assess amendment permit fees at Inspections Amendment Required
+include("ASSESS_AMENDMENT_PERMIT_FEES");
+// End script to assess amendment water permit fees
