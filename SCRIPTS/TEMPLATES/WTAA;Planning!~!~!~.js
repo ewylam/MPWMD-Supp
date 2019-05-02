@@ -1,4 +1,4 @@
-?try {
+try {
     var workflowResult = aa.workflow.getTasks(capId);
     if (workflowResult.getSuccess()) {
         var wfObj = workflowResult.getOutput();
