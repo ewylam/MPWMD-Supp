@@ -13,6 +13,6 @@ if (typeof(COMMERCIAL) == "object") {
 	}
 }
 if (vTotalFixtureCount != "NaN") {
-	editAppSpecific("Post Non-Residential", toFixed(vTotalFixtureCount, 2));
+	editAppSpecific("Post Non-Residential", toFixed(vTotalFixtureCount, 3));
 }
 // End script to update the Post Non-Residential with the sum of all Commercial (ASIT) Post Capacity values.
