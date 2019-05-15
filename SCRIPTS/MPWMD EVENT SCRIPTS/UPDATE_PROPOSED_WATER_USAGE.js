@@ -1,4 +1,4 @@
-// Begin script to update the Proposed Water Usage (ASI) with the result of the Post Fixture Unit Count and Post 2nd Bath Fixture (ASI) minus Current Fixture Unit Count (ASI)
+// Begin script to update the Proposed Water Usage (ASI) with the result of the Post Fixture Unit Count and Post 2nd Bath Fixture (ASI) minus Current Fixture Unit Count (ASI);
 var vPermitCategory;
 var vPostFixtureUnitCount;
 var v2ndBathFixtureCount;
@@ -8,7 +8,8 @@ var vCurrentPermitOnsiteCredit;
 var vPostNonResidential;
 var vNonResidentialAFTotal;
 vPermitCategory = getAppSpecific("Permit Category");
-if (vPermitCategory == "Residential") {
+vOverride = getAppSpecific("Override Usage");
+if (vPermitCategory == "Residential" && vOverride != "Yes") {
 	vPostFixtureUnitCount = getAppSpecific("Post Fixture Unit Count");
 	v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
 	vCurrentFixtureUnitCount = getAppSpecific("Current Fixture Unit Count");
@@ -55,7 +56,7 @@ if (vPermitCategory == "Residential") {
 			}
 		}
 	}
-} else if (vPermitCategory == "Non-Residential") {
+} else if (vPermitCategory == "Non-Residential" && vOverride != "Yes") {
 	vPostNonResidential = getAppSpecific("Post Non-Residential");
 	if (vPostNonResidential != null && vPostNonResidential != "") {
 		vPostNonResidential = parseFloat(vPostNonResidential);
@@ -80,7 +81,7 @@ if (vPermitCategory == "Residential") {
 			editAppSpecific("Current Permit Onsite Credit", 0);
 		}
 	}
-} else if (vPermitCategory == "Mixed-Use") {
+} else if (vPermitCategory == "Mixed-Use" && vOverride != "Yes") {
 	vPostFixtureUnitCount = getAppSpecific("Post Fixture Unit Count");
 	v2ndBathFixtureCount = getAppSpecific("Post 2nd Bath Fixture");
 	vCurrentFixtureUnitCount = getAppSpecific("Current Fixture Unit Count");
