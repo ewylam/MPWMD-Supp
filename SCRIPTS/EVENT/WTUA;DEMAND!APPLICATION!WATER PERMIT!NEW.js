@@ -17,3 +17,7 @@ include("UPDATE_RESIDENTIAL_FIXTURE_ASIT_FROM_INSPECTION");
 // Begin script to assess amendment permit fees at Inspections Amendment Required
 //include("ASSESS_AMENDMENT_PERMIT_FEES");
 // End script to assess amendment water permit fees
+
+// Begin script to update JAE record ASIT with water permit info
+include("UPDATE_JAE_RECORD_FROM_WATER_PERMIT");
+// End script to update JAE record ASIT with water permit info
