@@ -17,23 +17,25 @@ function getAddressInALine() {
 
 			if (addressToUse) {
 			    //strAddress = addressToUse.getHouseNumberStart();
-				strAddress = addressToUse.getHouseNumberAlphaStart();
-			    var addPart = addressToUse.getStreetDirection();
+			    var addPart = addressToUse.getHouseNumberAlphaStart();
+			    if (addPart && addPart != "") 
+			    	strAddress += addPart;			
+			    addPart = addressToUse.getStreetDirection();
 			    if (addPart && addPart != "") 
 			    	strAddress += " " + addPart;
-			    var addPart = addressToUse.getStreetName();
+			    addPart = addressToUse.getStreetName();
 			    if (addPart && addPart != "") 
 			    	strAddress += " " + addPart;	
-			    var addPart = addressToUse.getStreetSuffix();
+			    addPart = addressToUse.getStreetSuffix();
 			    if (addPart && addPart != "") 
 			    	strAddress += " " + addPart;	
-			    var addPart = addressToUse.getCity();
+			    addPart = addressToUse.getCity();
 			    if (addPart && addPart != "") 
 			    	strAddress += " " + addPart + ",";
-			    var addPart = addressToUse.getState();
+			    addPart = addressToUse.getState();
 			    if (addPart && addPart != "") 
 			    	strAddress += " " + addPart;	
-			    var addPart = addressToUse.getZip();
+			    addPart = addressToUse.getZip();
 			    if (addPart && addPart != "") 
 			    	strAddress += " " + addPart;	
 				return strAddress
