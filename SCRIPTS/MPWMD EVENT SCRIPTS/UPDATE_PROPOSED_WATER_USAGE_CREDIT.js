@@ -16,7 +16,7 @@ if (vNonResidentialAFTotal != null && vNonResidentialAFTotal != "") {
 
 vCurrentFixtureUnitCount = getAppSpecific("Current Fixture Unit Count");
 if (vCurrentFixtureUnitCount != null && vCurrentFixtureUnitCount != "") {
-	vCurrentFixtureUnitCount = parseFloat(vCurrentFixtureUnitCount);
+	vCurrentFixtureUnitCount = parseFloat(vCurrentFixtureUnitCount) * .001;
 } else {
 	vCurrentFixtureUnitCount = 0;
 }
@@ -32,7 +32,7 @@ if (vPostNonResidential != null && vPostNonResidential != "") {
 
 vPostFixtureUnitCount = getAppSpecific("Post Fixture Unit Count");
 if (vPostFixtureUnitCount != null && vPostFixtureUnitCount != "") {
-	vPostFixtureUnitCount = parseFloat(vPostFixtureUnitCount);
+	vPostFixtureUnitCount = parseFloat(vPostFixtureUnitCount) * .001;
 } else {
 	vPostFixtureUnitCount = 0;
 }
