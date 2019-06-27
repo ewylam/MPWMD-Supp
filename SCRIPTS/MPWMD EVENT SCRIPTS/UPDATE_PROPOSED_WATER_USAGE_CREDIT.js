@@ -21,6 +21,10 @@ if (vCurrentFixtureUnitCount != null && vCurrentFixtureUnitCount != "") {
 	vCurrentFixtureUnitCount = 0;
 }
 
+logDebug("vNonResidentialAFTotal: " + vNonResidentialAFTotal);
+logDebug("vCurrentFixtureUnitCount: " + vCurrentFixtureUnitCount);
+logDebug("vPreResult: " + (vNonResidentialAFTotal - vCurrentFixtureUnitCount));
+
 vPreResult = vNonResidentialAFTotal - vCurrentFixtureUnitCount;
 
 vPostNonResidential = getAppSpecific("Post Non-Residential");
@@ -36,6 +40,10 @@ if (vPostFixtureUnitCount != null && vPostFixtureUnitCount != "") {
 } else {
 	vPostFixtureUnitCount = 0;
 }
+
+logDebug("vPostNonResidential: " + vPostNonResidential);
+logDebug("vPostFixtureUnitCount: " + vPostFixtureUnitCount);
+logDebug("vPostResult: " + (vPostNonResidential + vPostFixtureUnitCount));
 
 vPostResult = vPostNonResidential + vPostFixtureUnitCount;
 
