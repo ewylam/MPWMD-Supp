@@ -144,7 +144,7 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 			}
 
 			if (vJAERecordName == vSubsystemName) {
-				vSubsystemValue = vSubsystemValue;
+				vSubsystemValue = getAppSpecific("Subsystem");
 				if (vSubsystemValue == null) {
 					vSubsystemValue = "";
 				} else {
