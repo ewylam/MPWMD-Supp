@@ -23,9 +23,9 @@ if (vCurrentFixtureUnitCount != null && vCurrentFixtureUnitCount != "") {
 
 logDebug("vNonResidentialAFTotal: " + vNonResidentialAFTotal);
 logDebug("vCurrentFixtureUnitCount: " + vCurrentFixtureUnitCount);
-logDebug("vPreResult: " + (vNonResidentialAFTotal - vCurrentFixtureUnitCount));
+logDebug("vPreResult: " + (vNonResidentialAFTotal + vCurrentFixtureUnitCount));
 
-vPreResult = vNonResidentialAFTotal - vCurrentFixtureUnitCount;
+vPreResult = vNonResidentialAFTotal + vCurrentFixtureUnitCount;
 
 vPostNonResidential = getAppSpecific("Post Non-Residential");
 if (vPostNonResidential != null && vPostNonResidential != "") {
