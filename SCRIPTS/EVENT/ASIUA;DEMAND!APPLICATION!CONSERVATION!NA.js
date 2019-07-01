@@ -17,3 +17,7 @@ include("UPDATE_POST_CAPACITY_COUNT_COMMERCIAL");
 // Begin script to convert old fixture names to new ones and add the sort order
 include("UPDATE_FIXTURE_TYPE_AND_SORT_ORDER");
 // End script to convert old fixture names to new ones and add the sort order
+
+// Begin script to copy the Transfer of Title Date field to the B1PERMIT.REC_DATE field for reporting
+include("UPDATE_REC_DATE_WITH_TOT");
+// End script to copy the Transfer of Title Date field to the B1PERMIT.REC_DATE field for reporting
