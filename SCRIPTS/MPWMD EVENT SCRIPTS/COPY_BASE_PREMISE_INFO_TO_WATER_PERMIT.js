@@ -9,11 +9,13 @@ if (parentCapId != null && parentCapId != false) {
 
 	//copy ASI Info from license to renewal
 	copyASIInfo(parentCapId, capId);
-	
+
 	//update Use ASI
-	var vPermitCategory = getAppSpecific("Use", parentCapId);
-	if (vPermitCategory != 'undefined' && vPermitCategory != null && vPermitCategory != '') {
-		editAppSpecific("Permit Category", vPermitCategory);
+	if (!appMatch("Demand/Application/Conservation/NA")) {
+		var vPermitCategory = getAppSpecific("Use", parentCapId);
+		if (vPermitCategory != 'undefined' && vPermitCategory != null && vPermitCategory != '') {
+			editAppSpecific("Permit Category", vPermitCategory);
+		}
 	}
 
 	//Copy ASIT from license to renewal
