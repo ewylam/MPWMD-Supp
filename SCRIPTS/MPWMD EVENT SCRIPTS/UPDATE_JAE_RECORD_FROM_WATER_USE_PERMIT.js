@@ -87,7 +87,7 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 			vASITRow["Purchaser Name"] = new asiTableValObj("Purchaser Name", vPurchaser, "Y");
 			vASITRow["Quantity"] = new asiTableValObj("Quantity", vQuantity, "Y");
 			vASITRow["Assignment Date"] = new asiTableValObj("Assignment Date", vAssignmentDate, "Y");
-			vASITRow["WUP Issued"] = new asiTableValObj("WUP Issued", vIssuedDate, "Y");
+			vASITRow["WUP Issued"] = new asiTableValObj("WUP Issued", vWUPIssuedDate, "Y");
 			vASITRow["WUP"] = new asiTableValObj("WUP", vWUP, "Y");
 
 			vPengingUpdatesASIT = loadASITable(vPendingUpdatesTableName, vJAECapId);
