@@ -84,6 +84,7 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 			// Update JAE records 'Entitlements Purchased' ASIT
 			// Create ASIT Row info
 			vASITRow = [];
+			vASITRow["Parcel"] = new asiTableValObj("Parcel", vParcel, "Y");
 			vASITRow["Purchaser Name"] = new asiTableValObj("Purchaser Name", vPurchaser, "Y");
 			vASITRow["Quantity"] = new asiTableValObj("Quantity", vQuantity, "Y");
 			vASITRow["Assignment Date"] = new asiTableValObj("Assignment Date", vAssignmentDate, "Y");
