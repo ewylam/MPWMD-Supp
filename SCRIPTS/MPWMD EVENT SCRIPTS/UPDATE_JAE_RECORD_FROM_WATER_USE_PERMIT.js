@@ -15,6 +15,8 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 	var vWUPIssuedDate;
 	var vWUP;
 	var x;
+	var vPebbleBeachTransfer;
+	var vPebbleBeachJAECapId;
 
 	vJAECapIdArray = [];
 
@@ -104,6 +106,37 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 				vPengingUpdatesASIT.push(vASITRow);
 				// Add updated table
 				addASITable(vPendingUpdatesTableName, vPengingUpdatesASIT, vJAECapId);
+			}
+
+			// Update Pebble Beach Co JAE Record if transfer selected.
+			vPebbleBeachTransfer = getAppSpecific('Pebble Beach Transfer');
+			if (vPebbleBeachTransfer == "Yes") {
+				vPebbleBeachJAECapId = getJAERecord("Demand", "Master", "JAE", "NA", "Pebble Beach Co");
+				if (vPebbleBeachJAECapId != null && vPebbleBeachJAECapId != "") {
+					vASITRow = [];
+					vASITRow["Parcel"] = new asiTableValObj("Parcel", vParcel, "Y");
+					vASITRow["Purchaser Name"] = new asiTableValObj("Purchaser Name", vPurchaser, "Y");
+					// Change quantity to a negitave
+					vASITRow["Quantity"] = new asiTableValObj("Quantity", "-" + vQuantity, "Y");
+					vASITRow["Assignment Date"] = new asiTableValObj("Assignment Date", vAssignmentDate, "Y");
+					vASITRow["WUP Issued"] = new asiTableValObj("WUP Issued", vWUPIssuedDate, "Y");
+					vASITRow["WUP"] = new asiTableValObj("WUP", vWUP, "Y");
+
+					vPengingUpdatesASIT = loadASITable(vPendingUpdatesTableName, vPebbleBeachJAECapId);
+					if (typeof(vPengingUpdatesASIT) == "object") {
+						// Add new row to ASIT
+						vPengingUpdatesASIT.push(vASITRow);
+						// Remove and re-add updated table
+						removeASITable(vPendingUpdatesTableName, vPebbleBeachJAECapId);
+						addASITable(vPendingUpdatesTableName, vPengingUpdatesASIT, vPebbleBeachJAECapId);
+					} else {
+						vPengingUpdatesASIT = [];
+						// Add new row to ASIT
+						vPengingUpdatesASIT.push(vASITRow);
+						// Add updated table
+						addASITable(vPendingUpdatesTableName, vPengingUpdatesASIT, vPebbleBeachJAECapId);
+					}
+				}
 			}
 		}
 	}
