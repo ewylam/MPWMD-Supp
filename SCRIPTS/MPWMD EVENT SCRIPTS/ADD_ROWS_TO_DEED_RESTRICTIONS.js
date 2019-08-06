@@ -1,12 +1,13 @@
 //Begin Script to add rows to DEED RESTRICTIONS table based on custom fields
 var vCalculationMethod = getAppSpecific("Calculation Method");
 var vPermitType = getAppSpecific("Permit Type");
+var vAmendment = getAppSpecific("Amendment");
 var asiTable = "DEED RESTRICTIONS";
 var rowFieldArray = [];
 var fieldRow = aa.util.newHashMap(); ;
 var perCat = AInfo["Permit Category"];
 var secondBath = AInfo["AF Second Bathroom Protocol"];
-
+if (vAmendment != "Yes") {
 if (vPermitType != "Landscape" && vCalculationMethod != null && vCalculationMethod != "") {
 	//Scenario A from specs
 	if (perCat == "Non-Residential" && !checkTable4Value("DEED RESTRICTIONS", "Form", ["1.0.0 Limitation on Use of Water"])) {
@@ -83,4 +84,5 @@ if (vPermitType != "Landscape" && vCalculationMethod != null && vCalculationMeth
 if (rowFieldArray.length > 0) {
 	logDebug("Adding Rows to table " + asiTable);
 	addAppSpecificTableInfors(asiTable, capId, rowFieldArray);
+}
 }
