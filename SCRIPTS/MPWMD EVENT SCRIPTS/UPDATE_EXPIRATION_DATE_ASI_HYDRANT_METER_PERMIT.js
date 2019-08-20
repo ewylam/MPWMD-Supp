@@ -1,5 +1,5 @@
-// Begin script to update the expiration date
-if (matches(wfTask,"Permit Issuance","Close") && matches(wfStatus,"Permit Issued", "Issued in Zone","First Extension","Final Extension")) {
+// Begin script to update the expiration date for Hydrant Meter Permits 60 days with 2 60 day extentions
+if (matches(wfTask,"Permit Issuance", "Inspection") && matches(wfStatus,"Issued", "Issued in Zone")) {
 	var vToday;
 	var vToday_mm;
 	var vToday_dd;
@@ -14,16 +14,19 @@ if (matches(wfTask,"Permit Issuance","Close") && matches(wfStatus,"Permit Issued
 	vToday_dd = vToday.getDate();
 	vToday_dd = (vToday_dd < 10) ? '0' + vToday_dd : vToday_dd;
 	vToday_yyyy = vToday.getFullYear();
-	vExpDateString = vToday_mm + "/" + vToday_dd + "/" + (vToday_yyyy + 1);
+	vExpDateString = vToday_mm + "/" + vToday_dd + "/" + (vToday_yyyy);
 	vIssuedDateString = wfDateMMDDYYYY;
 	
 	//Save to ASI Expiration Date
 	if (vExpDateString != null && vExpDateString!= "") {
-		editAppSpecific("Expiration Date", vExpDateString);
+		editAppSpecific("Expiration Date",dateAdd(vExpDateString, 60));
 	}
 	if (vIssuedDateString != null && vIssuedDateString!= "") {
 		editAppSpecific("Issued Date", vIssuedDateString);
 	}
 }
-// End script to update the expiration date
-
+if (matches(wfTask,"Close") && matches(wfStatus,"First Extension", "Final Extension")) {
+	var vExistingDate = getAppSpecific("Expiration Date");
+	editAppSpecific("Expiration Date", dateAdd(vExistingDate, 60));
+}
+// End script to update the expiration date for hydrant meter
