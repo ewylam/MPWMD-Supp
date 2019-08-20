@@ -1,5 +1,5 @@
 // Begin script to update the expiration date
-if (matches(wfTask,"Permit Issuance") && matches(wfStatus,"Permit Issued", "Issued in Zone")) {
+if (matches(wfTask,"Permit Issuance","Close") && matches(wfStatus,"Permit Issued", "Issued in Zone","First Extension","Final Extension")) {
 	var vToday;
 	var vToday_mm;
 	var vToday_dd;
