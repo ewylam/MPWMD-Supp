@@ -200,11 +200,13 @@ function mainProcess() {
 
 	var vJAEList = aa.cap.getByAppType("Demand", "Master", "JAE", "NA").getOutput();
 	var vJAEInt = 0;
+
+	var vNewTotalTransfers = 0;
 	for (vJAEInt in vJAEList) {
 		cap = vJAEList[vJAEInt];
 		capId = cap.getCapID();
 
-		if (capId.getCustomID() != 'JAE11') {
+		if (capId.getCustomID() != 'JAE10') {
 			continue;
 		}
 
@@ -344,15 +346,25 @@ function mainProcess() {
 						logMessage("---Successfully created ASIT backup document: " + documentModel.getFileName());
 						logDebug("Successfully created ASIT backup document: " + documentModel.getFileName());
 
+						// Copy Current Balance ASI to Balance Last Month ASIT
+						var vExistingCurrentBalance = getAppSpecific("Current Balance");
+						if (vExistingCurrentBalance != null && vExistingCurrentBalance != "") {
+							vExistingCurrentBalance = parseFloat(vExistingCurrentBalance);
+						} else {
+							vExistingCurrentBalance = 0;
+						}
+						var vNewBalanceLastMonth = parseFloat(vExistingCurrentBalance);
+						editAppSpecific("Balance Last Month", toFixed(vExistingCurrentBalance, 3));
+
 						// Update JAE Record Information from ASIT Data
 						if (vASITName == "ENTITLEMENT PURCHASES") {
-							logMessage("--Updating ASI Values from ENTITLEMENT PURCHASES");
 							var vASITQuantitySum = 0;
 							var vASIT = loadASITable(vASITName, capId);
 							var vRow;
 							var vTransferAmountSum = 0;
 							var r = 0
 								if (typeof(vASIT) == "object") {
+									logMessage("--Updating ASI Values from ENTITLEMENT PURCHASES");
 									for (r in vASIT) {
 										vRow = vASIT[r];
 										if (parseFloat(vRow["Quantity"]) + "" != "NaN") {
@@ -363,41 +375,49 @@ function mainProcess() {
 											vTransferAmountSum += parseFloat(vRow["Quantity"]);
 										}
 									}
-									
+
 									if (vTransferAmountSum != 0) {
 										vTransferAmountSum = parseFloat(vTransferAmountSum) * -1;
 										editAppSpecific("Transfer Amount", toFixed(vTransferAmountSum, 3));
+
+										var vExistingTotalTransfers = getAppSpecific("Total Transfers");
+										if (vExistingTotalTransfers != null && vExistingTotalTransfers != "") {
+											vExistingTotalTransfers = parseFloat(vExistingTotalTransfers);
+										} else {
+											vExistingTotalTransfers = 0;
+										}
+										vNewTotalTransfers = parseFloat(vExistingTotalTransfers) + parseFloat(vTransferAmountSum);
+										editAppSpecific("Total Transfers", toFixed(vNewTotalTransfers, 3));
 									}
-									
+
 									editAppSpecific("Entitlements Sold Last Update", toFixed(vASITQuantitySum, 3));
-									
+
 									var vExistingEntitlementSold = getAppSpecific("Entitlement Sold");
 									if (vExistingEntitlementSold != null && vExistingEntitlementSold != "") {
 										vExistingEntitlementSold = parseFloat(vExistingEntitlementSold);
 									} else {
 										vExistingEntitlementSold = 0;
 									}
-									
+
 									var vNewEntitlementSold = parseFloat(vASITQuantitySum) + parseFloat(vExistingEntitlementSold);
 									editAppSpecific("Entitlement Sold", toFixed(vNewEntitlementSold, 3));
-/*									
+									/*
 									var vExistingBalanceLastMonth = getAppSpecific("Balance Last Month");
 									if (vExistingBalanceLastMonth != null && vExistingBalanceLastMonth != "") {
-										vExistingBalanceLastMonth = parseFloat(vExistingBalanceLastMonth);
+									vExistingBalanceLastMonth = parseFloat(vExistingBalanceLastMonth);
 									} else {
-										vExistingBalanceLastMonth = 0;
-									}								
-									
+									vExistingBalanceLastMonth = 0;
+									}
+
 									var vNewCurrentBalance = parseFloat(vExistingBalanceLastMonth) - parseFloat(vNewEntitlementSold);
 									editAppSpecific("Current Balance", toFixed(vNewEntitlementSold, 3));
-*/									
+									 */
 									logMessage("--Removing " + vASITName + " ASIT");
 									//removeASITable(vASITName, capId);
-									
+
 								}
 						}
 						if (vASITName == "PENDING UPDATES") {
-							logMessage("--Updating ASI Values from PENDING UPDATES");
 							var vASITEntitlementsSum = 0;
 							var vASITParaltaSum = 0;
 							var vASITPreParaltaSum = 0;
@@ -409,6 +429,7 @@ function mainProcess() {
 							var vRow;
 							var r = 0
 								if (typeof(vASIT) == "object") {
+									logMessage("--Updating ASI Values from PENDING UPDATES");
 									for (r in vASIT) {
 										vRow = vASIT[r];
 										if (parseFloat(vRow["Entitlements"]) + "" != "NaN") {
@@ -459,8 +480,12 @@ function mainProcess() {
 									var vNewEntitlementPermitted = parseFloat(vASITEntitlementsSum) + parseFloat(vExistingEntitlementPermitted);
 									editAppSpecific("Entitlement Permitted", toFixed(vNewEntitlementPermitted, 3));
 
-									var vNewEntitlementRemaing = parseFloat(vExistingEntitlement) - parseFloat(vNewEntitlementPermitted);
+									var vNewEntitlementRemaing = parseFloat(vExistingEntitlement) - parseFloat(vNewEntitlementPermitted) - parseFloat(vNewTotalTransfers);
 									editAppSpecific("Entitlement Remaining", toFixed(vNewEntitlementRemaing, 3));
+
+									// Update Current Balance
+									var vNewCurrentBalance = parseFloat(vExistingEntitlement) - parseFloat(vNewTotalTransfers);
+									editAppSpecific("Current Balance", toFixed(vNewCurrentBalance, 3));
 
 									// Update Paralta
 									var vExistingParaltaPermitted = getAppSpecific("Paralta Permitted");
@@ -497,7 +522,7 @@ function mainProcess() {
 									} else {
 										vExistingPreParalta = 0;
 									}
-							
+
 									var vNewPreParaltaPermitted = parseFloat(vASITPreParaltaSum) + parseFloat(vExistingPreParaltaPermitted);
 									editAppSpecific("Pre-Paralta Permitted", toFixed(vNewPreParaltaPermitted, 3));
 
@@ -553,7 +578,7 @@ function mainProcess() {
 									} else {
 										vExistingOtherPermitted = 0;
 									}
-									
+
 									var vExistingOther = getAppSpecific("Other Allocation");
 									if (vExistingOther != null && vExistingOther != "") {
 										vExistingOther = parseFloat(vExistingOther);
