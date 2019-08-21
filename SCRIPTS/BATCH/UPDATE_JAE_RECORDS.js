@@ -364,7 +364,7 @@ function mainProcess() {
 							var vTransferAmountSum = 0;
 							var r = 0
 								if (typeof(vASIT) == "object") {
-									logMessage("--Updating ASI Values from ENTITLEMENT PURCHASES");
+									logMessage("---Updating ASI Values from ENTITLEMENT PURCHASES");
 									for (r in vASIT) {
 										vRow = vASIT[r];
 										if (parseFloat(vRow["Quantity"]) + "" != "NaN") {
@@ -401,18 +401,8 @@ function mainProcess() {
 
 									var vNewEntitlementSold = parseFloat(vASITQuantitySum) + parseFloat(vExistingEntitlementSold);
 									editAppSpecific("Entitlement Sold", toFixed(vNewEntitlementSold, 3));
-									/*
-									var vExistingBalanceLastMonth = getAppSpecific("Balance Last Month");
-									if (vExistingBalanceLastMonth != null && vExistingBalanceLastMonth != "") {
-									vExistingBalanceLastMonth = parseFloat(vExistingBalanceLastMonth);
-									} else {
-									vExistingBalanceLastMonth = 0;
-									}
 
-									var vNewCurrentBalance = parseFloat(vExistingBalanceLastMonth) - parseFloat(vNewEntitlementSold);
-									editAppSpecific("Current Balance", toFixed(vNewEntitlementSold, 3));
-									 */
-									logMessage("--Removing " + vASITName + " ASIT");
+									logMessage("---Removing " + vASITName + " ASIT");
 									//removeASITable(vASITName, capId);
 
 								}
@@ -429,7 +419,7 @@ function mainProcess() {
 							var vRow;
 							var r = 0
 								if (typeof(vASIT) == "object") {
-									logMessage("--Updating ASI Values from PENDING UPDATES");
+									logMessage("---Updating ASI Values from PENDING UPDATES");
 									for (r in vASIT) {
 										vRow = vASIT[r];
 										if (parseFloat(vRow["Entitlements"]) + "" != "NaN") {
@@ -623,7 +613,7 @@ function mainProcess() {
 									var vTodayString = vToday_mm + "/" + vToday_dd + "/" + vToday_yyyy;
 									editAppSpecific("Last Update", vTodayString);
 
-									logMessage("--Removing " + vASITName + " ASIT");
+									logMessage("---Removing " + vASITName + " ASIT");
 									//removeASITable(vASITName, capId);
 								}
 						}
