@@ -1,58 +1,141 @@
-<table align="center" class="mce-item-table" data-mce-selected="1">
-    <tbody>
-        <tr>
-            <td align="right">
-                Available Jurisdiction (AF):
-            </td>
-            <td align="left">
-                [Jurisdiction Used Historic]
-            </td>
-            <td align="right">
-                Credited WUP (AF):
-            </td>
-            <td align="left">
-                [WUP]
-            </td>
-        </tr>
-        <tr>
-            <td align="right">
-                Available WUC (AF):
-            </td>
-            <td align="left">
-                [Water Use Credit Using]
-            </td>
-            <td align="right">
-                Credited WUC (AF): 
-            </td>
-            <td align="left">
-                [WUC]
-            </td>
-        </tr>
-        <tr>
-            <td align="right">
-                Available WUP (AF):
-            </td>
-            <td align="left">
-                [Entitlements]
-            </td>
-            <td align="right">
-                Proposed Water Usage (AF): 
-            </td>
-            <td align="left">
-                [PWU]
-            </td>
-        </tr>
-        <tr>
-            <td align="right">
-                Available On-Site (AF):
-            </td>
-            <td align="left">
-                [Permit Onsite Credit]
-            </td>
-			<td>
-			</td>
-			<td>
-			</td>
-        </tr>		
-    </tbody>
-</table>
+<!--FORMSCRIPT-->
+<p>
+</p>
+<div id="iz-custom-js">
+$('#tempApp').hide();
+$('#annualApp').hide();
+if ($.trim($('#answer').text()).indexOf('Yes')
+	 & gt;  = 0) {
+	$('#tempApp').show();
+} else {
+	$('#annualApp').show();
+}
+if
+($.trim($('#answer').text()).indexOf('Yes') & gt;  = 0) {
+	$('#microExtractionInfusion').hide();
+}
+if ($.trim($('#answer').text()).indexOf('Yes') & gt;  = 0) {
+	$('#declarations').hide();
+}
+if ($.trim($('#answer').text()).indexOf('Yes') & gt;  = 0) {
+	$('#nonControllingInterests').hide();
+}
+if ($.trim($('#answer').text()).indexOf('Yes') & gt;  = 0) {
+	$('#fictitiousBusinessNames').hide();
+}
+if ($.trim($('#answer').text()).indexOf('Yes') & gt;  = 0) {
+	$('#feeAssessment').hide();
+}
+if ($('#bizPremiseAddress').text().indexOf('No Results') & gt;  = 0) {
+	$('#bizPremiseAddress').hide();
+}
+if ($('#bizMailingAddress').text().indexOf('No Results') & gt;  = 0) {
+	$('#bizMailingAddress').hide();
+}
+if ($('#microBizActivities').text().indexOf('No Results') & gt;  = 0) {
+	$('#microBizActivities').hide();
+}
+if ($('#microExtractionInfusion').text().indexOf('No
+		Results') & gt;  = 0) {
+	$('#microExtractionInfusion').hide();
+}
+if ($('#microDeclarations').text().indexOf('No
+		Results') & gt;  = 0) {
+	$('#microDeclarations').hide();
+}
+if ($('#distDeclarations').text().indexOf('No
+		Results') & gt;  = 0) {
+	$('#distDeclarations').hide();
+}
+if ($('#dstrDeclarations').text().indexOf('No
+		Results') & gt;  = 0) {
+	$('#dstrDeclarations').hide();
+}
+if ($('#retailDeclarations').text().indexOf('No
+		Results') & gt;  = 0) {
+	$('#retailDeclarations').hide();
+}
+if ($('#testDeclarations').text().indexOf('No
+		Results') & gt;  = 0) {
+	$('#testDeclarations').hide();
+}
+if ($('#ceoDeclarations').text().indexOf('No
+		Results') & gt;  = 0) {
+	$('#ceoDeclarations').hide();
+}
+$('#entityOwnersList').hide();
+if ($.trim($('#owned').text()).indexOf('Yes') & gt;  = 0) {
+	$('#entityOwnersList').show();
+}
+if ($('#microFees').text().indexOf('No Results') & gt;  = 0) {
+	$('#microFees').hide();
+}
+if ($('#distFees').text().indexOf('No Results') & gt;  = 0) {
+	$('#distFees').hide();
+}
+if ($('#retailFees').text().indexOf('No Results') & gt;  = 0) {
+	$('#retailFees').hide();
+}
+if ($('#testFees').text().indexOf('No Results') & gt;  = 0) {
+	$('#testFees').hide();
+}
+if ($('#ceoFees').text().indexOf('No Results') & gt;  = 0) {
+	$('#ceoFees').hide();
+}
+$('.hidden').hide();
+$('.hidden').parent().hide();
+$('.hidden').filter(function () {
+	return $(this).text() === "CHECKED";
+}).parent().show();
+
+</div>
+<p>
+</p>
+<!--FORMSCRIPT-->
+<div id="ReportHeader">
+    [[Sub Reports\Water Permit - Report Header]]
+</div>
+<div id="PageHeader">
+    [[Sub Reports\Water Permit - Page Header]]
+</div>
+<div id="Applicant">
+    [[Sub Reports\Water Permit - Applicant]]
+</div>
+<div id="Agent">
+    [[Sub Reports\Water Permit - Agent]]
+</div>
+<div id="ApplicantAddress">
+    [[Sub Reports\Water Permit - Applicant Address]]
+</div>
+<div id="PropertyAddress">
+    [[Sub Reports\Water Permit - Property Address]]
+</div>
+<div id="AppliedRule">
+    [[Sub Reports\Water Permit - Applied Rule]]
+</div>
+<hr>
+<div id="PermitInformaion">
+    [[Sub Reports\Water Permit - Permit Information]]
+</div>
+<div id="Remarks">
+    [[Sub Reports\Water Permit - Remarks]]
+</div>
+<hr>
+</div>
+<div id="ResidentialFixtures">
+    [[Sub Reports\Water Permit - Residential Fixtures]]
+</div>
+<div id="CommercialFixtures">
+    [[Sub Reports\Water Permit - Commercial Fixtures]]
+</div>
+<div id="ProjectWaterRequirements">
+    [[Sub Reports\Water Permit - Project Water Requirements]]
+</div>
+<hr>
+<div id="Fees">
+    [[Sub Reports\Water Permit - Fees]]
+</div>
+<hr>
+<div id="Signatures">
+    [[Sub Reports\Water Permit - Signatures]]
+</div>

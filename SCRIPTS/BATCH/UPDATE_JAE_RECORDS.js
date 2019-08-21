@@ -203,9 +203,13 @@ function mainProcess() {
 	for (vJAEInt in vJAEList) {
 		cap = vJAEList[vJAEInt];
 		capId = cap.getCapID();
-	
+
+		if (capId.getCustomID() != 'JAE11') {
+			continue;
+		}
+
 		logMessage("-Processing " + capId.getCustomID());
-		
+
 		var vInt = 0;
 		for (vInt in vASITNameArray) {
 			vASITName = vASITNameArray[vInt];
@@ -341,8 +345,59 @@ function mainProcess() {
 						logDebug("Successfully created ASIT backup document: " + documentModel.getFileName());
 
 						// Update JAE Record Information from ASIT Data
+						if (vASITName == "ENTITLEMENT PURCHASES") {
+							logMessage("--Updating ASI Values from ENTITLEMENT PURCHASES");
+							var vASITQuantitySum = 0;
+							var vASIT = loadASITable(vASITName, capId);
+							var vRow;
+							var vTransferAmountSum = 0;
+							var r = 0
+								if (typeof(vASIT) == "object") {
+									for (r in vASIT) {
+										vRow = vASIT[r];
+										if (parseFloat(vRow["Quantity"]) + "" != "NaN") {
+											vASITQuantitySum += parseFloat(vRow["Quantity"]);
+										}
+										// Update Pebble Beach Co JAE Record if transfer amount provided.
+										if (parseFloat(vRow["Quantity"]) < 0) {
+											vTransferAmountSum += parseFloat(vRow["Quantity"]);
+										}
+									}
+									
+									if (vTransferAmountSum != 0) {
+										vTransferAmountSum = parseFloat(vTransferAmountSum) * -1;
+										editAppSpecific("Transfer Amount", toFixed(vTransferAmountSum, 3));
+									}
+									
+									editAppSpecific("Entitlements Sold Last Update", toFixed(vASITQuantitySum, 3));
+									
+									var vExistingEntitlementSold = getAppSpecific("Entitlement Sold");
+									if (vExistingEntitlementSold != null && vExistingEntitlementSold != "") {
+										vExistingEntitlementSold = parseFloat(vExistingEntitlementSold);
+									} else {
+										vExistingEntitlementSold = 0;
+									}
+									
+									var vNewEntitlementSold = parseFloat(vASITQuantitySum) + parseFloat(vExistingEntitlementSold);
+									editAppSpecific("Entitlement Sold", toFixed(vNewEntitlementSold, 3));
+/*									
+									var vExistingBalanceLastMonth = getAppSpecific("Balance Last Month");
+									if (vExistingBalanceLastMonth != null && vExistingBalanceLastMonth != "") {
+										vExistingBalanceLastMonth = parseFloat(vExistingBalanceLastMonth);
+									} else {
+										vExistingBalanceLastMonth = 0;
+									}								
+									
+									var vNewCurrentBalance = parseFloat(vExistingBalanceLastMonth) - parseFloat(vNewEntitlementSold);
+									editAppSpecific("Current Balance", toFixed(vNewEntitlementSold, 3));
+*/									
+									logMessage("--Removing " + vASITName + " ASIT");
+									//removeASITable(vASITName, capId);
+									
+								}
+						}
 						if (vASITName == "PENDING UPDATES") {
-							logMessage("--Updating ASI Values");
+							logMessage("--Updating ASI Values from PENDING UPDATES");
 							var vASITEntitlementsSum = 0;
 							var vASITParaltaSum = 0;
 							var vASITPreParaltaSum = 0;
@@ -351,6 +406,7 @@ function mainProcess() {
 							var vASITOtherSum = 0;
 							var vASITWDSSum = 0;
 							var vASIT = loadASITable(vASITName, capId);
+							var vRow;
 							var r = 0
 								if (typeof(vASIT) == "object") {
 									for (r in vASIT) {
@@ -377,13 +433,160 @@ function mainProcess() {
 											vASITWDSSum += parseFloat(vRow["WDS"]);
 										}
 									}
-									editAppSpecific("Entitlements Total Last Update", toFixed(vASITEntitlementsSum, 4));
-									editAppSpecific("Paralta Total Last Update", toFixed(vASITParaltaSum, 4));
-									editAppSpecific("Pre-Paralta Total Last Update", toFixed(vASITPreParaltaSum, 4));
-									editAppSpecific("Public Total Last Update", toFixed(vASITPublicSum, 4));
-									editAppSpecific("Subsystem Total Last Update", toFixed(vASITSubsystemSum, 4));
-									editAppSpecific("Other Total Last Update", toFixed(vASITOtherSum, 4));
-									editAppSpecific("Other Total Last Update", toFixed(vASITOtherSum, 4));
+									editAppSpecific("Entitlements Total Last Update", toFixed(vASITEntitlementsSum, 3));
+									editAppSpecific("Paralta Total Last Update", toFixed(vASITParaltaSum, 3));
+									editAppSpecific("Pre-Paralta Total Last Update", toFixed(vASITPreParaltaSum, 3));
+									editAppSpecific("Public Total Last Update", toFixed(vASITPublicSum, 3));
+									editAppSpecific("Subsystem Total Last Update", toFixed(vASITSubsystemSum, 3));
+									editAppSpecific("Other Total Last Update", toFixed(vASITOtherSum, 3));
+									editAppSpecific("WDS Total Last Update", toFixed(vASITOtherSum, 3));
+
+									// Update Entitlement
+									var vExistingEntitlementPermitted = getAppSpecific("Entitlement Permitted");
+									if (vExistingEntitlementPermitted != null && vExistingEntitlementPermitted != "") {
+										vExistingEntitlementPermitted = parseFloat(vExistingEntitlementPermitted);
+									} else {
+										vExistingEntitlementPermitted = 0;
+									}
+
+									var vExistingEntitlement = getAppSpecific("Entitlement");
+									if (vExistingEntitlement != null && vExistingEntitlement != "") {
+										vExistingEntitlement = parseFloat(vExistingEntitlement);
+									} else {
+										vExistingEntitlement = 0;
+									}
+
+									var vNewEntitlementPermitted = parseFloat(vASITEntitlementsSum) + parseFloat(vExistingEntitlementPermitted);
+									editAppSpecific("Entitlement Permitted", toFixed(vNewEntitlementPermitted, 3));
+
+									var vNewEntitlementRemaing = parseFloat(vExistingEntitlement) - parseFloat(vNewEntitlementPermitted);
+									editAppSpecific("Entitlement Remaining", toFixed(vNewEntitlementRemaing, 3));
+
+									// Update Paralta
+									var vExistingParaltaPermitted = getAppSpecific("Paralta Permitted");
+									if (vExistingParaltaPermitted != null && vExistingParaltaPermitted != "") {
+										vExistingParaltaPermitted = parseFloat(vExistingParaltaPermitted);
+									} else {
+										vExistingParaltaPermitted = 0;
+									}
+
+									var vExistingParalta = getAppSpecific("Paralta Allocation");
+									if (vExistingParalta != null && vExistingParalta != "") {
+										vExistingParalta = parseFloat(vExistingParalta);
+									} else {
+										vExistingParalta = 0;
+									}
+
+									var vNewParaltaPermitted = parseFloat(vASITParaltaSum) + parseFloat(vExistingParaltaPermitted);
+									editAppSpecific("Paralta Permitted", toFixed(vNewParaltaPermitted, 3));
+
+									var vNewParaltaRemaing = parseFloat(vExistingParalta) - parseFloat(vNewParaltaPermitted);
+									editAppSpecific("Paralta Remaining", toFixed(vNewParaltaRemaing, 3));
+
+									// Update Pre-Paralta
+									var vExistingPreParaltaPermitted = getAppSpecific("Pre-Paralta Permitted");
+									if (vExistingPreParaltaPermitted != null && vExistingPreParaltaPermitted != "") {
+										vExistingPreParaltaPermitted = parseFloat(vExistingPreParaltaPermitted);
+									} else {
+										vExistingPreParaltaPermitted = 0;
+									}
+
+									var vExistingPreParalta = getAppSpecific("Pre-Paralta Credit");
+									if (vExistingPreParalta != null && vExistingPreParalta != "") {
+										vExistingPreParalta = parseFloat(vExistingPreParalta);
+									} else {
+										vExistingPreParalta = 0;
+									}
+							
+									var vNewPreParaltaPermitted = parseFloat(vASITPreParaltaSum) + parseFloat(vExistingPreParaltaPermitted);
+									editAppSpecific("Pre-Paralta Permitted", toFixed(vNewPreParaltaPermitted, 3));
+
+									var vNewPreParaltaRemaing = parseFloat(vExistingPreParalta) - parseFloat(vNewPreParaltaPermitted);
+									editAppSpecific("Pre-Paralta Remaining", toFixed(vNewPreParaltaRemaing, 3));
+
+									// Update Public
+									var vExistingPublicPermitted = getAppSpecific("Public Permitted");
+									if (vExistingPublicPermitted != null && vExistingPublicPermitted != "") {
+										vExistingPublicPermitted = parseFloat(vExistingPublicPermitted);
+									} else {
+										vExistingPublicPermitted = 0;
+									}
+
+									var vExistingPublic = getAppSpecific("Public");
+									if (vExistingPublic != null && vExistingPublic != "") {
+										vExistingPublic = parseFloat(vExistingPublic);
+									} else {
+										vExistingPublic = 0;
+									}
+
+									var vNewPublicPermitted = parseFloat(vASITPublicSum) + parseFloat(vExistingPublicPermitted);
+									editAppSpecific("Public Permitted", toFixed(vNewPublicPermitted, 3));
+
+									var vNewPublicRemaing = parseFloat(vExistingPublic) - parseFloat(vNewPublicPermitted);
+									editAppSpecific("Public Remaining", toFixed(vNewPublicRemaing, 3));
+
+									// Update Subsystem
+									var vExistingSubsystemPermitted = getAppSpecific("Subsystem Permitted");
+									if (vExistingSubsystemPermitted != null && vExistingSubsystemPermitted != "") {
+										vExistingSubsystemPermitted = parseFloat(vExistingSubsystemPermitted);
+									} else {
+										vExistingSubsystemPermitted = 0;
+									}
+
+									var vExistingSubsystem = getAppSpecific("Subsystem Allocation");
+									if (vExistingSubsystem != null && vExistingSubsystem != "") {
+										vExistingSubsystem = parseFloat(vExistingSubsystem);
+									} else {
+										vExistingSubsystem = 0;
+									}
+
+									var vNewSubsystemPermitted = parseFloat(vASITSubsystemSum) + parseFloat(vExistingSubsystemPermitted);
+									editAppSpecific("Subsystem Permitted", toFixed(vNewSubsystemPermitted, 3));
+
+									var vNewSubsystemRemaing = parseFloat(vExistingSubsystem) - parseFloat(vNewSubsystemPermitted);
+									editAppSpecific("Subsystem Remaining", toFixed(vNewSubsystemRemaing, 3));
+
+									// Update Other
+									var vExistingOtherPermitted = getAppSpecific("Other Permitted");
+									if (vExistingOtherPermitted != null && vExistingOtherPermitted != "") {
+										vExistingOtherPermitted = parseFloat(vExistingOtherPermitted);
+									} else {
+										vExistingOtherPermitted = 0;
+									}
+									
+									var vExistingOther = getAppSpecific("Other Allocation");
+									if (vExistingOther != null && vExistingOther != "") {
+										vExistingOther = parseFloat(vExistingOther);
+									} else {
+										vExistingOther = 0;
+									}
+
+									var vNewOtherPermitted = parseFloat(vASITOtherSum) + parseFloat(vExistingOtherPermitted);
+									editAppSpecific("Other Permitted", toFixed(vNewOtherPermitted, 3));
+
+									var vNewOtherRemaing = parseFloat(vExistingOther) - parseFloat(vNewOtherPermitted);
+									editAppSpecific("Other Remaining", toFixed(vNewOtherRemaing, 3));
+
+									// Update WDS
+									var vExistingWDSPermitted = getAppSpecific("WDS Permitted");
+									if (vExistingWDSPermitted != null && vExistingWDSPermitted != "") {
+										vExistingWDSPermitted = parseFloat(vExistingWDSPermitted);
+									} else {
+										vExistingWDSPermitted = 0;
+									}
+
+									var vExistingWDS = getAppSpecific("WDS Allocation");
+									if (vExistingWDS != null && vExistingWDS != "") {
+										vExistingWDS = parseFloat(vExistingWDS);
+									} else {
+										vExistingWDS = 0;
+									}
+
+									var vNewWDSPermitted = parseFloat(vASITWDSSum) + parseFloat(vExistingWDSPermitted);
+									editAppSpecific("WDS Permitted", toFixed(vNewWDSPermitted, 3));
+
+									var vNewWDSRemaing = parseFloat(vExistingWDS) - parseFloat(vNewWDSPermitted);
+									editAppSpecific("WDS Remaining", toFixed(vNewWDSRemaing, 3));
 
 									//get today as a string "MM/DD/YYYY"
 									var vToday = new Date();
