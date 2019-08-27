@@ -150,14 +150,12 @@ if (aa.env.getValue("CCEmail") != null && aa.env.getValue("CCEmail") != "") {
 // Your script goes here
 // Ex. var appGroup = getParam("Group");
 //
-
 showMessage = true;
 showDebug = false;
 
 logMessage("Start of Job");
 mainProcess();
 logMessage("End of Job: Elapsed Time : " + elapsed() + " Seconds");
-
 /*------------------------------------------------------------------------------------------------------/
 | <=========== Errors and Reporting
 /------------------------------------------------------------------------------------------------------*/
