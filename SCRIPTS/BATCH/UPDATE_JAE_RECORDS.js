@@ -19,13 +19,10 @@ var useTaskSpecificGroupName = true; // Use Group name when populating Task Spec
 var currentUserID = "ADMIN";
 var publicUser = null;
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
-var GLOBAL_VERSION = 3.0
-
-	var cancel = false;
-
+var GLOBAL_VERSION = 3.0;
+var cancel = false;
 var vScriptName = aa.env.getValue("ScriptCode");
 var vEventName = aa.env.getValue("EventName");
-
 var startDate = new Date();
 var startTime = startDate.getTime();
 var message = ""; // Message String
@@ -58,9 +55,8 @@ var feesInvoicedTotal = 0;
 var capDetail = "";
 var AInfo = new Array();
 var partialCap = false;
-var SCRIPT_VERSION = 2.0
-
-	var useSA = false;
+var SCRIPT_VERSION = 2.0;
+var useSA = false;
 var SA = null;
 var SAScript = null;
 var bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS", "SUPER_AGENCY_FOR_EMSE");
@@ -166,20 +162,16 @@ logMessage("End of Job: Elapsed Time : " + elapsed() + " Seconds");
 | <=========== Errors and Reporting
 /------------------------------------------------------------------------------------------------------*/
 if (debug.indexOf("**ERROR") > 0) {
-	aa.print(1);
 	aa.env.setValue("ScriptReturnCode", "1");
 	aa.env.setValue("ScriptReturnMessage", debug);
 	aa.sendMail(vEmailFrom, vEmailTo, vEmailCC, "", debug);
 } else {
-	aa.print(2);
 	aa.env.setValue("ScriptReturnCode", "0");
 	if (showMessage) {
-		aa.print(3);
 		aa.env.setValue("ScriptReturnMessage", message);
 		aa.sendMail(vEmailFrom, vEmailTo, vEmailCC, "Batch Results", message);
 	}
 	if (showDebug) {
-		aa.print(4);
 		aa.env.setValue("ScriptReturnDebug", debug);
 		aa.sendMail(vEmailFrom, vEmailTo, vEmailCC, "Batch Results - Debug", debug);
 	}
@@ -371,13 +363,13 @@ function mainProcess() {
 											vASITQuantitySum += parseFloat(vRow["Quantity"]);
 										}
 										// Update Pebble Beach Co JAE Record if transfer amount provided.
-										if (parseFloat(vRow["Quantity"]) < 0) {
+										if (vRow["Transfer"] == "Yes") {
 											vTransferAmountSum += parseFloat(vRow["Quantity"]);
 										}
 									}
 
 									if (vTransferAmountSum != 0) {
-										vTransferAmountSum = parseFloat(vTransferAmountSum) * -1;
+										vTransferAmountSum = parseFloat(vTransferAmountSum);
 										editAppSpecific("Transfer Amount", toFixed(vTransferAmountSum, 3));
 
 										var vExistingTotalTransfers = getAppSpecific("Total Transfers");
@@ -470,7 +462,7 @@ function mainProcess() {
 									var vNewEntitlementPermitted = parseFloat(vASITEntitlementsSum) + parseFloat(vExistingEntitlementPermitted);
 									editAppSpecific("Entitlement Permitted", toFixed(vNewEntitlementPermitted, 3));
 
-									var vNewEntitlementRemaing = parseFloat(vExistingEntitlement) + parseFloat(vNewEntitlementPermitted) - parseFloat(vNewTotalTransfers);
+									var vNewEntitlementRemaing = parseFloat(vExistingEntitlement) + parseFloat(vNewTotalTransfers) - parseFloat(vNewEntitlementPermitted);
 									editAppSpecific("Entitlement Remaining", toFixed(vNewEntitlementRemaing, 3));
 
 									// Update Current Balance
