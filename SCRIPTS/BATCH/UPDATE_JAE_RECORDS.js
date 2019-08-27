@@ -206,7 +206,7 @@ function mainProcess() {
 		cap = vJAEList[vJAEInt];
 		capId = cap.getCapID();
 
-		if (capId.getCustomID() != 'JAE10') {
+		if (capId.getCustomID() != 'JAE11') {
 			continue;
 		}
 
@@ -470,11 +470,11 @@ function mainProcess() {
 									var vNewEntitlementPermitted = parseFloat(vASITEntitlementsSum) + parseFloat(vExistingEntitlementPermitted);
 									editAppSpecific("Entitlement Permitted", toFixed(vNewEntitlementPermitted, 3));
 
-									var vNewEntitlementRemaing = parseFloat(vExistingEntitlement) - parseFloat(vNewEntitlementPermitted) - parseFloat(vNewTotalTransfers);
+									var vNewEntitlementRemaing = parseFloat(vExistingEntitlement) + parseFloat(vNewEntitlementPermitted) - parseFloat(vNewTotalTransfers);
 									editAppSpecific("Entitlement Remaining", toFixed(vNewEntitlementRemaing, 3));
 
 									// Update Current Balance
-									var vNewCurrentBalance = parseFloat(vExistingEntitlement) - parseFloat(vNewTotalTransfers);
+									var vNewCurrentBalance = parseFloat(vExistingEntitlement) + parseFloat(vNewTotalTransfers);
 									editAppSpecific("Current Balance", toFixed(vNewCurrentBalance, 3));
 
 									// Update Paralta
@@ -506,7 +506,7 @@ function mainProcess() {
 										vExistingPreParaltaPermitted = 0;
 									}
 
-									var vExistingPreParalta = getAppSpecific("Pre-Paralta Credit");
+									var vExistingPreParalta = getAppSpecific("Pre-Paralta Credits");
 									if (vExistingPreParalta != null && vExistingPreParalta != "") {
 										vExistingPreParalta = parseFloat(vExistingPreParalta);
 									} else {
