@@ -45,6 +45,7 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 			logDebug("Updating JAE Record: " + vJAECapId.getCustomID() + " " + vJAERecordName);
 
 			// Get Water Use Permit Values
+			vPebbleBeachTransfer = getAppSpecific('Pebble Beach Transfer');
 			vPendingUpdatesTableName = "ENTITLEMENT PURCHASES";
 			vParcel = getPrimaryParcel();
 			vPurchaser = getOwnersFullName();
@@ -92,6 +93,9 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 			vASITRow["Assignment Date"] = new asiTableValObj("Assignment Date", vAssignmentDate, "Y");
 			vASITRow["WUP Issued"] = new asiTableValObj("WUP Issued", vWUPIssuedDate, "Y");
 			vASITRow["WUP"] = new asiTableValObj("WUP", vWUP, "Y");
+			if (vPebbleBeachTransfer == "Yes") {
+				vASITRow["Transfer"] = new asiTableValObj("Transfer", "CHECKED", "Y");
+			}
 
 			vPengingUpdatesASIT = loadASITable(vPendingUpdatesTableName, vJAECapId);
 			if (typeof(vPengingUpdatesASIT) == "object") {
@@ -109,7 +113,6 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 			}
 
 			// Update Pebble Beach Co JAE Record if transfer selected.
-			vPebbleBeachTransfer = getAppSpecific('Pebble Beach Transfer');
 			if (vPebbleBeachTransfer == "Yes") {
 				vPebbleBeachJAECapId = getJAERecord("Demand", "Master", "JAE", "NA", "Pebble Beach Co");
 				if (vPebbleBeachJAECapId != null && vPebbleBeachJAECapId != "") {
@@ -121,7 +124,8 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 					vASITRow["Assignment Date"] = new asiTableValObj("Assignment Date", vAssignmentDate, "Y");
 					vASITRow["WUP Issued"] = new asiTableValObj("WUP Issued", vWUPIssuedDate, "Y");
 					vASITRow["WUP"] = new asiTableValObj("WUP", vWUP, "Y");
-
+					vASITRow["Transfer"] = new asiTableValObj("Transfer", "CHECKED", "Y");
+					
 					vPengingUpdatesASIT = loadASITable(vPendingUpdatesTableName, vPebbleBeachJAECapId);
 					if (typeof(vPengingUpdatesASIT) == "object") {
 						// Add new row to ASIT
