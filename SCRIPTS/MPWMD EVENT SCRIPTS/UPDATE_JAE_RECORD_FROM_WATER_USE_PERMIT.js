@@ -95,6 +95,8 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 			vASITRow["WUP"] = new asiTableValObj("WUP", vWUP, "Y");
 			if (vPebbleBeachTransfer == "Yes") {
 				vASITRow["Transfer"] = new asiTableValObj("Transfer", "Yes", "Y");
+			} else {
+				vASITRow["Transfer"] = new asiTableValObj("Transfer", "No", "Y");
 			}
 
 			vPengingUpdatesASIT = loadASITable(vPendingUpdatesTableName, vJAECapId);
