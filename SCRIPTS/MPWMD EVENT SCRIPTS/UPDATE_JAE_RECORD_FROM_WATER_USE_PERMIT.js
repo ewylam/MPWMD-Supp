@@ -94,9 +94,9 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 			vASITRow["WUP Issued"] = new asiTableValObj("WUP Issued", vWUPIssuedDate, "Y");
 			vASITRow["WUP"] = new asiTableValObj("WUP", vWUP, "Y");
 			if (vPebbleBeachTransfer == "Yes") {
-				vASITRow["Transfer"] = new asiTableValObj("Transfer", "Yes", "Y");
+				vASITRow["Transfer"] = new asiTableValObj("Transfer", "Y", "Y");
 			} else {
-				vASITRow["Transfer"] = new asiTableValObj("Transfer", "No", "Y");
+				vASITRow["Transfer"] = new asiTableValObj("Transfer", "N", "Y");
 			}
 
 			vPengingUpdatesASIT = loadASITable(vPendingUpdatesTableName, vJAECapId);
@@ -126,7 +126,7 @@ if (wfTask == "Permit Issuance" && matches(wfStatus, "Issued", "Issued in Zone")
 					vASITRow["Assignment Date"] = new asiTableValObj("Assignment Date", vAssignmentDate, "Y");
 					vASITRow["WUP Issued"] = new asiTableValObj("WUP Issued", vWUPIssuedDate, "Y");
 					vASITRow["WUP"] = new asiTableValObj("WUP", vWUP, "Y");
-					vASITRow["Transfer"] = new asiTableValObj("Transfer", "Yes", "Y");
+					vASITRow["Transfer"] = new asiTableValObj("Transfer", "Y", "Y");
 					
 					vPengingUpdatesASIT = loadASITable(vPendingUpdatesTableName, vPebbleBeachJAECapId);
 					if (typeof(vPengingUpdatesASIT) == "object") {
