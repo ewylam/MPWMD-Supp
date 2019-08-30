@@ -196,9 +196,9 @@ function mainProcess() {
 		cap = vJAEList[vJAEInt];
 		capId = cap.getCapID();
 
-		if (capId.getCustomID() != 'JAE11') {
-			continue;
-		}
+		//if (capId.getCustomID() != 'JAE11') {
+		//	continue;
+		//}
 
 		logMessage("-Processing " + capId.getCustomID());
 
