@@ -604,7 +604,7 @@ function mainProcess() {
 									editAppSpecific("Last Update", vTodayString);
 
 									logMessage("---Removing " + vASITName + " ASIT");
-									//removeASITable(vASITName, capId);
+									removeASITable(vASITName, capId);
 								}
 						}
 
