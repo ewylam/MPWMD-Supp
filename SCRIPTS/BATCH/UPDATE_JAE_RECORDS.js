@@ -393,7 +393,7 @@ function mainProcess() {
 									editAppSpecific("Entitlement Sold", toFixed(vNewEntitlementSold, 3));
 
 									logMessage("---Removing " + vASITName + " ASIT");
-									//removeASITable(vASITName, capId);
+									removeASITable(vASITName, capId);
 
 								}
 						}
